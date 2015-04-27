@@ -1,0 +1,2 @@
+<Document xmlns:gate="http://gate.ac.uk" gate:gateId="22" gate:annotMaxId="23">
+<Person gate:gateId="21" ruleFinal="PersonFinal" gender="female" surname="Merkel" firstName="Angela" kind="fullName" rule="GazPerson">Angela Merkel</Person> lives in <Location gate:gateId="20" ruleFinal="LocFinal" locType="city" kind="locName" rule="InLoc1">berlin</Location></Document>
