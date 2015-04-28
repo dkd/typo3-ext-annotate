@@ -6,12 +6,12 @@ class Server {
     private $client = null;
 
     function __construct() {       
-        $path = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('gateannotator') . 'Resources/Private/guzzle.phar';
-        require_once($path);
+        // $path = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('gateannotator') . 'Resources/Private/guzzle.phar';
+        // require_once($path);
 
         $this->client = new \GuzzleHttp\Client(
             [
-                'base_url' => "http://localhost:8080/",
+                'base_url' => "http://gate:8089/",
                 'defaults' => [
                     'query'   => [
                         //'annotationSetName' => 'Shef',

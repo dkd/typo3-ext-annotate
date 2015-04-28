@@ -16,5 +16,9 @@
         "psr-4": {
             "Dkd\\Gateannotator\\": "Classes/"
         }
+    },
+    "require-dev": {
+        "typo3-ci/typo3cms": "dev-master",
+        "guzzlehttp/guzzle": "~5.0"
     }
 }
