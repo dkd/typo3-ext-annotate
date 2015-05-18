@@ -11,8 +11,8 @@
  ***************************************************************/
 
 $EM_CONF[$_EXTKEY] = array(
-	'title' => 'GATE Annotator',
-	'description' => 'GATE Annotator',
+	'title' => 'Annotate',
+	'description' => 'Annotate',
 	'category' => 'be',
 	'author' => '',
 	'author_email' => '',

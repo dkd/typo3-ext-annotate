@@ -1,5 +1,5 @@
 {
-    "name": "dkd/gateannotator",
+    "name": "dkd/annotate",
     "type": "typo3-cms-extension",
     "description": "TYPO3 Extension GATE Annotator",
     "keywords": ["gate", "semantic", "annotation"],

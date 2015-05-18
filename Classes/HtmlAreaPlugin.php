@@ -1,21 +1,24 @@
 <?php
 
-namespace TYPO3\CMS\gateannotator\Extension;
+namespace Dkd\Annotate;
 
-class AnnotateButton extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
+class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
 
-    protected $extensionKey = 'gateannotator';
+    protected $extensionKey = 'annotate';
 
-    protected $pluginName = 'AnnotateButton';
+    protected $pluginName = 'Annotate';
+    
+    protected $requiredPlugins = 'Annotate';
 
     protected $relativePathToLocallangFile = '';
 
-    protected $relativePathToSkin = 'extensions/AnnotateButton/skin/htmlarea.css';
+    protected $relativePathToSkin = 'Resources/public/skin/htmlarea.css';
 
-    protected $pluginButtons = 'AnnotateButton';
-    protected $convertToolbarForHtmlAreaArray = array('AnnotateButton' => 'AnnotateButton');
-
-    protected $requiredPlugins = 'AnnotateButton';
+    protected $pluginButtons = 'annotateAuto, annotateHighlight';
+    protected $convertToolbarForHtmlAreaArray = array(
+        'annotateAuto' => 'annotateAuto',
+        'annotateHighlight' => 'annotateHighlight'
+    );
 
     protected $elementUid = '';
 
@@ -31,15 +34,15 @@ class AnnotateButton extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
     public function addButtonsToToolbar() {
         //xdebug_break();
         //array_unshift($this->htmlAreaRTE->thisConfig["showButtons"],"AnnotateButton");
-        $this->htmlAreaRTE->thisConfig["showButtons"] = "*";
+        //$this->htmlAreaRTE->thisConfig["showButtons"] = "*";
         //Add only buttons not yet in the default toolbar order
         $addButtons = implode(',', array_diff(\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->pluginButtons, TRUE), \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->htmlAreaRTE->defaultToolbarOrder, TRUE)));
-        return ($addButtons ? 'AnnotateButton,' : '') . $this->htmlAreaRTE->defaultToolbarOrder;
+        return ($addButtons ? $this->pluginButtons . ',' : '') . $this->htmlAreaRTE->defaultToolbarOrder;
     }
 
     public function buildJavascriptConfiguration($RTEcounter) {
         $registerRTEinJavascriptString = parent::buildJavascriptConfiguration($RTEcounter);
-        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.AnnotateButton.uid = "' . ($this->elementUid ?: 'null').'";';
-        return $registerRTEinJavascriptString . 'RTEarea[' . $RTEcounter . '].buttons.AnnotateButton.table = "' . ($this->elementTable ?: 'null').'";';
+        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.annotateAuto.uid = "' . ($this->elementUid ?: 'null').'";';
+        return $registerRTEinJavascriptString . 'RTEarea[' . $RTEcounter . '].buttons.annotateAuto.table = "' . ($this->elementTable ?: 'null').'";';
     }
 }
