@@ -1,5 +1,4 @@
-console.log("loaded");
-HTMLArea.AnnotateButton = Ext.extend(HTMLArea.Plugin, {
+HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
 	configurePlugin: function (editor)
     {
 		var pluginInformation = {
@@ -13,7 +12,7 @@ HTMLArea.AnnotateButton = Ext.extend(HTMLArea.Plugin, {
 		};
 		this.registerPluginInformation(pluginInformation);
         var buttonConfiguration = {
-            id: "annotateButton",
+            id: "annotateAuto",
             tooltip: "annotate",
             action: "onAnnotate",
             textMode: true,
@@ -21,7 +20,7 @@ HTMLArea.AnnotateButton = Ext.extend(HTMLArea.Plugin, {
         };
         this.registerButton(buttonConfiguration);
         buttonConfiguration = {
-            id: "highlightButton",
+            id: "annotateHighlight",
             tooltip: "highlight",
             action: "onHighlightToggle",
             textMode: true,
@@ -30,13 +29,20 @@ HTMLArea.AnnotateButton = Ext.extend(HTMLArea.Plugin, {
         this.registerButton(buttonConfiguration);
         return true;
 	},
+    onGenerate: function () {
+        var styleSheet = this.editor.document.styleSheets[0];
+        styleSheet.insertRule(".htmlarea-show-annotations span[vocab] { background-color: yellow;}",styleSheet.cssRules.length);
+    },
 	onAnnotate: function (editor, id, target)
     {
         var input = editor.getInnerHTML(),
-            table = this.editorConfiguration.buttonsConfig.AnnotateButton.table,
-            uid = this.editorConfiguration.buttonsConfig.AnnotateButton.uid;
+            table = 0,
+            uid = 0;
+        //table = this.editorConfiguration.buttonsConfig.AnnotateButton.table,
+        //uid = this.editorConfiguration.buttonsConfig.AnnotateButton.uid;
         
         TYPO3.GATE.Server.someFunction(input,table,uid,function(result){
+            alert(result);
             editor.setHTML(result);
         });
 	    return false;

@@ -1,9 +1,9 @@
-.AnnotateButton {
+.annotateAuto {
 	background-image: url('images/ed_html.gif') !important;
 	background-position: 0 0 !important;
 }
 
-.highlightButton {
+.annotateHighlight {
 	background-image: url('images/ed_html.gif') !important;
 	background-position: 0 0 !important;
 }
