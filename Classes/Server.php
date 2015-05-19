@@ -27,7 +27,7 @@ class Server {
      * @param $uid
      * @return string
      */
-    public function someFunction($input,$table,$uid)
+    public function annotateText($input,$table,$uid)
     {
         $annotated = $this->annotate($input,$table,$uid);
         return $annotated;

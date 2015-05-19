@@ -41,8 +41,7 @@ HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
         //table = this.editorConfiguration.buttonsConfig.AnnotateButton.table,
         //uid = this.editorConfiguration.buttonsConfig.AnnotateButton.uid;
         
-        TYPO3.GATE.Server.someFunction(input,table,uid,function(result){
-            alert(result);
+        TYPO3.Annotate.Server.annotateText(input,table,uid,function(result){
             editor.setHTML(result);
         });
 	    return false;

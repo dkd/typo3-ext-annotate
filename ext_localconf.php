@@ -10,6 +10,6 @@ $TYPO3_CONF_VARS['EXTCONF']['rtehtmlarea']['plugins']['Annotate']['addIconsToSki
 $TYPO3_CONF_VARS['EXTCONF']['rtehtmlarea']['plugins']['Annotate']['disableInFE'] = 1;
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerExtDirectComponent(
-    'TYPO3.GATE.Server',
+    'TYPO3.Annotate.Server',
     'Dkd\\Annotate\\Server'
 );
