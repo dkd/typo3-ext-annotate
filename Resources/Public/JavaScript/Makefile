@@ -1,6 +1,6 @@
 all:
-	jsx --watch src ./
+	jsx --watch -x jsx src ./
 
 build:
-	jsx src ./
+	jsx -x jsx src ./
 

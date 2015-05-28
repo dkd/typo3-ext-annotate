@@ -9,7 +9,7 @@ define('TYPO3/CMS/Annotate/EditorApi', [
         show: function(mountpoint, document){
             this.mountpoint = mountpoint;
             this.document = document;
-            React.render(React.createElement(List, {body: document.body}),this.mountpoint);
+            React.render(<List body={document.body}/>,this.mountpoint);
             $(this.document.body).addClass("htmlarea-show-annotations");           
         },
         hide: function(){

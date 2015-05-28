@@ -47,16 +47,6 @@ HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
 		css.type = 'text/css';
 		css.href = this.editor.config.documentcssPath;
 		headcss.appendChild(css);
-        
-        this.editor.document.addEventListener('contextmenu', function(ev) {
-            if (ev.target.hasAttribute("vocab"))
-            {
-                alert("annotated");
-                ev.preventDefault();
-                return false;
-            }
-            return true;
-        }, false);
     },
 	onAnnotate: function (editor, id, target)
     {
@@ -73,13 +63,23 @@ HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
     },
 	onHighlightToggle: function (editor, id, target)
     {
-        editorApi.doStuff();
-		var body = this.editor.document.body;
-		if (!HTMLArea.DOM.hasClass(body, 'htmlarea-show-annotations'))
-            HTMLArea.DOM.addClass(body,'htmlarea-show-annotations');
+        if (window.React === undefined)
+            window.React = editorApi.react;
+        if (this.mountpoint) {
+            editorApi.hide();
+            this.mountpoint.parentElement.removeChild(this.mountpoint);
+            this.mountpoint = null;
+        }
         else
-		    HTMLArea.DOM.removeClass(body,'htmlarea-show-annotations');
-	        return false;
+        {
+            var wrap = document.getElementById("editorWrap" +this.editor.editorId),
+                editortr = wrap.parentElement.parentElement,
+                before = wrap.parentElement.nextSibling;
+            this.mountpoint = document.createElement("td");
+            editortr.insertBefore(this.mountpoint,before);
+            editorApi.show(this.mountpoint,this.editor.document);
+        }
+	    return false;
 	},
 	onUpdateToolbar: function (button, mode, selectionEmpty, ancestors)
     {
