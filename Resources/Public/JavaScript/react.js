@@ -102,54 +102,67 @@ if (
   });
 }
 
-if ("production" !== "development") {
-  var ExecutionEnvironment = _dereq_(21);
-  if (ExecutionEnvironment.canUseDOM && window.top === window.self) {
+    // Inject the runtime into a devtools global hook regardless of browser.
+    // Allows for debugging when the hook is injected on the page.
+    if (typeof window.parent.__REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
+        typeof window.parent.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject === 'function') {
+        window.parent.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject({
+            CurrentOwner: ReactCurrentOwner,
+            InstanceHandles: ReactInstanceHandles,
+            Mount: ReactMount,
+            Reconciler: ReactReconciler,
+            TextComponent: ReactDOMTextComponent
+        });
+    }
+    
+    if ("production" !== "development") {
+        var ExecutionEnvironment = _dereq_(21);
+        if (ExecutionEnvironment.canUseDOM && window.top === window.self) {
 
-    // If we're in Chrome, look for the devtools marker and provide a download
-    // link if not installed.
-    if (navigator.userAgent.indexOf('Chrome') > -1) {
-      if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ === 'undefined') {
-        console.debug(
-          'Download the React DevTools for a better development experience: ' +
-          'https://fb.me/react-devtools'
-        );
-      }
+            // If we're in Chrome, look for the devtools marker and provide a download
+            // link if not installed.
+            if (navigator.userAgent.indexOf('Chrome') > -1) {
+                if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ === 'undefined') {
+                    console.debug(
+                        'Download the React DevTools for a better development experience: ' +
+                            'https://fb.me/react-devtools'
+                    );
+                }
+            }
+
+            var expectedFeatures = [
+                // shims
+                Array.isArray,
+                Array.prototype.every,
+                Array.prototype.forEach,
+                Array.prototype.indexOf,
+                Array.prototype.map,
+                Date.now,
+                Function.prototype.bind,
+                Object.keys,
+                String.prototype.split,
+                String.prototype.trim,
+
+                // shams
+                Object.create,
+                Object.freeze
+            ];
+
+            for (var i = 0; i < expectedFeatures.length; i++) {
+                if (!expectedFeatures[i]) {
+                    console.error(
+                        'One or more ES5 shim/shams expected by React are not available: ' +
+                            'https://fb.me/react-warning-polyfills'
+                    );
+                    break;
+                }
+            }
+        }
     }
 
-    var expectedFeatures = [
-      // shims
-      Array.isArray,
-      Array.prototype.every,
-      Array.prototype.forEach,
-      Array.prototype.indexOf,
-      Array.prototype.map,
-      Date.now,
-      Function.prototype.bind,
-      Object.keys,
-      String.prototype.split,
-      String.prototype.trim,
+    React.version = '0.13.3';
 
-      // shams
-      Object.create,
-      Object.freeze
-    ];
-
-    for (var i = 0; i < expectedFeatures.length; i++) {
-      if (!expectedFeatures[i]) {
-        console.error(
-          'One or more ES5 shim/shams expected by React are not available: ' +
-          'https://fb.me/react-warning-polyfills'
-        );
-        break;
-      }
-    }
-  }
-}
-
-React.version = '0.13.3';
-
-module.exports = React;
+    module.exports = React;
 
 },{"117":117,"144":144,"19":19,"21":21,"27":27,"32":32,"33":33,"34":34,"38":38,"39":39,"40":40,"51":51,"54":54,"57":57,"58":58,"66":66,"70":70,"75":75,"78":78,"81":81,"84":84}],2:[function(_dereq_,module,exports){
 /**

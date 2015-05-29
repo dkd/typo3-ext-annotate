@@ -30,7 +30,13 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
     public function main($parentObject) {
         parent::main($parentObject);
         $this->elementTable = $parentObject->elementParts[0];
-        $this->elementUid = $parentObject->elementParts[1];       
+        $this->elementUid = $parentObject->elementParts[1];
+        
+        $pageRenderer = $GLOBALS['SOBE']->doc->getPageRenderer();
+        $pageRenderer->loadRequireJs();
+        $pageRenderer->addRequireJsConfiguration(array(
+            "urlArgs" => "bust=" + time()
+        ));
         return TRUE;
     }
     
