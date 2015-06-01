@@ -1,11 +1,16 @@
 define('TYPO3/CMS/Annotate/ListEntry', [
     'TYPO3/CMS/Annotate/react',
-], function (React) {
+    'TYPO3/CMS/Annotate/Observe',
+], function (
+    React,
+    Observe
+) {
     return React.createClass({
         displayName: 'ListEntry',
+        mixins: [Observe.Mixin('annotation')], 
         render: function() {
             return (
-                    <p>{this.props.data.getAttribute("resource")}</p>
+                    <p>{this.props.annotation.resource}</p>
             );
         }
     });

@@ -1,17 +1,23 @@
 define('TYPO3/CMS/Annotate/Annotation', [
     'TYPO3/CMS/Annotate/react',
-], function (React) {
-    function Annotation(span) {
+    'TYPO3/CMS/Annotate/Observe'
+], function (
+    React,
+    Observe
+) {
+    function Annotation(span,id) {
         if (!(this instanceof Annotation))
             throw new TypeError("Annotation constructor cannot be called as a function.");
         this.span = span;
+        this.id = id;
         span.annotation = this;
-        this.scan();
-        this.observer = new MutationObserver(this.scan.bind(this));           
+        this.observe = new Observe();
+        this.observer = new MutationObserver(this.scan.bind(this));
         this.observer.observe(span, {
             attributes: true,
             attributeOldValue: true
         });
+        this.scan();
     };
     Annotation.prototype = {
         span: null,
@@ -22,7 +28,7 @@ define('TYPO3/CMS/Annotate/Annotation', [
             this.vocab = this.span.hasAttribute('vocab') && this.span.getAttribute('vocab');
             this.resource = this.span.hasAttribute('resource') && this.span.getAttribute('resource');
             this.typeof = this.span.hasAttribute('typeof') && this.span.getAttribute('typeof');
-            console.log(this.vocab,this.resource,this.typeof);
+            this.observe.trigger();
         }
     };
     return Annotation;
