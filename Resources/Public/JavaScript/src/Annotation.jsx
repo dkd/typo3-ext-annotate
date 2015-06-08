@@ -5,11 +5,12 @@ define('TYPO3/CMS/Annotate/Annotation', [
     React,
     Observe
 ) {
-    function Annotation(span,id) {
+    function Annotation(span, id, editor) {
         if (!(this instanceof Annotation))
             throw new TypeError("Annotation constructor cannot be called as a function.");
         this.span = span;
         this.id = id;
+        this.editor = editor;
         span.annotation = this;
         this.observe = new Observe();
         this.observer = new MutationObserver(this.scan.bind(this));
@@ -29,6 +30,9 @@ define('TYPO3/CMS/Annotate/Annotation', [
             this.resource = this.span.hasAttribute('resource') && this.span.getAttribute('resource');
             this.typeof = this.span.hasAttribute('typeof') && this.span.getAttribute('typeof');
             this.observe.trigger();
+        },
+        delete: function() {
+            this.editor.unwrapElement(this.span);
         }
     };
     return Annotation;

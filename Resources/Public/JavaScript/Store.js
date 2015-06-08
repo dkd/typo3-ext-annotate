@@ -9,10 +9,11 @@ define('TYPO3/CMS/Annotate/Store', [
     Annotation,
     Observe
 ) {
-    function Store(document) {
+    function Store(document, editor) {
         if (!(this instanceof Store))
             throw new TypeError("Store constructor cannot be called as a function.");
         this.doc = document;
+        this.editor = editor;
         this.annotations = [];
 
         this.observer = new MutationObserver(this.mutated.bind(this));
@@ -47,7 +48,7 @@ define('TYPO3/CMS/Annotate/Store', [
             if (!Utility.isAnnotation(span))
                 return;
             console.log('add ' + span);
-            this.annotations.push(new Annotation(span,this.nextId()));
+            this.annotations.push(new Annotation(span,this.nextId(),this.editor));
             this.status();
             this.observe.trigger();
         },
