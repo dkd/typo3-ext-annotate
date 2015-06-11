@@ -12,26 +12,30 @@ define('TYPO3/CMS/Annotate/Store', [
     function Store(document, editor) {
         if (!(this instanceof Store))
             throw new TypeError("Store constructor cannot be called as a function.");
-        this.doc = document;
-        this.editor = editor;
-        this.annotations = [];
-
-        this.observer = new MutationObserver(this.mutated.bind(this));
-        var config = { childList: true, subtree: true };
-        this.observer.observe(document.body, config);
-
         this.observe = new Observe();
-
-        Utility.nodeListForEach(document.body.querySelectorAll("[vocab]"), this.addAnnotation.bind(this));
+        this.editor = editor;
+        this.editor.store =  this;
+        this.reset();
     };
+
     Store.prototype = {
         constructor: Store,
         doc: null,
         observer: null,
         observers: null,
         annotations: null,
-        unobserve: function() {
-            this.observer.disconnect();
+        reset: function() {
+            this.doc = this.editor.getDocument();
+            this.annotations = [];
+
+            if (this.observer)
+                this.observer.disconnect();
+
+            this.observer = new MutationObserver(this.mutated.bind(this));
+            var config = { childList: true, subtree: true };
+            this.observer.observe(this.doc.body, config);
+
+            Utility.nodeListForEach(this.doc.body.querySelectorAll("[vocab]"), this.addAnnotation.bind(this));
         },
         mutated: function(mutations) {
             mutations.forEach(function(mutation){

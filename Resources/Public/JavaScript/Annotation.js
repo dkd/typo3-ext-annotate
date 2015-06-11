@@ -8,18 +8,20 @@ define('TYPO3/CMS/Annotate/Annotation', [
     function Annotation(span, id, editor) {
         if (!(this instanceof Annotation))
             throw new TypeError("Annotation constructor cannot be called as a function.");
+
         this.span = span;
         this.id = id;
         this.editor = editor;
         span.annotation = this;
         this.observe = new Observe();
         this.observer = new MutationObserver(this.scan.bind(this));
+
         this.observer.observe(span, {
             attributes: true,
             attributeOldValue: true
         });
         this.scan();
-    };
+    }
     Annotation.prototype = {
         span: null,
         vocab: null,

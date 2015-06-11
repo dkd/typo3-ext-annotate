@@ -1,41 +1,50 @@
 define('TYPO3/CMS/Annotate/ListEntry', [
     'TYPO3/CMS/Annotate/react',
     'TYPO3/CMS/Annotate/Observe',
+    'TYPO3/CMS/Annotate/ListEntryLine',
 ], function (
     React,
-    Observe
+    Observe,
+    ListEntryLine
 ) {
     return React.createClass({
         displayName: 'ListEntry',
+        mixins: [Observe.Mixin('annotation')],
         getInitialState: function() {
-            return {expanded: false};
+            return {
+                expanded: false,
+                editableAttributes: ["vocab","resource","typeof"]
+            };
         },
         onExpand: function() {
             this.setState({expanded: !this.state.expanded});
         },
         onChange: function(attribute) {
+            var context = this;
             return function(event) {
-                this.props.annotation.setAttribute(attribute,event.target.value);
+                context.state.annotation.span.setAttribute(attribute,event.target.value);
             };
         },
         onDelete: function() {
-            console.log('delete');
-            this.props.annotation.delete();
+            this.state.annotation.delete();
         },
         render: function() {
-            var short =  this.props.annotation.resource.split('/').pop();
-            if (!this.state.expanded)
+            var annotation = this.props.annotation,
+                expanded = this.state.expanded,
+                short =  annotation.resource.split('/').pop();
+
+            if (!expanded)
                 return (React.createElement("div", null, " ", React.createElement("h3", {onClick: this.onExpand}, short)));
             else
-                return (React.createElement("div", null, " ", React.createElement("h3", {onClick: this.onExpand}, short), 
-                        React.createElement("button", {onClick: this.onDelete}, "Delete"), 
-                        React.createElement("form", {action: ""}, 
-                        "Vocab: ", React.createElement("input", {type: "text", name: "vocab", value: this.props.annotation.vocab, onChange: this.onChange('vocab')}), React.createElement("br", null), 
-                        "Resource: ", React.createElement("input", {type: "text", name: "resource", value: this.props.annotation.resource, onChange: this.onChange('resource')}), React.createElement("br", null), 
-                        "Typeof: ", React.createElement("input", {type: "text", name: "typeof", value: this.props.annotation.typeof, onChange: this.onChange('typeof')}), React.createElement("br", null)
-                        )
-                        )
-                       );
+                return (
+                    React.createElement("div", null, React.createElement("h3", {onClick: this.onExpand}, short),
+                      React.createElement("button", {onClick: this.onDelete, type:"button"}, "Delete"),
+                      React.createElement("br", null),
+                      this.state.editableAttributes.map(function(attribute){
+                          return(React.createElement(ListEntryLine, {key: attribute, annotation: annotation, attribute: attribute}));
+                      },this)
+                     )
+                );
         }
     });
 });

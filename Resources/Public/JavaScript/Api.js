@@ -22,10 +22,11 @@ define('TYPO3/CMS/Annotate/Api', [
             this.editor = new (Editor[editorType])(editorInstance);
         },
         show: function(mountpoint, document, htmlarea){
+            //extra
             this.mountpoint = mountpoint;
             this.document = document;
-            this.store = new Store(document, this.editor);
-            React.render(React.createElement(List, {store: this.store}),this.mountpoint);
+            this.store = new Store(document,this.editor);
+            React.render(React.createElement(List, {editor: this.editor, store: this.store}),this.mountpoint);
             $(this.document.body).addClass("htmlarea-show-annotations");
         },
         hide: function(){
@@ -37,4 +38,4 @@ define('TYPO3/CMS/Annotate/Api', [
         react: React
     };
     return Api;
-    });
+});

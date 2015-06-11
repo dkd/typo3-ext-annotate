@@ -59,7 +59,7 @@ HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
 	  onAnnotate: function (editor, id, target)
     {
         this.checkApi();
-        var was = this.mountpoint !== null;
+        var was = this.mountpoint != null;
         if (was)
             this.onHighlightToggle();
         var input = editor.getInnerHTML(),

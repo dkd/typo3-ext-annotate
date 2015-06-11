@@ -7,7 +7,7 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
     protected $extensionKey = 'annotate';
 
     protected $pluginName = 'Annotate';
-    
+
     protected $relativePathToLocallangFile = '';
 
     protected $relativePathToSkin = 'Resources/Public/Skin/htmlarea.css';
@@ -18,28 +18,31 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
         'annotateHighlight' => 'annotateHighlight'
     );
 
+    protected $requiredPlugins = 'InlineElements';
+
     protected $elementUid = '';
 
     protected $elementTable = '';
-   
+
     public function addButtonsToToolbar() {
         $this->htmlAreaRTE->thisConfig["showButtons"] = "*";
         return parent::addButtonsToToolbar();
     }
-    
+
     public function main($parentObject) {
         parent::main($parentObject);
         $this->elementTable = $parentObject->elementParts[0];
         $this->elementUid = $parentObject->elementParts[1];
-        
-        $pageRenderer = $GLOBALS['SOBE']->doc->getPageRenderer();
-        $pageRenderer->loadRequireJs();
-        $pageRenderer->addRequireJsConfiguration(array(
-            "urlArgs" => "bust=" + time()
-        ));
+
+        // $pageRenderer = $GLOBALS['SOBE']->doc->getPageRenderer();
+        // $pageRenderer->loadRequireJs();
+        // $pageRenderer->addRequireJsConfiguration(array(
+        //     "urlArgs" => "bust=" + time()
+        // ));
+
         return TRUE;
     }
-    
+
     public function buildJavascriptConfiguration($RTEcounter) {
         $registerRTEinJavascriptString = parent::buildJavascriptConfiguration($RTEcounter);
         $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.annotateAuto.uid = "' . ($this->elementUid ?: 'null').'";';
