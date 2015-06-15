@@ -17,7 +17,7 @@ define('TYPO3/CMS/Annotate/ListEntry', [
             };
         },
         onExpand: function() {
-            this.setState({expanded: !this.state.expanded});
+            this.props.expand(this.state.annotation.aid);
         },
         onChange: function(attribute) {
             var context = this;
@@ -30,7 +30,7 @@ define('TYPO3/CMS/Annotate/ListEntry', [
         },
         render: function() {
             var annotation = this.props.annotation,
-                expanded = this.state.expanded,
+                expanded = this.props.expanded,
                 short =  annotation.resource.split('/').pop();
 
             if (!expanded)

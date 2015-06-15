@@ -18,6 +18,16 @@ define('TYPO3/CMS/Annotate/Store', [
         this.reset();
     };
 
+    function guid() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
+    }
+
     Store.prototype = {
         constructor: Store,
         doc: null,
@@ -51,8 +61,13 @@ define('TYPO3/CMS/Annotate/Store', [
         addAnnotation: function(span) {
             if (!Utility.isAnnotation(span))
                 return;
+
+            if (!span.hasAttribute('aid'))
+                span.setAttribute('aid', guid());
+
             console.log('add ' + span);
-            this.annotations.push(new Annotation(span,this.nextId(),this.editor));
+
+            this.annotations.push(new Annotation(span,this.editor));
             this.status();
             this.observe.trigger();
         },

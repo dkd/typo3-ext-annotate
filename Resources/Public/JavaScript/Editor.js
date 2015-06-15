@@ -49,7 +49,7 @@ define('TYPO3/CMS/Annotate/Editor', [
             editor =  this;
         this.htmlarea.focus = function() {
             // the htmlarea undo functionality will refocus on the editor if we change an annotation attribute
-            if (! editor.getAnnotationList().contains(document.activeElement))
+            if (editor.getAnnotationList() && !editor.getAnnotationList().contains(document.activeElement))
                 focus_();
         };
         this.htmlarea.setHTML = function() {
