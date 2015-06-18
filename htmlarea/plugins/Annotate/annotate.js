@@ -41,10 +41,16 @@ HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
         this.registerButton(buttonConfiguration);
         return true;
 	  },
-    checkApi: function() {
-        if (!this.editorSet){
-            Annotate.setEditor('Htmlarea',this.editor);
-            this.editorSet = true;
+    checkAnnotate: function() {
+        if (!Annotate.created)
+        {
+            var wrap = document.getElementById("editorWrap" +this.editor.editorId),
+                editortr = wrap.parentElement.parentElement,
+                before = wrap.parentElement.nextSibling,
+                mountpoint = document.createElement("td");
+            editortr.insertBefore(mountpoint,before);
+
+            Annotate.create(mountpoint, this.editor.document, 'Htmlarea', this.editor);
         }
     },
     onGenerate: function () {
@@ -55,44 +61,35 @@ HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
 		    css.href = this.editor.config.documentcssPath;
 		    headcss.appendChild(css);
         annotatePlugins.push(this);
-        },
+    },
 	  onAnnotate: function (editor, id, target)
     {
-        this.checkApi();
-        var was = this.mountpoint != null;
-        if (was)
-            this.onHighlightToggle();
+        this.checkAnnotate();
+
         var input = editor.getInnerHTML(),
+            was = Annotate.active,
             table = 0,
             uid = 0;
+
+        if (was)
+            Annotate.hide();
+
         //table = this.editorConfiguration.buttonsConfig.AnnotateButton.table,
         //uid = this.editorConfiguration.buttonsConfig.AnnotateButton.uid;
-        var outer = this;
+
         TYPO3.Annotate.Server.annotateText(input,table,uid,function(result){
             editor.setHTML(result);
             if (was)
-                outer.onHighlightToggle();
+                Annotate.show();
         });
+
 	      return false;
     },
 	  onHighlightToggle: function ()
     {
-        this.checkApi();
-        if (this.mountpoint) {
-            Annotate.hide();
-            this.mountpoint.parentElement.removeChild(this.mountpoint);
-            this.mountpoint = null;
-        }
-        else
-        {
-            var wrap = document.getElementById("editorWrap" +this.editor.editorId),
-                editortr = wrap.parentElement.parentElement,
-                before = wrap.parentElement.nextSibling;
-            this.mountpoint = document.createElement("td");
-            editortr.insertBefore(this.mountpoint,before);
-            Annotate.show(this.mountpoint,this.editor.document);
-        }
-	      return false;
+        this.checkAnnotate();
+        Annotate.toggle();
+        return false;
 	  },
 	  onUpdateToolbar: function (button, mode, selectionEmpty, ancestors)
     {
@@ -101,7 +98,7 @@ HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
 
 require([
     'TYPO3/CMS/Annotate/Api',
-],function(
+], function(
     Api
 ){
     Annotate = new Api();

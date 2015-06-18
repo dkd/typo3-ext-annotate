@@ -12,30 +12,46 @@ define('TYPO3/CMS/Annotate/Annotation', [
         this.span = span;
         this.editor = editor;
         span.annotation = this;
+        // directAttributes observer
         this.observe = new Observe();
-        this.observer = new MutationObserver(this.scan.bind(this));
-
+        this.observer = new MutationObserver(this.observe.trigger.bind(this.observe));
         this.observer.observe(span, {
             attributes: true,
             attributeOldValue: true
         });
-        this.scan();
+        // indirect attributes
+
+
     }
     Annotation.prototype = {
         span: null,
-        vocab: null,
-        resource: null,
-        typeof: null,
-        aid:  null,
-        scan: function(mutations) {
-            this.vocab = this.span.hasAttribute('vocab') && this.span.getAttribute('vocab');
-            this.resource = this.span.hasAttribute('resource') && this.span.getAttribute('resource');
-            this.typeof = this.span.hasAttribute('typeof') && this.span.getAttribute('typeof');
-            this.aid = this.span.hasAttribute('aid') && this.span.getAttribute('aid');
-            this.observe.trigger();
-        },
+        directAttributes: ['vocab', 'resource', 'typeof', 'aid'],
+        editableAttributes: ["vocab","resource","typeof"],
         delete: function() {
             this.editor.unwrapElement(this.span);
+        },
+        set: function(name, value) {
+            if (this.directAttributes.indexOf(name) != - 1)
+            {
+                this.span.setAttribute(name, value);
+            }
+            else
+            {
+            }
+            this.observe.trigger();
+        },
+        get: function(name) {
+            if (this.directAttributes.indexOf(name) != - 1)
+            {
+                return this.span.hasAttribute(name) && this.span.getAttribute(name);
+            }
+            else
+            {
+                return "";
+            }
+        },
+        short: function() {
+            return this.get('resource').split('/').pop();
         }
     };
     return Annotation;

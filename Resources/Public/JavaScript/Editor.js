@@ -24,11 +24,15 @@ define('TYPO3/CMS/Annotate/Editor', [
         applyHooks: function() {
         },
         getAnnotationList: function() {
-            return document.getElementsByClassName("annotate-list")[0];
+            var lists = document.getElementsByClassName("annotate-list");
+            if (lists.length > 0)
+                return lists[0];
+            return null;
         }
     };
-    function Htmlarea(htmlarea) {
+    function Htmlarea(api, htmlarea) {
         this.htmlarea = htmlarea;
+        this.api = api;
         Abs.call(this);
     }
     Htmlarea.prototype = Object.create(Abs.prototype);
@@ -46,6 +50,7 @@ define('TYPO3/CMS/Annotate/Editor', [
     Htmlarea.prototype.applyHooks = function() {
         var focus_ = this.htmlarea.focus.bind(this.htmlarea),
             setHTML_ = this.htmlarea.setHTML.bind(this.htmlarea),
+            setMode_ = this.htmlarea.setMode.bind(this.htmlarea),
             editor =  this;
         this.htmlarea.focus = function() {
             // the htmlarea undo functionality will refocus on the editor if we change an annotation attribute
@@ -57,7 +62,19 @@ define('TYPO3/CMS/Annotate/Editor', [
             if (editor.store)
                 editor.store.reset();
         };
-
+        var previous = false;
+        this.htmlarea.setMode = function(mode) {
+            if (mode != 'wysiwyg')
+            {
+                previous = editor.getAnnotationList() != null;
+                editor.api.hide();
+            }
+            else if (previous)
+                editor.api.show();
+            setMode_(mode);
+            if (editor.store)
+                editor.store.reset();
+        };
     };
     return {
         Htmlarea: Htmlarea
