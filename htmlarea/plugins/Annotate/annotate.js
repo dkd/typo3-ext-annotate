@@ -24,17 +24,9 @@ HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
 		    };
 		    this.registerPluginInformation(pluginInformation);
         var buttonConfiguration = {
-            id: "annotateAuto",
-            tooltip: "annotate",
-            action: "onAnnotate",
-            textMode: true,
-            dialog: true
-        };
-        this.registerButton(buttonConfiguration);
-        buttonConfiguration = {
-            id: "annotateHighlight",
+            id: "annotate",
             tooltip: "highlight",
-            action: "onHighlightToggle",
+            action: "onAnnotate",
             textMode: true,
             dialog: true
         };
@@ -62,30 +54,7 @@ HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
 		    headcss.appendChild(css);
         annotatePlugins.push(this);
     },
-	  onAnnotate: function (editor, id, target)
-    {
-        this.checkAnnotate();
-
-        var input = editor.getInnerHTML(),
-            was = Annotate.active,
-            table = 0,
-            uid = 0;
-
-        if (was)
-            Annotate.hide();
-
-        //table = this.editorConfiguration.buttonsConfig.AnnotateButton.table,
-        //uid = this.editorConfiguration.buttonsConfig.AnnotateButton.uid;
-
-        TYPO3.Annotate.Server.annotateText(input,table,uid,function(result){
-            editor.setHTML(result);
-            if (was)
-                Annotate.show();
-        });
-
-	      return false;
-    },
-	  onHighlightToggle: function ()
+    onAnnotate: function ()
     {
         this.checkAnnotate();
         Annotate.toggle();

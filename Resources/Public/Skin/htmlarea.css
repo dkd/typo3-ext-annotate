@@ -1,11 +1,7 @@
-.annotateAuto {
-	background-image: url('images/ed_html.gif') !important;
-	background-position: 0 0 !important;
-}
-
-.annotateHighlight {
-	background-image: url('images/ed_html.gif') !important;
-	background-position: 0 0 !important;
+.annotate
+{
+	  background-image: url('images/ed_html.gif') !important;
+	  background-position: 0 0 !important;
 }
 
 .annotate-list {

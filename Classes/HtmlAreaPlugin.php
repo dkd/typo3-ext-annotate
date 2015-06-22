@@ -12,10 +12,9 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
 
     protected $relativePathToSkin = 'Resources/Public/Skin/htmlarea.css';
 
-    protected $pluginButtons = 'annotateAuto, annotateHighlight';
+    protected $pluginButtons = 'annotate';
     protected $convertToolbarForHtmlAreaArray = array(
-        'annotateAuto' => 'annotateAuto',
-        'annotateHighlight' => 'annotateHighlight'
+        'annotate' => 'annotate'
     );
 
     protected $requiredPlugins = 'InlineElements';
@@ -45,8 +44,8 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
 
     public function buildJavascriptConfiguration($RTEcounter) {
         $registerRTEinJavascriptString = parent::buildJavascriptConfiguration($RTEcounter);
-        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.annotateAuto.uid = "' . ($this->elementUid ?: 'null').'";';
-        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.annotateAuto.table = "' . ($this->elementTable ?: 'null').'";';
+        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.annotate.uid = "' . ($this->elementUid ?: 'null').'";';
+        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.annotate.table = "' . ($this->elementTable ?: 'null').'";';
         $documentcss = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extensionKey) . 'Resources/Public/Skin/document.css';
         $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].documentcssPath = "../' . $documentcss . '";';
         return $registerRTEinJavascriptString;

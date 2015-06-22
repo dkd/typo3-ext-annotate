@@ -11,29 +11,28 @@ define('TYPO3/CMS/Annotate/List', [
         displayName: 'List',
         mixins: [Observe.Mixin('store')],
         getInitialState: function() {
-            return {expanded: []};
+            return {expanded: null};
         },
         onCreateAnnotation: function() {
-            this.props.editor.createAnnotationAroundSelection.call(this.props.editor);
+            this.props.api.editor.createAnnotationAroundSelection.call(this.props.api.editor);
+        },
+        onAuto: function() {
+            this.props.api.auto.call(this.props.api);
         },
         expand: function(aid) {
-            var exp = this.state.expanded;
-            if (exp.indexOf(aid) != - 1)
-                exp.remove(aid);
-            else
-                exp.push(aid);
-            this.setState({expanded: exp});
+            this.setState({expanded: aid});
         },
         render: function() {
             return (
                 React.createElement("div", {className: "annotate-list"},
+                  React.createElement("button", {onClick: this.onAuto, type:"button"}, "Annotate!"),
                   React.createElement("button", {onClick: this.onCreateAnnotation, type:"button"}, "New Annotation Around Selection"),
                   React.createElement("h1", null, "Annotations"),
                   this.state.store.annotations.map(function(annotation, index) {
                       return React.createElement(ListEntry, {
                           key: annotation.get('aid'),
                           expand: this.expand,
-                          expanded: (this.state.expanded.indexOf(annotation.get('aid')) != - 1),
+                          expanded: this.state.expanded == annotation.get('aid'),
                           annotation: annotation});
                   }, this)
                  )

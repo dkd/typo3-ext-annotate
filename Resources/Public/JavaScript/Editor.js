@@ -28,6 +28,11 @@ define('TYPO3/CMS/Annotate/Editor', [
             if (lists.length > 0)
                 return lists[0];
             return null;
+        },
+        getContent: function() {
+            return null;
+        },
+        setContent: function() {
         }
     };
     function Htmlarea(api, htmlarea) {
@@ -40,12 +45,23 @@ define('TYPO3/CMS/Annotate/Editor', [
     Htmlarea.prototype.getSelectedRange = function() {
         return this.htmlarea.getSelectionRanges()[0];
     };
+
     Htmlarea.prototype.unwrapElement = function(element) {
         this.htmlarea.getDomNode().removeMarkup(element);
     };
+
     Htmlarea.prototype.getDocument = function() {
         return this.htmlarea.document;
     };
+
+    Htmlarea.prototype.setContent = function(content) {
+        this.htmlarea.setHTML(content);
+    };
+
+    Htmlarea.prototype.getContent = function() {
+        return this.htmlarea.getInnerHTML();
+    };
+
 
     Htmlarea.prototype.applyHooks = function() {
         var focus_ = this.htmlarea.focus.bind(this.htmlarea),
