@@ -1,3 +1,8 @@
+/**
+ * @fileOverview Store for all annotations of the edited document
+ * @name Store.js
+ * @author Johannes Goslar
+ */
 define('TYPO3/CMS/Annotate/Store', [
     'TYPO3/CMS/Annotate/react',
     'TYPO3/CMS/Annotate/Utility',
@@ -9,15 +14,22 @@ define('TYPO3/CMS/Annotate/Store', [
     Annotation,
     Observe
 ) {
+    /**
+     * Store Constructor
+     * @param {HTMLDocument} document
+     * @param {Object} editor
+     */
     function Store(document, editor) {
-        if (!(this instanceof Store))
-            throw new TypeError("Store constructor cannot be called as a function.");
         this.observe = new Observe();
         this.editor = editor;
         this.editor.store =  this;
         this.reset();
     };
 
+    /**
+     * Generate a (fake) guid for an annotation
+     * @returns {string}
+     */
     function guid() {
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)
@@ -34,6 +46,9 @@ define('TYPO3/CMS/Annotate/Store', [
         observer: null,
         observers: null,
         annotations: null,
+        /**
+         * Reset this store e.g. when html is set directly
+         */
         reset: function() {
             this.doc = this.editor.getDocument();
             this.annotations = [];
@@ -47,17 +62,20 @@ define('TYPO3/CMS/Annotate/Store', [
 
             Utility.nodeListForEach(this.doc.body.querySelectorAll("[vocab]"), this.addAnnotation.bind(this));
         },
+        /**
+         * MutationObserver callback, check if annotations were created/deleted
+         * @param {} mutations
+         */
         mutated: function(mutations) {
             mutations.forEach(function(mutation){
                 Utility.nodeListForEach(mutation.addedNodes, this.addAnnotation, this);
                 Utility.nodeListForEach(mutation.removedNodes, this.removeAnnotation, this);
             },this);
         },
-        nextId: function() {
-            var id =(this.nextIdCounter === undefined) ? 1 : this.nextIdCounter;
-            this.nextIdCounter = id +1;
-            return id;
-        },
+        /**
+         * Create a model when a new span was detected
+         * @param {Element} span
+         */
         addAnnotation: function(span) {
             if (!Utility.isAnnotation(span))
                 return;
@@ -71,6 +89,10 @@ define('TYPO3/CMS/Annotate/Store', [
             this.status();
             this.observe.trigger();
         },
+        /**
+         * Remove annotation when a span got deleted
+         * @param {Element} span
+         */
         removeAnnotation: function(span) {
             if (!Utility.isAnnotation(span))
                 return;
@@ -79,6 +101,9 @@ define('TYPO3/CMS/Annotate/Store', [
             this.status();
             this.observe.trigger();
         },
+        /**
+         * Show some status on the console
+         */
         status: function() {
             this.annotations.forEach(console.log, console);
         }

@@ -1,11 +1,22 @@
+/**
+ * @fileOverview Editor wrapper for functions manipulating the edited document
+ * @name Editor.js
+ * @author Johannes Goslar
+ */
 define('TYPO3/CMS/Annotate/Editor', [
 ], function (
 ) {
+    /**
+     * Abstract Editor Wrapper Constructor
+     */
     function Abs(){
         this.applyHooks();
     }
     Abs.prototype = {
         constructor: Abs,
+        /**
+         * Create new annotation around the currently selected text
+         */
         createAnnotationAroundSelection: function() {
             var range = this.getSelectedRange(),
                 doc = this.getDocument(),
@@ -15,26 +26,54 @@ define('TYPO3/CMS/Annotate/Editor', [
             ele.setAttribute('typeof',"New Annotation");
             range.surroundContents(ele);
         },
+        /**
+         * Get currently selected range from the editor
+         * @returns {Range}
+         */
         getSelectedRange: function() {
             return null;
         },
+        /**
+         * Get editied document
+         * @returns {Document}
+         */
         getDocument: function() {
             return null;
         },
+        /**
+         * Apply/insert editor specific hooks, done on init
+         */
         applyHooks: function() {
         },
+        /**
+         * Get current instance of the list view
+         * @returns {Element}
+         */
         getAnnotationList: function() {
             var lists = document.getElementsByClassName("annotate-list");
             if (lists.length > 0)
                 return lists[0];
             return null;
         },
+        /**
+         * Get the whole content of the edited document as string
+         * @returns {string}
+         */
         getContent: function() {
             return null;
         },
-        setContent: function() {
+        /**
+         * Set document content to the given html document
+         * @param {string} content
+         */
+        setContent: function(content) {
         }
     };
+    /**
+     * Htmlarea Wrapper Constructor
+     * @param {Object} api
+     * @param {Object} htmlarea
+     */
     function Htmlarea(api, htmlarea) {
         this.htmlarea = htmlarea;
         this.api = api;
@@ -61,7 +100,6 @@ define('TYPO3/CMS/Annotate/Editor', [
     Htmlarea.prototype.getContent = function() {
         return this.htmlarea.getInnerHTML();
     };
-
 
     Htmlarea.prototype.applyHooks = function() {
         var focus_ = this.htmlarea.focus.bind(this.htmlarea),

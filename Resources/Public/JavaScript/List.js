@@ -1,3 +1,8 @@
+/**
+ * @fileOverview Annotation List View
+ * @name List.js
+ * @author Johannes Goslar
+ */
 define('TYPO3/CMS/Annotate/List', [
     'TYPO3/CMS/Annotate/react',
     'TYPO3/CMS/Annotate/ListEntry',
@@ -13,12 +18,22 @@ define('TYPO3/CMS/Annotate/List', [
         getInitialState: function() {
             return {expanded: null};
         },
+        /**
+         * Create new annotation
+         */
         onCreateAnnotation: function() {
             this.props.api.editor.createAnnotationAroundSelection.call(this.props.api.editor);
         },
+        /**
+         * Automatically annotate the whole document
+         */
         onAuto: function() {
             this.props.api.auto.call(this.props.api);
         },
+        /**
+         * Expand one annotation
+         * @param {string} aid
+         */
         expand: function(aid) {
             this.setState({expanded: aid});
         },

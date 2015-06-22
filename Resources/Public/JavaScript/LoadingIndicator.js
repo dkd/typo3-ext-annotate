@@ -1,3 +1,8 @@
+/**
+ * @fileOverview Show a LoadingIndicator
+ * @name LoadingIndicator.js
+ * @author Johannes Goslar
+ */
 define('TYPO3/CMS/Annotate/LoadingIndicator', [
     'TYPO3/CMS/Annotate/react',
     'TYPO3/CMS/Annotate/spin'
