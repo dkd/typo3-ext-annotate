@@ -67,6 +67,12 @@ define('TYPO3/CMS/Annotate/Editor', [
          * @param {string} content
          */
         setContent: function(content) {
+        },
+        /**
+         * Automatically annotate the whole content
+         * @param {function} cb
+         */
+        autoAnnotate: function(cb) {
         }
     };
     /**
@@ -130,6 +136,18 @@ define('TYPO3/CMS/Annotate/Editor', [
                 editor.store.reset();
         };
     };
+    Htmlarea.prototype.autoAnnotate = function(cb) {
+        var input = this.getContent(),
+            table = 0, //this.editorConfiguration.buttonsConfig.AnnotateButton.table,
+            uid = 0, //uid = this.editorConfiguration.buttonsConfig.AnnotateButton.uid;
+            editor =  this;
+
+        TYPO3.Annotate.Server.annotateText(input, table, uid, (function(result){
+            editor.setContent(result);
+            cb();
+        }));
+    };
+
     return {
         Htmlarea: Htmlarea
     };

@@ -79,16 +79,9 @@ define('TYPO3/CMS/Annotate/Api', [
          * Automatically annotate the whole document
          */
         auto: function() {
-            var input = this.editor.getContent(),
-                table = 0, //this.editorConfiguration.buttonsConfig.AnnotateButton.table,
-                uid = 0;  //uid = this.editorConfiguration.buttonsConfig.AnnotateButton.uid;
-
             this.hide();
             React.render(React.createElement(LoadingIndicator, null), this.mountpoint);
-
-
-            TYPO3.Annotate.Server.annotateText(input, table, uid, (function(result){
-                this.editor.setContent(result);
+            this.editor.autoAnnotate((function() {
                 React.unmountComponentAtNode(this.mountpoint);
                 this.show();
             }).bind(this));
