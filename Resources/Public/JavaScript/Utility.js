@@ -12,8 +12,16 @@ define('TYPO3/CMS/Annotate/Utility', [
          * @param {Element} span
          * @returns {boolean}
          */
-        isAnnotation: function(span) {
+        isAnnotation: function (span) {
             return span.hasAttribute !== undefined && span.hasAttribute('vocab');
+        },
+        /**
+         * Is the span an property
+         * @param {Element} span
+         * @returns {boolean}
+         */
+        isProperty: function(span) {
+            return span.hasAttribute !== undefined && span.hasAttribute('property');
         },
         /**
          * Iterate over a NodeList
@@ -29,6 +37,18 @@ define('TYPO3/CMS/Annotate/Utility', [
                 else
                     cb(item);
             }
+        },
+        /**
+         * Generate a (fake) guid for an annotation/property
+         * @returns {string}
+         */
+        guid: function () {
+            function s4() {
+                return Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+            }
+            return s4() + s4() + s4() + s4();
         }
     };
 });

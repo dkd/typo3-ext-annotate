@@ -5,10 +5,12 @@
  */
 define('TYPO3/CMS/Annotate/Annotation', [
     'TYPO3/CMS/Annotate/react',
-    'TYPO3/CMS/Annotate/Observe'
+    'TYPO3/CMS/Annotate/Observe',
+    'TYPO3/CMS/Annotate/Properties'
 ], function (
     React,
-    Observe
+    Observe,
+    Properties
 ) {
     /**
      * Constructor for annotation object
@@ -27,6 +29,7 @@ define('TYPO3/CMS/Annotate/Annotation', [
             attributes: true,
             attributeOldValue: true
         });
+        this.properties = new Properties(this.observe);
     }
     Annotation.prototype = {
         // @type {Element}
@@ -34,7 +37,13 @@ define('TYPO3/CMS/Annotate/Annotation', [
         // @type {string[]} attributes which are direct attributes of the span, otherwise they are accessed as hidden spans
         directAttributes: ['vocab', 'resource', 'typeof', 'aid'],
         // @type {string[]} editable attributes
-        editableAttributes: ["vocab","resource","typeof"],
+        editableAttributesBase: ["vocab","resource","typeof"],
+        /**
+         * Returns all editable Attributes in edit order
+         */
+        editableAttributes: function() {
+            return this.editableAttributesBase;
+        },
         /**
          * Delete this annotation and remove its span, actual model deletion will happen after the domobserver triggered
          */
@@ -53,6 +62,7 @@ define('TYPO3/CMS/Annotate/Annotation', [
             }
             else
             {
+                this.properties.findByName(name).textContent = value;
             }
             this.observe.trigger();
         },
@@ -68,7 +78,8 @@ define('TYPO3/CMS/Annotate/Annotation', [
             }
             else
             {
-                return "";
+                var span = this.properties.findByName(name);
+                return span ? span.textContent : undefined;
             }
         },
         /**

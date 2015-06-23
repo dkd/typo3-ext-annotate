@@ -73,6 +73,27 @@ define('TYPO3/CMS/Annotate/Editor', [
          * @param {function} cb
          */
         autoAnnotate: function(cb) {
+        },
+        /**
+         * Add hidden property to annotation span
+         * @param {Element} span
+         */
+        addPropertyHidden: function(span) {
+            var ele = this.getDocument().createElement("span");
+            ele.setAttribute("hidden","true");
+            ele.setAttribute("property","New Property");
+            ele.innerHTML = "New Value";
+            span.insertBefore(ele, span.firstChild);
+        },
+        /**
+         * Add property around selection
+         */
+        addPropertyAroundSelection: function() {
+            var range = this.getSelectedRange(),
+                doc = this.getDocument(),
+                ele = doc.createElement("span");
+            ele.setAttribute("property","New Property");
+            range.surroundContents(ele);
         }
     };
     /**

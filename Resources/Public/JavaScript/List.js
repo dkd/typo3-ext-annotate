@@ -46,6 +46,7 @@ define('TYPO3/CMS/Annotate/List', [
                   this.state.store.annotations.map(function(annotation, index) {
                       return React.createElement(ListEntry, {
                           key: annotation.get('aid'),
+                          editor: this.props.api.editor,
                           expand: this.expand,
                           expanded: this.state.expanded == annotation.get('aid'),
                           annotation: annotation});

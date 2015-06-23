@@ -4,6 +4,7 @@
  * @author Johannes Goslar
  */
 define('TYPO3/CMS/Annotate/Api', [
+    'TYPO3/CMS/Annotate/poly',
     'TYPO3/CMS/Annotate/react',
     'jquery',
     'TYPO3/CMS/Annotate/List',
@@ -11,6 +12,7 @@ define('TYPO3/CMS/Annotate/Api', [
     'TYPO3/CMS/Annotate/Editor',
     'TYPO3/CMS/Annotate/LoadingIndicator'
 ], function (
+    Poly,
     React,
     $,
     List,
@@ -40,8 +42,8 @@ define('TYPO3/CMS/Annotate/Api', [
          * Create the Concrete Annotate-Instance
          * @param {Element} mountpoint where will the List be mounted with React.
          * @param {HTMLDocument} document the document where we are editing annotations.
-         * @param {!string} editorType specific editor type calling us, at the moment only htmlarea.
-         * @param {!Object} editorInstance concrete instance of that editor.
+         * @param {string} editorType specific editor type calling us, at the moment only htmlarea.
+         * @param {Object} editorInstance concrete instance of that editor.
          */
         create: function(mountpoint, document, editorType, editorInstance) {
             this.created = true;
@@ -86,7 +88,7 @@ define('TYPO3/CMS/Annotate/Api', [
                 this.show();
             }).bind(this));
         },
-        // @type {React}
+        // @type {Object}
         react: React
     };
     return Api;

@@ -26,20 +26,6 @@ define('TYPO3/CMS/Annotate/Store', [
         this.reset();
     };
 
-    /**
-     * Generate a (fake) guid for an annotation
-     * @returns {string}
-     */
-    function guid() {
-        function s4() {
-            return Math.floor((1 + Math.random()) * 0x10000)
-                .toString(16)
-                .substring(1);
-        }
-        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-            s4() + '-' + s4() + s4() + s4();
-    }
-
     Store.prototype = {
         constructor: Store,
         doc: null,
@@ -57,49 +43,72 @@ define('TYPO3/CMS/Annotate/Store', [
                 this.observer.disconnect();
 
             this.observer = new MutationObserver(this.mutated.bind(this));
-            var config = { childList: true, subtree: true };
+            var config = {childList: true, subtree: true};
             this.observer.observe(this.doc.body, config);
 
-            Utility.nodeListForEach(this.doc.body.querySelectorAll("[vocab]"), this.addAnnotation.bind(this));
+            Utility.nodeListForEach(this.doc.body.querySelectorAll("[vocab]"), this.handleAddition.bind(this));
+            Utility.nodeListForEach(this.doc.body.querySelectorAll("[property]"), this.handleAddition.bind(this));
         },
         /**
          * MutationObserver callback, check if annotations were created/deleted
-         * @param {} mutations
+         * @param {MutationRecord[]} mutations
          */
         mutated: function(mutations) {
             mutations.forEach(function(mutation){
-                Utility.nodeListForEach(mutation.addedNodes, this.addAnnotation, this);
-                Utility.nodeListForEach(mutation.removedNodes, this.removeAnnotation, this);
+                Utility.nodeListForEach(mutation.addedNodes, this.handleAddition, this);
+                Utility.nodeListForEach(mutation.removedNodes, this.handleRemoval, this);
             },this);
         },
         /**
          * Create a model when a new span was detected
          * @param {Element} span
          */
-        addAnnotation: function(span) {
-            if (!Utility.isAnnotation(span))
-                return;
+        handleAddition: function(span) {
+            if (Utility.isAnnotation(span))
+            {
+                if (!span.hasAttribute('aid'))
+                    span.setAttribute('aid', Utility.guid());
 
-            if (!span.hasAttribute('aid'))
-                span.setAttribute('aid', guid());
+                this.annotations.push(new Annotation(span,this.editor));
+                this.status();
+                this.observe.trigger();
+            }
+            else if (Utility.isProperty(span))
+            {
+                if (!span.hasAttribute('aid'))
+                    span.setAttribute('aid', Utility.guid());
 
-            console.log('add ' + span);
-
-            this.annotations.push(new Annotation(span,this.editor));
-            this.status();
-            this.observe.trigger();
+                var ann = this.findAnnotationForProperty(span);
+                ann.properties.add(span, ann);
+                this.observe.trigger();
+            }
         },
         /**
          * Remove annotation when a span got deleted
          * @param {Element} span
          */
-        removeAnnotation: function(span) {
-            if (!Utility.isAnnotation(span))
-                return;
-            console.log('remove ' + span);
-            this.annotations.remove(span.annotation);
-            this.status();
-            this.observe.trigger();
+        handleRemoval: function(span) {
+            if (Utility.isAnnotation(span))
+            {
+                this.annotations.remove(span.annotation);
+                this.status();
+                this.observe.trigger();
+            }
+            else if (Utility.isProperty(span))
+            {
+                span.annotation.properties.remove(span);
+                this.observe.trigger();
+            }
+        },
+        /**
+         * Find nearest annotation
+         * @param {Element} span
+         * @returns {Annotation}
+         */
+        findAnnotationForProperty: function(span) {
+            while (span && !Utility.isAnnotation(span))
+                span = span.parentElement;
+            return span.annotation;
         },
         /**
          * Show some status on the console
