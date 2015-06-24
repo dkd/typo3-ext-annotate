@@ -1,20 +1,3 @@
-.annotateAuto {
-	background-image: url('images/ed_html.gif') !important;
-	background-position: 0 0 !important;
-}
-
-.annotateHighlight {
-	background-image: url('images/ed_html.gif') !important;
-	background-position: 0 0 !important;
-}
-
-.annotate-list {
-    width: 300px;
-}
-
-/* Styles for Annotation inzterface, added by Valeriya Krasteva, START*/
-
-
 body{
     margin-bottom: 20px;
     font-family: "Share-Regular";
@@ -143,6 +126,3 @@ h1, h3 {
 .iconClose {
     width: 15px;
 }
-
-
-/* Styles for Annotation inzterface, added by Valeriya Krasteva, END*/
