@@ -1,144 +1,112 @@
-.annotate
+.showAnnotate
 {
 	  background-image: url('images/ed_html.gif') !important;
 	  background-position: 0 0 !important;
 }
 
-.annotate-list {
+.annotate .wrapper {
+    background-color: #e4e4e4;
     width: 300px;
 }
 
-/* Styles for Annotation inzterface, added by Valeriya Krasteva, START*/
-
-
-body{
-    margin-bottom: 20px;
-    font-family: "Share-Regular";
-}
-
-
-input, label, button {
+.annotate input, .annotate label, .annotate button {
     display:block;
     margin-bottom: 20px;
 }
 
-.wrapper {
-    width: 33%;
-    background-color: #e4e4e4;
+.annotate section {
+    padding: 20px;
 }
 
-
-
-
-/* Sections START*/
-section {
-    padding: 20;
-    border-bottom: 1px solid #b9b9b9;
-}
-
-/* Sections END*/
-
-
-
-
-
-
-
-/*Input fields START*/
-input {
+.annotate input {
     border-color: 1px solid #515151;
     width: 200px;
     height: 30px;
-
 }
 
-label {
+.annotate label {
     margin-bottom: 5px;
 }
-/*Input fields END*/
 
-
-
-
-
-/* Buttons START*/
-button {
+.annotate button {
     width: 150px;
     border: 0px;
     font-size: 14px;
     color: #fff;
+    margin-left: auto;
+    margin-right: auto;
+    white-space: normal !important;
 }
 
-.annotateAll {
+.annotate .all {
     height: 40px;
     border-radius: 5px;
     background-color: #FF8700;
 }
 
-.annotateAll:hover {
+.annotate .all:hover {
     background-color: #d06e01;
 }
 
-.basicButton {
+.annotate .basic {
     height: 30px;
     border-radius: 5px;
     background-color: #B9B9B9;
 }
 
-.basicButton:hover {
+.annotate .basic:hover {
     background-color: #9c9c9c;
 }
-/* Buttons END*/
 
-.moduletitle {
-    background-color: #666;
-    width: 100%;
-    color: #fff;
-    display: inline-block;
-}
-
-.sectiontitle {
+.annotate .sectionTitle {
     background-color: #333;
     padding: 0;
 }
 
-.entitylist {
+.annotate .entities {
 
 }
 
+.annotate .entry {
+}
 
-
-h1, h3 {
+.annotate .moduleTitle {
+    background-color: #666;
+    width: 100%;
+    color: #fff !important;
     display: inline-block;
-    float: left;
-    padding-left: 20px;
+    text-align: center;
 }
 
+.annotate h1, .annotate h3 {
+    text-align: center;
+    margin: 0;
+    color: #fff !important;
+    margin-bottom: 5px;
+}
 
+.annotate .moduleTitle button{
+    padding: 0 !important;
+    margin: 0.5em !important;
+}
 
-.icons {
+.annotate .icon {
     width: 20px;
-    position: relative;
+    height: 20px;
     display: inline-block;
+}
+
+.annotate .iconExpand {
+    float: left;
+    background: url("images/arrow_acc.svg") no-repeat;
+    transform: rotate(-90deg);
+}
+
+.annotate .expanded .iconExpand {
+    transform: rotate(0deg);
+}
+
+.annotate .iconDelete {
     float: right;
-    padding: 30 20 0 20;    
+    background: url("images/close.svg") no-repeat;
 }
-
-.iconEntityTitle {
-        padding: 20 20 20 20; 
-}
-
-
-
-.iconOpenAccordion {
-    width: 20px;
-    float: left;
-    padding: 19 0 0 20; 
-}
-
-.iconClose {
-    width: 15px;
-}
-
-
-/* Styles for Annotation inzterface, added by Valeriya Krasteva, END*/

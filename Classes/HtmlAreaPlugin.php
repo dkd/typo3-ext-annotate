@@ -15,10 +15,10 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
 
     protected $relativePathToSkin = 'Resources/Public/Skin/htmlarea.css';
 
-    protected $pluginButtons = 'annotate';
+    protected $pluginButtons = 'showAnnotate';
 
     protected $convertToolbarForHtmlAreaArray = array(
-        'annotate' => 'annotate'
+        'showAnnotate' => 'showAnnotate'
     );
 
     protected $requiredPlugins = 'InlineElements';
@@ -49,8 +49,8 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
         $registerRTEinJavascriptString = parent::buildJavascriptConfiguration($RTEcounter);
 
         //provide editing with ids for backlinking
-        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.annotate.uid = "' . ($this->elementUid ?: 'null').'";';
-        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.annotate.table = "' . ($this->elementTable ?: 'null').'";';
+        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.showAnnotate.uid = "' . ($this->elementUid ?: 'null').'";';
+        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.showAnnotate.table = "' . ($this->elementTable ?: 'null').'";';
 
         //add special css to edited htmldocument
         $documentcss = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extensionKey) . 'Resources/Public/Skin/document.css';

@@ -35,22 +35,30 @@ define('TYPO3/CMS/Annotate/List', [
          * @param {string} aid
          */
         expand: function(aid) {
-            this.setState({expanded: aid});
+            this.setState({expanded: this.state.expanded != aid ? aid : null});
         },
         render: function() {
             return (
-                React.createElement("div", {className: "annotate-list"},
-                  React.createElement("button", {onClick: this.onAuto, type:"button"}, "Annotate!"),
-                  React.createElement("button", {onClick: this.onCreateAnnotation, type:"button"}, "New Annotation Around Selection"),
-                  React.createElement("h1", null, "Annotations"),
-                  this.state.store.annotations.map(function(annotation, index) {
-                      return React.createElement(ListEntry, {
-                          key: annotation.get('aid'),
-                          editor: this.props.api.editor,
-                          expand: this.expand,
-                          expanded: this.state.expanded == annotation.get('aid'),
-                          annotation: annotation});
-                  }, this)
+                React.createElement("div", {className: "annotate"},
+                  React.createElement("div", {className: "wrapper"},
+                    React.createElement("div", {className: "moduleTitle"},
+                      React.createElement("h1", null, "Annotations")
+                     ),
+                    React.createElement("section", null,
+                      React.createElement("button", {onClick: this.onAuto, type:"button", className: "all"}, "Annotate!"),
+                      React.createElement("button", {onClick: this.onCreateAnnotation, type:"button", className: "new"}, "New Annotation Around Selection")
+                     ),
+                    React.createElement("div", {className: "entities"},
+                      this.state.store.annotations.map(function(annotation, index) {
+                          return React.createElement(ListEntry, {
+                              key: annotation.get('aid'),
+                              editor: this.props.api.editor,
+                              expand: this.expand,
+                              expanded: this.state.expanded == annotation.get('aid'),
+                              annotation: annotation});
+                      }, this)
+                     )
+                   )
                  )
             );
         }
