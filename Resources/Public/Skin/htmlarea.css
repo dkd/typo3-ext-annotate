@@ -22,6 +22,8 @@
     border-color: 1px solid #515151;
     width: 200px;
     height: 30px;
+    margin-right: 0px;
+    width: 90%;
 }
 
 .annotate label {
@@ -64,7 +66,6 @@
 }
 
 .annotate .entities {
-
 }
 
 .annotate .entry {
@@ -109,4 +110,10 @@
 .annotate .iconDelete {
     float: right;
     background: url("images/close.svg") no-repeat;
+}
+
+.annotate .spinner {
+    margin-left: 150px;
+    margin-top: 50px;
+    position: absolute;
 }

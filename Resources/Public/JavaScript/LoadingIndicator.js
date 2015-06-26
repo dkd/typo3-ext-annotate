@@ -14,18 +14,9 @@ define('TYPO3/CMS/Annotate/LoadingIndicator', [
         displayName: 'LoadingIndicator',
         render: function() {
             return (React.createElement("div",{
-                className: 'annotate-list',
                 ref: function(component) {
                     if (component)
-                    {
-                        var opts = {
-                            className: 'spinner',
-                            top: '50%',
-                            left: '50%',
-                            position: null
-                        };
-                        React.findDOMNode(component).appendChild((new Spinner(opts)).spin().el);
-                    }
+                        React.findDOMNode(component).appendChild((new Spinner({left: null, top: null})).spin().el);
                 }}));
         }
     });

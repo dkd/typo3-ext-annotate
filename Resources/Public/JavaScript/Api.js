@@ -9,16 +9,14 @@ define('TYPO3/CMS/Annotate/Api', [
     'jquery',
     'TYPO3/CMS/Annotate/List',
     'TYPO3/CMS/Annotate/Store',
-    'TYPO3/CMS/Annotate/Editor',
-    'TYPO3/CMS/Annotate/LoadingIndicator'
+    'TYPO3/CMS/Annotate/Editor'
 ], function (
     Poly,
     React,
     $,
     List,
     Store,
-    Editor,
-    LoadingIndicator
+    Editor
 ) {
     /**
      * Api Constructor
@@ -76,17 +74,6 @@ define('TYPO3/CMS/Annotate/Api', [
                 this.hide();
             else
                 this.show();
-        },
-        /**
-         * Automatically annotate the whole document
-         */
-        auto: function() {
-            this.hide();
-            React.render(React.createElement(LoadingIndicator, null), this.mountpoint);
-            this.editor.autoAnnotate((function() {
-                React.unmountComponentAtNode(this.mountpoint);
-                this.show();
-            }).bind(this));
         },
         // @type {Object}
         react: React
