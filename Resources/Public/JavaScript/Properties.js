@@ -45,7 +45,7 @@ define('TYPO3/CMS/Annotate/Properties', [
     Properties.prototype.findByName = function (name) {
         // polyfilled es6 find
         return this.raw.find(function(prop) {
-            return (prop.getAttribute('property') == name && prop) || undefined;
+            return prop.getAttribute('property') == name? prop : undefined;
         });
     };
 
@@ -56,7 +56,7 @@ define('TYPO3/CMS/Annotate/Properties', [
     Properties.prototype.findByAid = function (aid) {
         // polyfilled es6 find
         return this.raw.find(function(prop) {
-            return (prop.getAttribute('aid') == aid && prop) || undefined;
+            return prop.getAttribute('aid') == aid ? prop : undefined;
         });
     };
 
