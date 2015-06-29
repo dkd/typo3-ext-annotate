@@ -88,25 +88,26 @@ define('TYPO3/CMS/Annotate/ListEntry', [
                               name: attribute,
                               value: annotation.get(attribute),
                               onChange: this.onChange(attribute)
-                          }),
-                          React.createElement("br", null)
+                          })
                          );
                   }, this),
                   annotation.properties.map(function(span){
                       var name = span.getAttribute('property'),
                           aid = span.getAttribute('aid');
-                      return React.createElement("span", {key: aid},
-                          React.createElement("input", {
-                              type: "text",
-                              value: name,
-                              onChange: this.onRename(span.getAttribute('aid'))
-                          }),": ",
-                          React.createElement("input", {
-                              type: "text",
-                              value: annotation.get(name),
-                              onChange: this.onChange(name)
-                          }),
-                          React.createElement("br", null)
+                      return React.createElement("div", {key: aid, className: "newPropertyValue"},
+                          React.createElement("div", {key: aid + "k", className: "newProperty"},
+                            React.createElement("input", {
+                                type: "text",
+                                value: name,
+                                onChange: this.onRename(span.getAttribute('aid'))
+                            })),
+                          ": ",
+                          React.createElement("div", {key: aid + "p", className: "newValue"},
+                            React.createElement("input", {
+                                type: "text",
+                                value: annotation.get(name),
+                                onChange: this.onChange(name)
+                            }))
                          );
                   }, this),
                   React.createElement("button", {onClick: this.onAddPS, type:"button", disabled: annotation.get("New Property") !== undefined}, "Add Property Around Selection"),
