@@ -29,7 +29,7 @@ define('TYPO3/CMS/Annotate/Annotation', [
             attributes: true,
             attributeOldValue: true
         });
-        this.properties = new Properties(this.observe);
+        this.properties = new Properties(this.observe, this.editor);
     }
     Annotation.prototype = {
         // @type {Element}
@@ -48,6 +48,7 @@ define('TYPO3/CMS/Annotate/Annotation', [
          * Delete this annotation and remove its span, actual model deletion will happen after the domobserver triggered
          */
         delete: function() {
+            this.properties.unwrapAll();
             this.editor.unwrapElement(this.span);
         },
         /**

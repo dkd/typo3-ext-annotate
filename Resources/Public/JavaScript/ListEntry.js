@@ -69,8 +69,8 @@ define('TYPO3/CMS/Annotate/ListEntry', [
                 expanded = this.props.expanded,
                 short = annotation.short(),
                 header = React.createElement("div", {className: "moduleTitle"},
-                           React.createElement("h3", null,
-                             React.createElement("button", {onClick: this.onExpand, type:"button", className: "icon iconExpand"}),
+                           React.createElement("h3", {onClick: this.onExpand},
+                             React.createElement("button", {type:"button", className: "icon iconExpand"}),
                              short,
                              React.createElement("button", {onClick: this.onDelete, type:"button", className: "icon iconDelete"})
                             ));
@@ -115,5 +115,5 @@ define('TYPO3/CMS/Annotate/ListEntry', [
                  )
                );
         }
-    });
-});
+                       });
+      });

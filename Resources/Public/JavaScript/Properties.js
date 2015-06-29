@@ -4,11 +4,13 @@ define('TYPO3/CMS/Annotate/Properties', [
      * Property Container
      * @param {Observe} observe
      */
-    function Properties(observe) {
+    function Properties(observe, editor) {
         // @type {Observe}
         this.observe = observe;
         // @type {Element[]}
         this.raw = [];
+        // @type {Editor}
+        this.editor = editor;
 
         this.map = Array.prototype.map.bind(this.raw);
     }
@@ -36,6 +38,18 @@ define('TYPO3/CMS/Annotate/Properties', [
             this.raw.splice(index, 1);
             this.observe.trigger();
         }
+    };
+
+    /**
+     * Remove all properties
+     */
+    Properties.prototype.unwrapAll = function () {
+        this.raw.forEach(function(prop) {
+            if (prop.hasAttribute('hidden'))
+                prop.parentNode.removeChild(prop);
+            else
+                this.editor.unwrapElement(prop);
+        }, this);
     };
 
     /**
