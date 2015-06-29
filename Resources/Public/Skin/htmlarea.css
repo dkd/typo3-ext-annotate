@@ -4,6 +4,14 @@
 	  background-position: 0 0 !important;
 }
 
+h1 {
+    font-size: 1.8em;
+}
+
+h3 {
+    font-size: 1.3em;
+}
+
 .annotate .wrapper {
     background-color: #e4e4e4;
     width: 300px;
@@ -12,14 +20,17 @@
 .annotate input, .annotate label, .annotate button {
     display:block;
     margin-bottom: 20px;
+    border:1px solid #b9b9b9;
 }
 
 .annotate section {
-    padding: 20px;
+    padding: 10px 0px 0px 20px;
+    border-bottom: 1px solid #b9b9b9;
+    margin-bottom: 20px;
 }
 
 .annotate input {
-    border-color: 1px solid #515151;
+    border-color: 1px solid #b9b9b9;
     width: 200px;
     height: 30px;
     margin-right: 0px;
@@ -31,13 +42,18 @@
 }
 
 .annotate button {
-    width: 150px;
+    width: 248px;
+    height: 40px;
     border: 0px;
     font-size: 14px;
     color: #fff;
-    margin-left: auto;
-    margin-right: auto;
     white-space: normal !important;
+    background-color:#B9B9B9;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #9c9c9c;
 }
 
 .annotate .all {
@@ -66,6 +82,11 @@
 }
 
 .annotate .entities {
+    margin: 0px 10px 0 10px ;
+}
+
+.entity {
+margin-bottom: 20px;
 }
 
 .annotate .entry {
@@ -77,13 +98,14 @@
     color: #fff !important;
     display: inline-block;
     text-align: center;
+    margin-bottom: 1px;
+    margin: 0px 10px 1px 0px;
 }
 
 .annotate h1, .annotate h3 {
-    text-align: center;
-    margin: 0;
+    text-align: left;
     color: #fff !important;
-    margin-bottom: 5px;
+    margin: 10px 0px 10px 10px;
 }
 
 .annotate .moduleTitle button{
@@ -92,9 +114,10 @@
 }
 
 .annotate .icon {
-    width: 20px;
-    height: 20px;
+    width: 10px;
+    height: 10px;
     display: inline-block;
+    margin: 5px 10px 10px 10px;
 }
 
 .annotate .iconExpand {
@@ -116,4 +139,31 @@
     margin-left: 150px;
     margin-top: 50px;
     position: absolute;
+}
+
+
+.inputLabel{
+    margin-bottom: 10px;
+}
+
+.newPropertyValue{
+    display: inline-block;
+}
+
+.newProperty{
+    display: inline-block;
+    float: left;
+    width: 110px;
+    margin-right: 10px;
+}
+
+.newValue{
+    display: inline-block;
+    float: right;
+    width: 110px;
+    margin-left: 10px;
+}
+
+.newPropertyValueSeparator{
+    margin: 5px 0px 0px 0px;
 }
