@@ -25,8 +25,6 @@ h3 {
 
 .annotate section {
     padding: 10px 0px 0px 20px;
-    border-bottom: 1px solid #b9b9b9;
-    margin-bottom: 20px;
 }
 
 .annotate input {
@@ -86,7 +84,7 @@ button:hover {
 }
 
 .entity {
-margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .annotate .entry {
@@ -142,28 +140,30 @@ margin-bottom: 20px;
 }
 
 
-.inputLabel{
+.annotate .inputLabel {
     margin-bottom: 10px;
 }
 
-.newPropertyValue{
+.annotate .property {
     display: inline-block;
 }
 
-.newProperty{
+.annotate .property .key {
     display: inline-block;
-    float: left;
-    width: 110px;
-    margin-right: 10px;
+    width: 90px;
+    margin-right: 5px;
 }
 
-.newValue{
+.annotate .property .value {
     display: inline-block;
-    float: right;
-    width: 110px;
-    margin-left: 10px;
+    width: 90px;
+    margin-left: 5px;
 }
 
-.newPropertyValueSeparator{
+.annotate .property .separator {
     margin: 5px 0px 0px 0px;
+}
+
+.annotate .property .iconDelete {
+    border: 0;
 }

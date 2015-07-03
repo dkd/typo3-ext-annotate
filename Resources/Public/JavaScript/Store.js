@@ -48,6 +48,8 @@ define('TYPO3/CMS/Annotate/Store', [
 
             Utility.nodeListForEach(this.doc.body.querySelectorAll("[vocab]"), this.handleAddition.bind(this));
             Utility.nodeListForEach(this.doc.body.querySelectorAll("[property]"), this.handleAddition.bind(this));
+
+            this.observe.trigger();
         },
         /**
          * MutationObserver callback, check if annotations were created/deleted

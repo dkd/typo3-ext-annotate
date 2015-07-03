@@ -18,6 +18,8 @@ define('TYPO3/CMS/Annotate/ListEntry', [
          * Expand this annotation
          */
         onExpand: function() {
+            if (this.toBeDeleted)
+                return;
             this.props.expand(this.state.annotation.get('aid'));
         },
         /**
@@ -34,24 +36,25 @@ define('TYPO3/CMS/Annotate/ListEntry', [
          * Delete this annotation
          */
         onDelete: function() {
+            this.toBeDeleted =  true;
             this.state.annotation.delete();
         },
         /**
          * Add hidden property
          */
-        onAddPH: function() {
+        onPropertyHidden: function() {
             this.props.editor.addPropertyHidden(this.state.annotation.span);
         },
         /**
          * Add property around selection
          */
-        onAddPS: function() {
+        onPropertySurround: function() {
             this.props.editor.addPropertyAroundSelection();
         },
         /**
          * Rename Property
          */
-        onRename: function(aid) {
+        onPropertyRename: function(aid) {
             return (function(event) {
                 this.state.annotation.properties.rename(aid, event.target.value);
             }).bind(this);
@@ -59,9 +62,9 @@ define('TYPO3/CMS/Annotate/ListEntry', [
         /**
          * Delete Property
          */
-        onDeleteProperty: function(aid) {
+        onPropertyDelete: function(aid) {
             return (function(event) {
-                this.state.annotation.properties.rename(aid, event.target.value);
+                this.state.annotation.properties.unwrap(aid);
             }).bind(this);
         },
         render: function() {
@@ -94,26 +97,32 @@ define('TYPO3/CMS/Annotate/ListEntry', [
                   annotation.properties.map(function(span){
                       var name = span.getAttribute('property'),
                           aid = span.getAttribute('aid');
-                      return React.createElement("div", {key: aid, className: "newPropertyValue"},
-                          React.createElement("div", {key: aid + "k", className: "newProperty"},
-                            React.createElement("input", {
-                                type: "text",
-                                value: name,
-                                onChange: this.onRename(span.getAttribute('aid'))
-                            })),
-                          ": ",
-                          React.createElement("div", {key: aid + "p", className: "newValue"},
-                            React.createElement("input", {
-                                type: "text",
-                                value: annotation.get(name),
-                                onChange: this.onChange(name)
-                            }))
+                      return React.createElement("div", {key: aid, className: "property"},
+                          React.createElement("input", {
+                              key: aid + "k", className: "key",
+                              type: "text",
+                              value: name,
+                              onChange: this.onPropertyRename(span.getAttribute('aid'))
+                          }),
+                          React.createElement("span", {className: "separator"}, ": "),
+                          React.createElement("input", {
+                              key: aid + "p",
+                              className: "value",
+                              type: "text",
+                              value: annotation.get(name),
+                              onChange: this.onChange(name)
+                          }),
+                          React.createElement("input", {
+                              type: "button",
+                              className: "icon iconDelete",
+                              onClick: this.onPropertyDelete(span.getAttribute('aid'))
+                          })
                          );
                   }, this),
-                  React.createElement("button", {onClick: this.onAddPS, type:"button", disabled: annotation.get("New Property") !== undefined}, "Add Property Around Selection"),
-                  React.createElement("button", {onClick: this.onAddPH, type:"button", disabled: annotation.get("New Property") !== undefined}, "Add Hidden Property")
+                  React.createElement("button", {onClick: this.onPropertySurround, type:"button", disabled: annotation.get("New Property") !== undefined}, "Add Property Around Selection"),
+                  React.createElement("button", {onClick: this.onPropertyHidden, type:"button", disabled: annotation.get("New Property") !== undefined}, "Add Hidden Property")
                  )
                );
         }
-                       });
-      });
+    });
+});

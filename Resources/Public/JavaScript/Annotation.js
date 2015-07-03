@@ -59,11 +59,17 @@ define('TYPO3/CMS/Annotate/Annotation', [
         set: function(name, value) {
             if (this.directAttributes.indexOf(name) != - 1)
             {
-                this.span.setAttribute(name, value);
+                if (value)
+                    this.span.setAttribute(name, value);
+                else
+                    this.span.removeAttribute(name);
             }
             else
             {
-                this.properties.findByName(name).textContent = value;
+                if (value)
+                    this.properties.findByName(name).textContent = value;
+                else
+                    this.properties.unwrap(name);
             }
             this.observe.trigger();
         },
@@ -88,7 +94,16 @@ define('TYPO3/CMS/Annotate/Annotation', [
          * @returns {string}
          */
         short: function() {
-            return this.get('resource').split('/').pop();
+            var res = this.get('resource');
+            if (res)
+                return res.split('/').pop();
+            var name = this.get('name');
+            if (name)
+                return name;
+            var typof = this.get('typeof');
+            if (typof)
+                return typof;
+            return "N";
         }
     };
     return Annotation;

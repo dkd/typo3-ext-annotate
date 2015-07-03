@@ -21,9 +21,9 @@ define('TYPO3/CMS/Annotate/Editor', [
             var range = this.getSelectedRange(),
                 doc = this.getDocument(),
                 ele = doc.createElement("span");
-            ele.setAttribute('vocab',"New Annotation");
-            ele.setAttribute('resource',"New Annotation");
-            ele.setAttribute('typeof',"New Annotation");
+            ele.setAttribute('vocab',"http://schema.org");
+            // ele.setAttribute('resource',"New Annotation");
+            ele.setAttribute('typeof',"Set Me");
             range.surroundContents(ele);
         },
         /**

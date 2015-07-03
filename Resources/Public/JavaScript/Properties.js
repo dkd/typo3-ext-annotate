@@ -53,6 +53,16 @@ define('TYPO3/CMS/Annotate/Properties', [
     };
 
     /**
+     * Remove a property by name
+     * @param {string} name
+     */
+    Properties.prototype.unwrap = function (nameOrAid) {
+        var span =  this.findByName(nameOrAid) || this.findByAid(nameOrAid);
+        if (span)
+            this.editor.unwrapElement(span);
+    };
+
+    /**
      * Find a property span
      * @param {string} name
      */
