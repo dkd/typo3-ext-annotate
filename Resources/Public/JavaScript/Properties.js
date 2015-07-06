@@ -44,21 +44,21 @@ define('TYPO3/CMS/Annotate/Properties', [
      * Remove all properties
      */
     Properties.prototype.unwrapAll = function () {
-        this.raw.forEach(function(prop) {
-            if (prop.hasAttribute('hidden'))
-                prop.parentNode.removeChild(prop);
-            else
-                this.editor.unwrapElement(prop);
-        }, this);
+        debugger;
+        this.raw.forEach(this.unwrap, this);
     };
 
     /**
      * Remove a property by name
      * @param {string} name
      */
-    Properties.prototype.unwrap = function (nameOrAid) {
-        var span =  this.findByName(nameOrAid) || this.findByAid(nameOrAid);
-        if (span)
+    Properties.prototype.unwrap = function (nameOrAidSpan) {
+        var span = (typeof nameOrAidSpan == Element) ? nameOrAidSpan : this.findByName(nameOrAidSpan) || this.findByAid(nameOrAidSpan);
+        if (!span)
+            return;
+        if (span.hasAttribute('hidden'))
+            span.parentNode.removeChild(span);
+        else
             this.editor.unwrapElement(span);
     };
 

@@ -94,6 +94,20 @@ define('TYPO3/CMS/Annotate/Editor', [
                 ele = doc.createElement("span");
             ele.setAttribute("property","New Property");
             range.surroundContents(ele);
+        },
+        /**
+         * Get wished for list height
+         * @returns {number} height
+         */
+        getWishedListHeigth: function() {
+            return 0;
+        },
+        /**
+         * Get Total Editor Wrap
+         * @returns {Element} wrap
+         */
+        getWrap: function() {
+            return null;
         }
     };
     /**
@@ -167,6 +181,16 @@ define('TYPO3/CMS/Annotate/Editor', [
             editor.setContent(result);
             cb();
         }));
+    };
+
+    Htmlarea.prototype.getWishedListHeigth = function() {
+        var editorWrap = this.getWrap(),
+            headerHeight = 180;
+        return editorWrap.getHeight() -  180;
+    };
+
+    Htmlarea.prototype.getWrap = function() {
+        return document.getElementsByClassName("editorWrap")[0];
     };
 
     return {

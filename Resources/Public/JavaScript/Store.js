@@ -110,7 +110,7 @@ define('TYPO3/CMS/Annotate/Store', [
         findAnnotationForProperty: function(span) {
             while (span && !Utility.isAnnotation(span))
                 span = span.parentElement;
-            return span.annotation;
+            return span ? span.annotation : null;
         },
         /**
          * Show some status on the console

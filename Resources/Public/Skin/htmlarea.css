@@ -80,7 +80,8 @@ button:hover {
 }
 
 .annotate .entities {
-    margin: 0px 10px 0 10px ;
+    margin: 0px 10px 0 10px;
+    overflow: scroll;
 }
 
 .entity {
@@ -139,6 +140,9 @@ button:hover {
     position: absolute;
 }
 
+.annotate .header {
+    height: 180px;
+}
 
 .annotate .inputLabel {
     margin-bottom: 10px;

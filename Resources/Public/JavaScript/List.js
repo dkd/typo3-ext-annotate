@@ -18,8 +18,16 @@ define('TYPO3/CMS/Annotate/List', [
         displayName: 'List',
         mixins: [Observe.Mixin('store')],
         getInitialState: function() {
-            return {expanded: null,
-               autoAnnotating: false};
+            return {
+                expanded: null,
+                autoAnnotating: false
+            };
+        },
+        updateListHeight: function() {
+            this.setState({entitiesHeigth: this.props.api.editor.getWishedListHeigth()});
+        },
+        componentWillMount: function() {
+            this.updateListHeight();
         },
         /**
          * Create new annotation
@@ -44,32 +52,31 @@ define('TYPO3/CMS/Annotate/List', [
             this.setState({expanded: this.state.expanded != aid ? aid : null});
         },
         render: function() {
-            return (
-                React.createElement("div", {className: "annotate"},
-                  React.createElement("div", {className: "wrapper"},
-                    React.createElement("div", {className: "moduleTitle"},
-                      React.createElement("h1", null, "Annotations")
-                     ),
+            return React.createElement("div", {className: "annotate"},
+                React.createElement("div", {className: "wrapper"},
+                  React.createElement("div", {className: "header"},
+                    React.createElement("div", {className: "moduleTitle"}, React.createElement("h1", null, "Annotations")),
                     this.state.autoAnnotating ? React.createElement(LoadingIndicator, null) :
                     React.createElement("div", null,
                       React.createElement("section", null,
                         React.createElement("button", {onClick: this.onAuto, type:"button", className: "all"}, "Annotate!"),
                         React.createElement("button", {onClick: this.onCreateAnnotation, type:"button", className: "new"}, "New Annotation Around Selection")
-                       ),
-                      React.createElement("div", {className: "entities"},
-                        this.state.store.annotations.map(function(annotation, index) {
-                            return React.createElement(ListEntry, {
-                                key: annotation.get('aid'),
-                                editor: this.props.api.editor,
-                                expand: this.expand,
-                                expanded: this.state.expanded == annotation.get('aid'),
-                                annotation: annotation});
-                        }, this)
                        )
                      )
+                   ),
+                  this.state.autoAnnotating ? null :
+                  React.createElement("div", {className: "entities", style: {maxHeight: this.state.entitiesHeigth}},
+                    this.state.store.annotations.map(function(annotation, index) {
+                        return React.createElement(ListEntry, {
+                            key: annotation.get('aid'),
+                            editor: this.props.api.editor,
+                            expand: this.expand,
+                            expanded: this.state.expanded == annotation.get('aid'),
+                            annotation: annotation});
+                    }, this)
                    )
                  )
-            );
+               );
         }
     });
 });
