@@ -1,5 +1,6 @@
 .htmlarea-show-annotations span[vocab] {
-    background-color: yellow;
+    background-color: black;
+    color: white;
 }
 
 .htmlarea-show-annotations span[property] {
