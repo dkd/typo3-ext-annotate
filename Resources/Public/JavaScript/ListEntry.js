@@ -71,23 +71,23 @@ define('TYPO3/CMS/Annotate/ListEntry', [
             var annotation = this.state.annotation,
                 expanded = this.props.expanded,
                 short = annotation.short(),
-                header = React.createElement("div", {className: "moduleTitle"},
-                           React.createElement("h3", {onClick: this.onExpand},
-                             React.createElement("button", {type:"button", className: "icon iconExpand"}),
+                header = React.createElement('div', {className: 'moduleTitle'},
+                           React.createElement('h3', {onClick: this.onExpand},
+                             React.createElement('button', {type:'button', className: 'icon iconExpand'}),
                              short,
-                             React.createElement("button", {onClick: this.onDelete, type:"button", className: "icon iconDelete"})
+                             React.createElement('button', {onClick: this.onDelete, type:'button', className: 'icon iconDelete'})
                             ));
 
             if (!expanded)
                 return header;
 
-            return React.createElement("div", {className: "expanded"},
+            return React.createElement('div', {className: 'expanded'},
                 header,
-                React.createElement("section", null,
+                React.createElement('section', null,
                   annotation.editableAttributes().map(function(attribute){
-                      return React.createElement("span",{key: attribute}, attribute, ":",
-                          React.createElement("input", {
-                              type: "text",
+                      return React.createElement('span',{key: attribute}, attribute, ':',
+                          React.createElement('input', {
+                              type: 'text',
                               name: attribute,
                               value: annotation.get(attribute),
                               onChange: this.onChange(attribute)
@@ -97,30 +97,30 @@ define('TYPO3/CMS/Annotate/ListEntry', [
                   annotation.properties.map(function(span){
                       var name = span.getAttribute('property'),
                           aid = span.getAttribute('aid');
-                      return React.createElement("div", {key: aid, className: "property"},
-                          React.createElement("input", {
-                              key: aid + "k", className: "key",
-                              type: "text",
+                      return React.createElement('div', {key: aid, className: 'property'},
+                          React.createElement('input', {
+                              key: aid + 'k', className: 'key',
+                              type: 'text',
                               value: name,
                               onChange: this.onPropertyRename(span.getAttribute('aid'))
                           }),
-                          React.createElement("span", {className: "separator"}, ": "),
-                          React.createElement("input", {
-                              key: aid + "p",
-                              className: "value",
-                              type: "text",
+                          React.createElement('span', {className: 'separator'}, ': '),
+                          React.createElement('input', {
+                              key: aid + 'p',
+                              className: 'value',
+                              type: 'text',
                               value: annotation.get(name),
                               onChange: this.onChange(name)
                           }),
-                          React.createElement("input", {
-                              type: "button",
-                              className: "icon iconDelete",
+                          React.createElement('input', {
+                              type: 'button',
+                              className: 'icon iconDelete',
                               onClick: this.onPropertyDelete(span.getAttribute('aid'))
                           })
                          );
                   }, this),
-                  React.createElement("button", {onClick: this.onPropertySurround, type:"button", disabled: annotation.get("New Property") !== undefined}, "Add Property Around Selection"),
-                  React.createElement("button", {onClick: this.onPropertyHidden, type:"button", disabled: annotation.get("New Property") !== undefined}, "Add Hidden Property")
+                  React.createElement('button', {onClick: this.onPropertySurround, type:'button', disabled: annotation.get('New Property') !== undefined}, 'Add Property Around Selection'),
+                  React.createElement('button', {onClick: this.onPropertyHidden, type:'button', disabled: annotation.get('New Property') !== undefined}, 'Add Hidden Property')
                  )
                );
         }

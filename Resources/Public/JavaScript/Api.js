@@ -56,7 +56,7 @@ define('TYPO3/CMS/Annotate/Api', [
         show: function() {
             this.active = true;
             $(this.document.body).addClass("htmlarea-show-annotations");
-            React.render(React.createElement(List, {api: this, store: this.store}), this.mountpoint);
+            React.render(React.createElement(List, {editor: this.editor, store: this.store}), this.mountpoint);
         },
         /**
          * Hide annotation list

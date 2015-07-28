@@ -20,6 +20,7 @@ define('TYPO3/CMS/Annotate/Annotation', [
     function Annotation(span, editor) {
         this.span = span;
         this.editor = editor;
+        this.blinking = false;
         span.annotation = this;
         // directAttributes observer
         // @type {Object}
@@ -94,16 +95,26 @@ define('TYPO3/CMS/Annotate/Annotation', [
          * @returns {string}
          */
         short: function() {
-            var res = this.get('resource');
-            if (res)
-                return res.split('/').pop();
-            var name = this.get('name');
-            if (name)
-                return name;
-            var typof = this.get('typeof');
-            if (typof)
-                return typof;
-            return "N";
+            // @type {string}
+            var ret =this.get('resource');
+            if (ret)
+                ret = ret.split('/').pop();
+            else
+                ret = this.get('name') || this.get('typeof');
+
+            if (ret && ret.length > 15)
+                ret = ret.substring(0, 15) +  "...";
+
+            return ret || "New";
+        },
+        /**
+         * Yeah, we want that.
+         */
+        toggleBlink: function() {
+            if (!this.blinking)
+                this.blinking = true, this.span.style.backgroundColor = 'red';
+            else
+                this.blinking = false, this.span.style.backgroundColor = null;
         }
     };
     return Annotation;

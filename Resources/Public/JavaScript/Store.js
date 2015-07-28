@@ -46,8 +46,8 @@ define('TYPO3/CMS/Annotate/Store', [
             var config = {childList: true, subtree: true};
             this.observer.observe(this.doc.body, config);
 
-            Utility.nodeListForEach(this.doc.body.querySelectorAll("[vocab]"), this.handleAddition.bind(this));
-            Utility.nodeListForEach(this.doc.body.querySelectorAll("[property]"), this.handleAddition.bind(this));
+            Utility.nodeListForEach(this.doc.body.querySelectorAll('[vocab]'), this.handleAddition.bind(this));
+            Utility.nodeListForEach(this.doc.body.querySelectorAll('[property]'), this.handleAddition.bind(this));
 
             this.observe.trigger();
         },
@@ -117,6 +117,15 @@ define('TYPO3/CMS/Annotate/Store', [
          */
         status: function() {
             this.annotations.forEach(console.log, console);
+        },
+        /**
+            * Get Annotation for aid
+            * @param {string} aid
+        */
+        forAid: function(aid) {
+            return this.annotations.find(function(annotation) {
+                return annotation.get('aid') == aid ? annotation : undefined;
+            });
         }
     };
     return Store;

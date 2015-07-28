@@ -171,6 +171,7 @@ define('TYPO3/CMS/Annotate/Editor', [
                 editor.store.reset();
         };
     };
+
     Htmlarea.prototype.autoAnnotate = function(cb) {
         var input = this.getContent(),
             table = 0, //this.editorConfiguration.buttonsConfig.AnnotateButton.table,

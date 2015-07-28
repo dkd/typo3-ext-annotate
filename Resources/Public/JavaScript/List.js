@@ -24,7 +24,7 @@ define('TYPO3/CMS/Annotate/List', [
             };
         },
         updateListHeight: function() {
-            this.setState({entitiesHeigth: this.props.api.editor.getWishedListHeigth()});
+            this.setState({entitiesHeigth: this.props.editor.getWishedListHeigth()});
         },
         componentWillMount: function() {
             this.updateListHeight();
@@ -33,14 +33,14 @@ define('TYPO3/CMS/Annotate/List', [
          * Create new annotation
          */
         onCreateAnnotation: function() {
-            this.props.api.editor.createAnnotationAroundSelection.call(this.props.api.editor);
+            this.props.editor.createAnnotationAroundSelection.call(this.props.editor);
         },
         /**
-         * Automatically annotate the whole document
+         * Automatically annotate the whole onAuto
          */
         onAuto: function() {
             this.setState({autoAnnotating: true});
-            this.props.api.editor.autoAnnotate.call(this.props.api.editor, (function() {
+            this.props.editor.autoAnnotate.call(this.props.editor, (function() {
                 this.setState({autoAnnotating: false});
             }).bind(this));
         },
@@ -49,6 +49,10 @@ define('TYPO3/CMS/Annotate/List', [
          * @param {string} aid
          */
         expand: function(aid) {
+            if (this.state.expanded)
+                this.state.store.forAid(this.state.expanded).toggleBlink();
+            if (aid && this.state.expanded != aid)
+                this.state.store.forAid(aid).toggleBlink();
             this.setState({expanded: this.state.expanded != aid ? aid : null});
         },
         render: function() {
@@ -69,7 +73,7 @@ define('TYPO3/CMS/Annotate/List', [
                     this.state.store.annotations.map(function(annotation, index) {
                         return React.createElement(ListEntry, {
                             key: annotation.get('aid'),
-                            editor: this.props.api.editor,
+                            editor: this.props.editor,
                             expand: this.expand,
                             expanded: this.state.expanded == annotation.get('aid'),
                             annotation: annotation});
