@@ -1,8 +1,18 @@
 .htmlarea-show-annotations span[vocab] {
-    background-color: black;
+    background-color: #666;
     color: white;
+    padding: 0px 3px 2px 3px;
 }
 
 .htmlarea-show-annotations span[property] {
-    background-color: orange;
+    background-color: #FF8700;
+}
+
+
+p.lead {
+line-height: 1.8em;
+}
+
+showAnnotate{
+background-color: red;
 }

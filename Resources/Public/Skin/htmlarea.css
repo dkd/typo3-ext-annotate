@@ -5,20 +5,20 @@
 }
 
 h1 {
-    font-size: 1.8em;
+    font-size: 1.4em;
 }
 
 h3 {
-    font-size: 1.3em;
+    font-size: 1.1em;
+    font-weight: normal;
 }
 
 .annotate .wrapper {
     background-color: #e4e4e4;
-    width: 300px;
+    width: 500px;
 }
 
 .annotate input, .annotate label, .annotate button {
-    display:block;
     margin-bottom: 20px;
     border:1px solid #b9b9b9;
 }
@@ -29,10 +29,9 @@ h3 {
 
 .annotate input {
     border-color: 1px solid #b9b9b9;
-    width: 200px;
-    height: 30px;
+    height: 23px;
     margin-right: 0px;
-    width: 90%;
+    width: 93%;
 }
 
 .annotate label {
@@ -40,14 +39,15 @@ h3 {
 }
 
 .annotate button {
-    width: 248px;
-    height: 40px;
+    padding: 0px 15px 0px 15px;
+    height: 36px;
     border: 0px;
     font-size: 14px;
     color: #fff;
     white-space: normal !important;
     background-color:#B9B9B9;
     border-radius: 4px;
+    margin-right: 15px;
 }
 
 button:hover {
@@ -55,7 +55,7 @@ button:hover {
 }
 
 .annotate .all {
-    height: 40px;
+    height: 36px;
     border-radius: 5px;
     background-color: #FF8700;
 }
@@ -81,7 +81,9 @@ button:hover {
 
 .annotate .entities {
     margin: 0px 10px 0 10px;
-    overflow: scroll;
+    padding: 0px 10px 0px 0px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .entity {
@@ -98,18 +100,18 @@ button:hover {
     display: inline-block;
     text-align: center;
     margin-bottom: 1px;
-    margin: 0px 10px 1px 0px;
+    margin: 0px 0px 1px 0px;
 }
 
 .annotate h1, .annotate h3 {
     text-align: left;
     color: #fff !important;
-    margin: 10px 0px 10px 10px;
+    margin: 7px 0px 7px 7px;
 }
 
 .annotate .moduleTitle button{
     padding: 0 !important;
-    margin: 0.5em !important;
+    margin: 0.3em 0.4em 0em 0.1em !important;
 }
 
 .annotate .icon {
@@ -134,14 +136,18 @@ button:hover {
     background: url("images/close.svg") no-repeat;
 }
 
+.annotate .iconDeleteDark{
+    background: url("images/close_dark.svg") no-repeat;
+}
+
 .annotate .spinner {
-    margin-left: 150px;
+    margin-left: auto;
     margin-top: 50px;
     position: absolute;
 }
 
 .annotate .header {
-    height: 180px;
+    height: 100px;
 }
 
 .annotate .inputLabel {
@@ -154,13 +160,13 @@ button:hover {
 
 .annotate .property .key {
     display: inline-block;
-    width: 90px;
+    width: 40%;
     margin-right: 5px;
 }
 
 .annotate .property .value {
     display: inline-block;
-    width: 90px;
+    width: 40%;
     margin-left: 5px;
 }
 

@@ -114,7 +114,7 @@ define('TYPO3/CMS/Annotate/ListEntry', [
                           }),
                           React.createElement('input', {
                               type: 'button',
-                              className: 'icon iconDelete',
+                              className: 'icon iconDeleteDark',
                               onClick: this.onPropertyDelete(span.getAttribute('aid'))
                           })
                          );
