@@ -1,11 +1,13 @@
 .htmlarea-show-annotations span[vocab] {
     background-color: #666;
     color: white;
-    padding: 0px 3px 2px 3px;
+    padding: 3px;
 }
 
 .htmlarea-show-annotations span[property] {
-    background-color: #FF8700;
+    background-color: #e0e0e0;
+    color: #666;
+    padding: 1px 3px 1px 3px;
 }
 
 
