@@ -1,7 +1,7 @@
 .showAnnotate
 {
-	  background-image: url('images/ed_html.gif') !important;
-	  background-position: 0 0 !important;
+    background-image: url('images/ed_html.gif') !important;
+    background-position: 0 0 !important;
 }
 
 h1 {
@@ -81,7 +81,7 @@ button:hover {
 
 .annotate .entities {
     margin: 0px 10px 0 10px;
-    padding: 0px 10px 0px 0px;
+    padding: 0px 10px 10px 0px;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -138,11 +138,23 @@ button:hover {
 
 .annotate .iconDeleteDark{
     background: url("images/close_dark.svg") no-repeat;
+    width: 15px;
+    height: 15px;
+    margin-bottom: 25px;
+    border: 0px;
+}
+
+.annotate .iconDeleteDark:hover {
+    background-color: #e4e4e4;
+}
+
+.annotate .iconDeleteDark:active {
+    background-color: #e4e4e4;
 }
 
 .annotate .spinner {
-    margin-left: auto;
-    margin-top: 50px;
+    margin-left: 250px;
+    margin-top: 30px;
     position: absolute;
 }
 
@@ -154,9 +166,9 @@ button:hover {
     margin-bottom: 10px;
 }
 
-.annotate .property {
+/*.annotate .property {
     display: inline-block;
-}
+}*/
 
 .annotate .property .key {
     display: inline-block;
@@ -171,9 +183,10 @@ button:hover {
 }
 
 .annotate .property .separator {
-    margin: 5px 0px 0px 0px;
-}
-
-.annotate .property .iconDelete {
-    border: 0;
+    background-image: url("images/separator.svg");
+    background-repeat: no-repeat;
+    margin: 0px 0px 5px 0px;
+    border: 0px;
+    width: 5px;
+    height: 15px;
 }

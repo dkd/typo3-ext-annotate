@@ -112,7 +112,7 @@ define('TYPO3/CMS/Annotate/Annotation', [
          */
         toggleBlink: function() {
             if (!this.blinking)
-                this.blinking = true, this.span.style.backgroundColor = 'red';
+                this.blinking = true, this.span.style.backgroundColor = '#FF8700';
             else
                 this.blinking = false, this.span.style.backgroundColor = null;
         }
