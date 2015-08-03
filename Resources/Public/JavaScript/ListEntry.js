@@ -104,7 +104,7 @@ define('TYPO3/CMS/Annotate/ListEntry', [
                               value: name,
                               onChange: this.onPropertyRename(span.getAttribute('aid'))
                           }),
-                          React.createElement('div', {className: 'separator'}),
+                          React.createElement('input', {className: 'separator'}),
                           React.createElement('input', {
                               key: aid + 'p',
                               className: 'value',

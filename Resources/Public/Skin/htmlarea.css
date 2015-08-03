@@ -172,21 +172,23 @@ button:hover {
 
 .annotate .property .key {
     display: inline-block;
+    display: -moz-inline-stack;
     width: 40%;
-    margin-right: 5px;
 }
 
 .annotate .property .value {
     display: inline-block;
+    display: -moz-inline-stack;
     width: 40%;
-    margin-left: 5px;
 }
 
 .annotate .property .separator {
     background-image: url("images/separator.svg");
     background-repeat: no-repeat;
-    margin: 0px 0px 5px 0px;
+    background-color: #e4e4e4;
+    margin-left: 10px;
+    display: inline;
     border: 0px;
-    width: 5px;
-    height: 15px;
+    width: 3px;
+    height: 7px;
 }
