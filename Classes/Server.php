@@ -7,25 +7,52 @@ namespace Dkd\Annotate;
  */
 class Server {
 
-    private $client = null;
+    private $gate = null;
+    private $mimir = null;
 
     function __construct()
     {
-        $this->client = new \GuzzleHttp\Client(['base_url' => "http://gate:8089/"]);
+        $this->gate = new \GuzzleHttp\Client(['base_url' => "http://gate:8089/"]);
+        $this->mimir = new \GuzzleHttp\Client(['base_url' => "http://mimir:8080/"]);
     }
 
     /**
      * Server call for actually annotating text
      * @param $input Text to be Annotated
+     * @return string annotated text
+     */
+    private function annotateRemotely($text)
+    {
+        $ret = $this->gate->get('/gate/service', ['query' => [
+            'text' => $text
+        ]]);
+        return (string) $ret->getBody();
+    }
+
+    /**
+     * Ext.Direct wrapper for annotating Text TYPO3.Annotate.Server.annotateText
+     * @param $input Text to be Annotated
+     * @return string annotated text
+     */
+    public function annotateText($input)
+    {
+        $annotated = $this->annotateRemotely($input);
+        return $annotated;
+    }
+
+    /**
+     * Server call for actually indexing text
+     * @param $input Text to be Annotated
      * @param $table TableId of the edited text
      * @param $uid uid of the edited text
      * @return string annotated text
      */
-    function annotate($text,$table,$uid)
+    private function indexRemotely($text,$table,$uid)
     {
-        $ret = $this->client->get('/gate/service', ['query' => [
-            'text' => $text
-            //'gate.mimir.uri' => "http://localhost:8081/typo3/alt_doc.php?edit[$table][$uid]=edit"
+        $ret = $this->mimir->get('/gate/service', ['query' => [
+            'text' => $text,
+            'gate.mimir.uri' => "[$table][$uid]",
+            'gate.export.format' => 'gate.corpora.export.GateXMLExporter'
         ]]);
         //force mimir to annotate
         // $resync = (string) $this->client->get('/mimir-cloud-5.1-SNAPSHOT/admin/actions/78f58cf4-5fd7-4093-aedb-d0d67c4a9c60/sync', ['auth' => ['admin', 'admin']]);
@@ -33,15 +60,14 @@ class Server {
     }
 
     /**
-     * Ext.Direct wrapper for annotating Text TYPO3.Annotate.Server.annotateText
+     * Ext.Direct wrapper for TYPO3.Annotate.Server.indexText
      * @param $input Text to be Annotated
      * @param $table TableId of the edited text
      * @param $uid uid of the edited text
-     * @return string annotated text
+     * @return string indexed document
      */
-    public function annotateText($input,$table,$uid)
+    public function index($text,$table,$uid)
     {
-        $annotated = $this->annotate($input,$table,$uid);
-        return $annotated;
+        return $this->indexRemotely($text,$table,$uid);
     }
 }

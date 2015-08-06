@@ -20,7 +20,7 @@ define('TYPO3/CMS/Annotate/List', [
         getInitialState: function() {
             return {
                 expanded: null,
-                autoAnnotating: false
+                busy: false
             };
         },
         updateListHeight: function() {
@@ -39,9 +39,18 @@ define('TYPO3/CMS/Annotate/List', [
          * Automatically annotate the whole onAuto
          */
         onAuto: function() {
-            this.setState({autoAnnotating: true});
+            this.setState({busy: true});
             this.props.editor.autoAnnotate.call(this.props.editor, (function() {
-                this.setState({autoAnnotating: false});
+                this.setState({busy: false});
+            }).bind(this));
+        },
+        /**
+         * Index the Document
+         */
+        onIndex: function() {
+            this.setState({busy: true});
+            this.props.editor.autoIndex.call(this.props.editor, (function() {
+                this.setState({busy: false});
             }).bind(this));
         },
         /**
@@ -60,15 +69,16 @@ define('TYPO3/CMS/Annotate/List', [
                 React.createElement("div", {className: "wrapper"},
                   React.createElement("div", {className: "header"},
                     React.createElement("div", {className: "moduleTitle"}, React.createElement("h1", null, "Annotations")),
-                    this.state.autoAnnotating ? React.createElement(LoadingIndicator, null) :
+                    this.state.busy ? React.createElement(LoadingIndicator, null) :
                     React.createElement("div", null,
                       React.createElement("section", null,
                         React.createElement("button", {onClick: this.onAuto, type:"button", className: "all"}, "Annotate!"),
+                        React.createElement("button", {onClick: this.onIndex, type:"button", className: "index"}, "Index!"),
                         React.createElement("button", {onClick: this.onCreateAnnotation, type:"button", className: "new"}, "New Annotation Around Selection")
                        )
                      )
                    ),
-                  this.state.autoAnnotating ? null :
+                  this.state.busy ? null :
                   React.createElement("div", {className: "entities", style: {maxHeight: this.state.entitiesHeigth}},
                     this.state.store.annotations.map(function(annotation, index) {
                         return React.createElement(ListEntry, {

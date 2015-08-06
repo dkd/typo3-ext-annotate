@@ -75,6 +75,12 @@ define('TYPO3/CMS/Annotate/Editor', [
         autoAnnotate: function(cb) {
         },
         /**
+         * Index the whole content
+         * @param {function} cb
+         */
+        autoIndex: function(cb) {
+        },
+        /**
          * Add hidden property to annotation span
          * @param {Element} span
          */
@@ -178,8 +184,21 @@ define('TYPO3/CMS/Annotate/Editor', [
             uid = 0, //uid = this.editorConfiguration.buttonsConfig.AnnotateButton.uid;
             editor =  this;
 
-        TYPO3.Annotate.Server.annotateText(input, table, uid, (function(result){
+        TYPO3.Annotate.Server.annotateText(input, (function(result){
             editor.setContent(result);
+            cb();
+        }));
+    };
+
+    Htmlarea.prototype.autoIndex = function(cb) {
+        var input = this.getContent(),
+            table = 0, //this.editorConfiguration.buttonsConfig.AnnotateButton.table,
+            uid = 0, //uid = this.editorConfiguration.buttonsConfig.AnnotateButton.uid;
+            editor =  this;
+
+        debugger;
+        TYPO3.Annotate.Server.index(input, table, uid, (function(result){
+            debugger;
             cb();
         }));
     };
