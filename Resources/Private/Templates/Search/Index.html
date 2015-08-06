@@ -10,13 +10,11 @@
     <div id="searchMountpoint">
     </div>
     <script type="text/javascript">
-     debugger;
      require([
          'TYPO3/CMS/Annotate/SearchApi',
      ], function(
          SearchApi
      ){
-         debugger;
          var search = new SearchApi();
          search.show(document.getElementById("searchMountpoint"));
      });

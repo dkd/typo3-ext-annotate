@@ -26,7 +26,6 @@ define('TYPO3/CMS/Annotate/SearchApi', [
          * Show search ui
          */
         show: function(mountpoint) {
-            debugger;
             React.render(React.createElement(SearchUI, {}), mountpoint);
         }
     };

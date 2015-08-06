@@ -10,7 +10,7 @@ class RequireJSViewHelper extends  \TYPO3\CMS\Fluid\ViewHelpers\Be\AbstractBacke
         $pageRenderer->loadRequireJs();
 
         $output = $this->renderChildren();
-        $output = $doc->startPage("title") . $output;
+        $output = $doc->startPage("Semantic Search") . $output;
         $output .= $doc->endPage();
 
         return $output;
