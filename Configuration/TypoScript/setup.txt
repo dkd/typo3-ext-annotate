@@ -1,0 +1,12 @@
+
+ # Module configuration
+module.tx_mimir {
+	persistence {
+		storagePid = {$module.tx_mimir.persistence.storagePid}
+	}
+	view {
+		templateRootPath = {$module.tx_mimir.view.templateRootPath}
+		partialRootPath = {$module.tx_mimir.view.partialRootPath}
+		layoutRootPath = {$module.tx_mimir.view.layoutRootPath}
+	}
+}

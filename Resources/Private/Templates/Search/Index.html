@@ -1,0 +1,24 @@
+{namespace annotate=Dkd\Annotate\ViewHelpers}
+<f:layout name="Default" />
+
+<!-- <f:section name="iframe">
+<iframe style="width:100%;height:100%;" src='http://localhost:8080/mimir-cloud-5.1-SNAPSHOT/e8509193-6ae0-43ac-a364-5e33a1295d8e/search/index'></iframe>
+</f:section> -->
+
+<f:section name="search">
+    <annotate:RequireJS />
+    <div id="searchMountpoint">
+    </div>
+    <script type="text/javascript">
+     debugger;
+     require([
+         'TYPO3/CMS/Annotate/SearchApi',
+     ], function(
+         SearchApi
+     ){
+         debugger;
+         var search = new SearchApi();
+         search.show(document.getElementById("searchMountpoint"));
+     });
+    </script>
+</f:section>
