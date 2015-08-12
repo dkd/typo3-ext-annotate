@@ -13,7 +13,8 @@ class Server {
     function __construct()
     {
         $this->gate = new \GuzzleHttp\Client(['base_url' => "http://gate:8089/"]);
-        $this->mimir = new \GuzzleHttp\Client(['base_url' => "http://mimir:8080/"]);
+        $this->mimirIndex = new \GuzzleHttp\Client(['base_url' => "http://mimir:8080/"]);
+        $this->mimirQuery = new \GuzzleHttp\Client(['base_url' => "http://mimir:8091/"]);
     }
 
     /**
@@ -49,7 +50,7 @@ class Server {
      */
     private function indexRemotely($text,$table,$uid)
     {
-        $ret = $this->mimir->get('/gate/service', ['query' => [
+        $ret = $this->mimirIndex->get('/gate/service', ['query' => [
             'text' => $text,
             'gate.mimir.uri' => "[$table][$uid]",
             'gate.export.format' => 'gate.corpora.export.GateXMLExporter'
@@ -69,5 +70,25 @@ class Server {
     public function index($text,$table,$uid)
     {
         return $this->indexRemotely($text,$table,$uid);
+    }
+
+    /**
+     * Ext.Direct wrapper for TYPO3.Annotate.Server.MimirURL
+     * @param $action mimir verb
+     * @param $args dictionary of query args
+     * @return string result
+     */
+    public function mimirQuery($action, $args)
+    {
+        $extractedargs = get_object_vars($args);
+        $ret = $this->mimirQuery->get('/mimir-cloud/1/search/'.$action, ['query' => $extractedargs]);
+        $xml_string = (string) $ret->getBody();
+        if (!$extractedargs["keepOriginal"])
+        {
+            $xml = simplexml_load_string($xml_string);
+            $json = json_encode($xml);
+            return $json;
+        }
+        return json_encode($xml_string);
     }
 }

@@ -44,19 +44,23 @@ define('TYPO3/CMS/Annotate/Observe',[
     Observe.Mixin =  function(key) {
         return {
             componentDidMount: function() {
-                this.props[key].observe.add(this.observeChanged);
+                var target = this.state[key] || this.props[key];
+                target.observe.add(this.observeChanged);
             },
             componentDidUnmount: function() {
-                this.props[key].observe.remove(this.observeChanged);
+                var target = this.state[key] || this.props[key];
+                target.observe.remove(this.observeChanged);
             },
             observeChanged: function() {
                 var newState =  {};
-                newState[key] =  this.props[key];
+                if (this.props[key] !== undefined)
+                    newState[key] =  this.props[key];
                 this.setState(newState);
             },
             getInitialState: function() {
                 var newState =  {};
-                newState[key] =  this.props[key];
+                if (this.props[key] !== undefined)
+                    newState[key] =  this.props[key];
                 return newState;
             }
         };
