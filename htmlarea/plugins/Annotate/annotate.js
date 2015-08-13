@@ -81,9 +81,9 @@ HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
  * Async load for the annotate js stuff
  */
 require([
-    'TYPO3/CMS/Annotate/Api',
+    'TYPO3/CMS/Annotate/EditorApi',
 ], function(
-    Api
+    EditorApi
 ){
-    Annotate = new Api();
+    Annotate = new EditorApi();
 });

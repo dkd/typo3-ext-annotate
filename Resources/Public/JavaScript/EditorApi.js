@@ -3,7 +3,7 @@
  * @name Api.js
  * @author Johannes Goslar
  */
-define('TYPO3/CMS/Annotate/Api', [
+define('TYPO3/CMS/Annotate/EditorApi', [
     'TYPO3/CMS/Annotate/poly',
     'TYPO3/CMS/Annotate/react',
     'jquery',
