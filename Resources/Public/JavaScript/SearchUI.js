@@ -39,7 +39,7 @@ define('TYPO3/CMS/Annotate/SearchUI', [
             var ready =  this.state.query.isReady(),
                 running = this.state.query.isRunning(),
                 finished = this.state.query.isFinished();
-            return React.createElement("div", {className: "annotate search"},
+            return React.createElement("div", {className: "mimir"},
                 React.createElement("p", null,  "Welcome to your Search"),
                 React.createElement('button', {
                     onClick: this.onNew
@@ -67,10 +67,11 @@ define('TYPO3/CMS/Annotate/SearchUI', [
                 !finished ? null : [
                     "Showing " +  this.state.query.documentCurrentCount + " results for queryId: " + this.state.query.queryId,
                     this.state.query.results.map(function (result) {
-                        return React.createElement("div", {
-                            className: "result",
-                            key: result.index
-                        },
+                        return React.createElement("div",
+                            {
+                                className: "result",
+                                key: result.index
+                            },
                             React.createElement("p", {}, "id: " + result.uri),
                             React.createElement("p", {dangerouslySetInnerHTML: {__html: result.text}})
                            );

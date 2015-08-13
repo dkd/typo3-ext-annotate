@@ -147,7 +147,7 @@ define('TYPO3/CMS/Annotate/Query', [
                         var val = response.value;
                         if (val != - 1)
                         {
-                            self.documentCurrentCount = val;
+                            self.documentCurrentCount = Math.max(val);
                             self.state = self.states.FINISHED;
                             self.downloadResults();
                             self.observe.trigger();
@@ -161,27 +161,21 @@ define('TYPO3/CMS/Annotate/Query', [
          * Download all Results
          */
         downloadResults: function() {
-            var self =  this;
-            for (var i = 0; i < self.documentCurrentCount; i++)
+            for (var i = 0; i < this.documentCurrentCount; ++i)
             {
                 this.results.push({
                     uri: "Loading Uri",
                     text: "Loading Content",
                     index: i
                 });
-                var index = i;
-                this.results[i] = {
-                    text: "loading result",
-                    uri: "<>"
-                };
-                self.sendQuery('renderDocument', {queryId: self.queryId, rank: i, keepOriginal: true}, function(err, response) {
-                    self.results[index].text = response;
-                    self.observe.trigger();
-                });
-                self.sendQuery('documentId', {queryId: self.queryId, rank: i}, function(err, response) {
-                    self.results[index].uri = response.value;
-                    self.observe.trigger();
-                });
+                this.sendQuery('renderDocument', {queryId: this.queryId, rank: i, keepOriginal: true}, (function (index, err, response) {
+                    this.results[index].text = response;
+                    this.observe.trigger();
+                }).bind(this, i));
+                this.sendQuery('documentId', {queryId: this.queryId, rank: i}, (function(index, err, response) {
+                    this.results[index].uri = response.value;
+                    this.observe.trigger();
+                }).bind(this, i));
             }
         }
     };
