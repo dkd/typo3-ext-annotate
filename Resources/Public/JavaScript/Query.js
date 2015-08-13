@@ -49,7 +49,20 @@ define('TYPO3/CMS/Annotate/Query', [
          * @returns {String} transformed query
          */
         queryize: function(raw) {
-            return " " +  raw +  " ";
+            var re = /\|(.*)\|/,
+                template = "\
+sparql=\"\
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>\
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>\
+PREFIX owl:<http://www.w3.org/2002/07/owl#>\
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
+PREFIX dbo:<http://dbpedia.org/ontology/>\
+PREFIX dbr:<http://dbpedia.org/resource/>\
+select distinct ?inst where {\
+$1\
+}\"";
+            raw = raw.replace(re, template);
+            return raw;
         },
         /**
          * Update local input
