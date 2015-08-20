@@ -52,14 +52,14 @@ define('TYPO3/CMS/Annotate/Query', [
             var re = /\|(.*)\|/,
                 template = "\
 sparql=\"\
-PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>\
-PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>\
-PREFIX owl:<http://www.w3.org/2002/07/owl#>\
-PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
-PREFIX dbo:<http://dbpedia.org/ontology/>\
-PREFIX dbr:<http://dbpedia.org/resource/>\
-select distinct ?inst where {\
-$1\
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>\n\
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>\n\
+PREFIX owl:<http://www.w3.org/2002/07/owl#>\n\
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n\
+PREFIX dbo:<http://dbpedia.org/ontology/>\n\
+PREFIX dbr:<http://dbpedia.org/resource/>\n\
+select distinct ?inst where {\n\
+$1\n\
 }\"";
             raw = raw.replace(re, template);
             return raw;
@@ -185,8 +185,8 @@ $1\
                     this.results[index].text = response;
                     this.observe.trigger();
                 }).bind(this, i));
-                this.sendQuery('documentId', {queryId: this.queryId, rank: i}, (function(index, err, response) {
-                    this.results[index].uri = response.value;
+                this.sendQuery('documentMetadata', {queryId: this.queryId, rank: i}, (function(index, err, response) {
+                    this.results[index].uri = response.documentURI;
                     this.observe.trigger();
                 }).bind(this, i));
             }

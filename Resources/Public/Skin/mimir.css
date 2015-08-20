@@ -1,3 +1,36 @@
 .mimir-hit {
     font-weight: bold;
 }
+
+.mimir {
+    max-width:600px;
+background-color:red;
+margin:auto;
+}
+
+.mimir .new {
+width: 10%;
+}
+
+.mimir .bar {
+width:77%;
+}
+
+.mimir .run {
+width: 10%;
+}
+    
+.mimir .transformed {
+width: 100%;
+height:200px
+}
+
+
+.mimir .spinner {
+width:100px;
+height:100px;
+margin:auto;
+display: inline-block;
+background-color:orange;
+
+}

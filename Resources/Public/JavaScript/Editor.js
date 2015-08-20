@@ -114,6 +114,13 @@ define('TYPO3/CMS/Annotate/Editor', [
          */
         getWrap: function() {
             return null;
+        },
+        /**
+         * get content id
+         * @returns {string} id for the content
+         */
+        getContentId: function () {
+            return "";
         }
     };
     /**
@@ -180,8 +187,6 @@ define('TYPO3/CMS/Annotate/Editor', [
 
     Htmlarea.prototype.autoAnnotate = function(cb) {
         var input = this.getContent(),
-            table = 0, //this.editorConfiguration.buttonsConfig.AnnotateButton.table,
-            uid = 0, //uid = this.editorConfiguration.buttonsConfig.AnnotateButton.uid;
             editor =  this;
 
         TYPO3.Annotate.Server.annotateText(input, (function(result){
@@ -192,13 +197,9 @@ define('TYPO3/CMS/Annotate/Editor', [
 
     Htmlarea.prototype.autoIndex = function(cb) {
         var input = this.getContent(),
-            table = 0, //this.editorConfiguration.buttonsConfig.AnnotateButton.table,
-            uid = 0, //uid = this.editorConfiguration.buttonsConfig.AnnotateButton.uid;
+            id = this.getContentId(),
             editor =  this;
-
-        debugger;
-        TYPO3.Annotate.Server.index(input, table, uid, (function(result){
-            debugger;
+        TYPO3.Annotate.Server.index(input, id, (function(result){
             cb();
         }));
     };
@@ -211,6 +212,10 @@ define('TYPO3/CMS/Annotate/Editor', [
 
     Htmlarea.prototype.getWrap = function() {
         return document.getElementsByClassName("editorWrap")[0];
+    };
+
+    Htmlarea.prototype.getContentId = function () {
+        return this.htmlarea.config.buttons.showAnnotate.id;
     };
 
     return {

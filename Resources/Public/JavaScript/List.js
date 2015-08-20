@@ -48,10 +48,15 @@ define('TYPO3/CMS/Annotate/List', [
          * Index the Document
          */
         onIndex: function() {
-            this.setState({busy: true});
-            this.props.editor.autoIndex.call(this.props.editor, (function() {
-                this.setState({busy: false});
-            }).bind(this));
+            if (this.props.editor.getContentId().substring(0, 3) == "NEW")
+                TYPO3.Flashmessage.display(3, "ERROR", "You need to save at least once before you can index content.");
+            else
+            {
+                this.setState({busy: true});
+                this.props.editor.autoIndex.call(this.props.editor, (function() {
+                    this.setState({busy: false});
+                }).bind(this));
+            }
         },
         /**
          * Expand one annotation

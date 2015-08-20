@@ -3,7 +3,7 @@
     "type": "typo3-cms-extension",
     "description": "TYPO3 Extension GATE Annotator",
     "keywords": ["gate", "semantic", "annotation"],
-    "homepage": "https://github.com/ksjogo/gate",
+    "homepage": "https://github.com/dkd/typo3-ext-annotate",
     "license": "GPL-2.0",
     "authors": [
         {
@@ -19,6 +19,7 @@
     },
     "require-dev": {
         "typo3-ci/typo3cms": "dev-master",
+        "typo3/identity": "*",
         "guzzlehttp/guzzle": "~5.0"
     }
 }

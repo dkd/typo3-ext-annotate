@@ -35,48 +35,63 @@ define('TYPO3/CMS/Annotate/SearchUI', [
             ns.query.observe = this.state.query.observe;
             this.replaceState(ns);
         },
+        onView: function(event) {
+            TYPO3.Annotate.Server.mimirResolveUuid(
+                event.target.innerHTML,
+                function(ret){
+                    window.open("alt_doc.php?&edit[" + ret.tablename +  "][" +  ret.uid + "]=edit");
+                });
+        },
         render: function() {
             var ready =  this.state.query.isReady(),
                 running = this.state.query.isRunning(),
                 finished = this.state.query.isFinished();
             return React.createElement("div", {className: "mimir"},
-                React.createElement("p", null,  "Welcome to your Search"),
+                React.createElement("p", null,  "Welcome to your Mimir Search"),
                 React.createElement('button', {
+                    className: 'new',
                     onClick: this.onNew
                 }, 'New!'),
-                !ready ? null: [
-                    React.createElement('input', {
-                        type: 'text',
-                        name: 'input',
-                        value: this.state.query.raw,
-                        onChange: this.onChange
-                    }),
-                    React.createElement('textarea', {
-                        readOnly:true,
-                        value: this.state.query.transformed
-                    }),
-                    React.createElement('button', {
-                        onClick: this.onQuery
-                    }, 'Query!'),
-                ],
-                !running ? null : [
-                    this.state.query.queryId,
-                    React.createElement(LoadingIndicator, null),
-                    this.state.query.documentCurrentCount
-                ],
-                !finished ? null : [
-                    "Showing " +  this.state.query.documentCurrentCount + " results for queryId: " + this.state.query.queryId,
-                    this.state.query.results.map(function (result) {
-                        return React.createElement("div",
-                            {
-                                className: "result",
-                                key: result.index
-                            },
-                            React.createElement("p", {}, "id: " + result.uri),
-                            React.createElement("p", {dangerouslySetInnerHTML: {__html: result.text}})
-                           );
-                    })
-                ]);
+                React.createElement('input', {
+                    type: 'text',
+                    className: 'bar',
+                    name: 'input',
+                    value: this.state.query.raw,
+                    onChange: this.onChange
+                }),
+                React.createElement('button', {
+                    className: 'run',
+                    onClick: this.onQuery
+                }, 'Query!'),
+                React.createElement('textarea', {
+                    className: 'transformed',
+                    readOnly:true,
+                    value: this.state.query.transformed
+                }),
+                !(running || finished) ? null:
+                React.createElement("div", {
+                    className: 'results'
+                },
+                  !running ? null : [
+                      this.state.query.queryId,
+                      React.createElement(LoadingIndicator, {className: 'loading'}),
+                      this.state.query.documentCurrentCount
+                  ],
+                  !finished ? null : [
+                      "Showing " +  this.state.query.documentCurrentCount + " results for queryId: " + this.state.query.queryId,
+                      this.state.query.results.map((function (result) {
+                          return React.createElement("div",
+                              {
+                                  className: "result",
+                                  key: result.index
+                              },
+                              React.createElement("p", {onClick: this.onView}, result.uri),
+                              React.createElement("p", {dangerouslySetInnerHTML: {__html: result.text}})
+                             );
+                      }).bind(this))
+                  ]
+                 )
+               );
         }
     });
 });

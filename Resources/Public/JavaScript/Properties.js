@@ -44,7 +44,6 @@ define('TYPO3/CMS/Annotate/Properties', [
      * Remove all properties
      */
     Properties.prototype.unwrapAll = function () {
-        debugger;
         this.raw.forEach(this.unwrap, this);
     };
 

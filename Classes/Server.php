@@ -44,36 +44,33 @@ class Server {
     /**
      * Server call for actually indexing text
      * @param $input Text to be Annotated
-     * @param $table TableId of the edited text
-     * @param $uid uid of the edited text
+     * @param $id id of the edited text
      * @return string annotated text
      */
-    private function indexRemotely($text,$table,$uid)
+    private function indexRemotely($text,$id)
     {
         $ret = $this->mimirIndex->get('/gate/service', ['query' => [
             'text' => $text,
-            'gate.mimir.uri' => "[$table][$uid]",
+            'gate.mimir.uri' => "$id",
+            //not really needed but default is the not present rdfaexporter, so we set it to something
             'gate.export.format' => 'gate.corpora.export.GateXMLExporter'
         ]]);
-        //force mimir to annotate
-        // $resync = (string) $this->client->get('/mimir-cloud-5.1-SNAPSHOT/admin/actions/78f58cf4-5fd7-4093-aedb-d0d67c4a9c60/sync', ['auth' => ['admin', 'admin']]);
         return (string) $ret->getBody();
     }
 
     /**
-     * Ext.Direct wrapper for TYPO3.Annotate.Server.indexText
-     * @param $input Text to be Annotated
-     * @param $table TableId of the edited text
-     * @param $uid uid of the edited text
+     * Ext.Direct wrapper for TYPO3.Annotate.Server.index
+     * @param $input text to be annotated
+     * @param $id id of the edited text
      * @return string indexed document
      */
-    public function index($text,$table,$uid)
+    public function index($text,$id)
     {
-        return $this->indexRemotely($text,$table,$uid);
+        return $this->indexRemotely($text,$id);
     }
 
     /**
-     * Ext.Direct wrapper for TYPO3.Annotate.Server.MimirURL
+     * Ext.Direct wrapper for TYPO3.Annotate.Server.mimirQuery
      * @param $action mimir verb
      * @param $args dictionary of query args
      * @return string result
@@ -90,5 +87,17 @@ class Server {
             return $json;
         }
         return json_encode($xml_string);
+    }
+
+    /**
+     * Ext.Direct wrapper for TYPO3.Annotate.Server.mimirResolveUuid
+     * @param $uuid string
+     * @return array [tablename, uid] the resource location
+     */
+    public function mimirResolveUuid($uuid)
+    {
+        $identityMap = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Maroschik\Identity\IdentityMap');
+        $ret = $identityMap->getResourceLocationForIdentifier($uuid);
+        return $ret;
     }
 }

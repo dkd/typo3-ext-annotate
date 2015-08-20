@@ -13,7 +13,7 @@ define('TYPO3/CMS/Annotate/LoadingIndicator', [
     return React.createClass({
         displayName: 'LoadingIndicator',
         render: function() {
-            return (React.createElement("div",{
+            return (React.createElement("div", {
                 ref: function(component) {
                     if (component)
                         React.findDOMNode(component).appendChild((new Spinner({left: null, top: null})).spin().el);

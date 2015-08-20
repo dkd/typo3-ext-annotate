@@ -48,9 +48,11 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
     public function buildJavascriptConfiguration($RTEcounter) {
         $registerRTEinJavascriptString = parent::buildJavascriptConfiguration($RTEcounter);
 
-        //provide editing with ids for backlinking
-        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.showAnnotate.uid = "' . ($this->elementUid ?: 'null').'";';
-        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.showAnnotate.table = "' . ($this->elementTable ?: 'null').'";';
+        //provide editing with id for backlinking
+        $identityMap = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Maroschik\Identity\IdentityMap');
+        //identity is not handling NEW uuids
+        $id =  strpos($this->elementUid, "NEW", 0) === 0 ? $this->elementUid : $identityMap->getIdentifierForResourceLocation($this->elementTable, $this->elementUid);
+        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.showAnnotate.id = "' . $id . '";';
 
         //add special css to edited htmldocument
         $documentcss = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extensionKey) . 'Resources/Public/Skin/document.css';

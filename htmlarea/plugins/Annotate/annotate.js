@@ -64,14 +64,12 @@ HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
     },
     /**
      * Show/Hide annotation list
-     * @returns {boolean}
      */
     onAnnotate: function ()
     {
         this.checkAnnotate();
         Annotate.toggle();
-        return false;
-	  },
+    },
 	  onUpdateToolbar: function (button, mode, selectionEmpty, ancestors)
     {
 	  }
