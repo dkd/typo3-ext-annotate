@@ -49,6 +49,17 @@ define('TYPO3/CMS/Annotate/Utility', [
                     .substring(1);
             }
             return s4() + s4() + s4() + s4();
+        },
+        /**
+         * Return range of numbers, upperBound is not included
+         * @param {number} upperBound
+         * @returns {number[]}
+         */
+        range: function (upperBound) {
+            var list = [];
+            for (var i = 0; i < upperBound; i++)
+                list.push(i);
+            return list;
         }
     };
 });

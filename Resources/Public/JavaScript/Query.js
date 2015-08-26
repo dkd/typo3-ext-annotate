@@ -6,11 +6,13 @@
 define('TYPO3/CMS/Annotate/Query', [
     'jquery',
     'TYPO3/CMS/Annotate/Observe',
-    'TYPO3/CMS/Annotate/async'
+    'TYPO3/CMS/Annotate/async',
+    'TYPO3/CMS/Annotate/Utility'
 ], function (
     $,
     Observe,
-    async
+    async,
+    Utility
 ) {
     /**
      * Query Constructor
@@ -24,12 +26,8 @@ define('TYPO3/CMS/Annotate/Query', [
         this.state = this.states.READY;
         // @type {Observe}
         this.observe =  new Observe();
-        // @type {String}
-        this.queryId = "";
-        // @type {Object[]}
-        this.results = [];
-        // @type {number}
-        this.documentCurrentCount =  0;
+
+        this.reset();
     };
     Query.prototype = {
         // @type {Object}
@@ -39,6 +37,17 @@ define('TYPO3/CMS/Annotate/Query', [
             READY: 1,
             RUNNING: 2,
             FINISHED: 3
+        },
+        /**
+         * reset for a new query
+         */
+        reset: function () {
+            // @type {String}
+            this.queryId = "";
+            // @type {Object[]}
+            this.results = [];
+            // @type {number}
+            this.documentCurrentCount =  0;
         },
         url: function(verb) {
             return this.baseURL + verb;
@@ -78,6 +87,7 @@ $1\n\
          */
         run: function() {
             var self = this;
+            this.reset();
             this.state = this.states.RUNNING;
             this.sendQuery(
                 "postQuery",
@@ -125,6 +135,8 @@ $1\n\
          */
         sendQuery: function(verb, args, cb) {
             var self = this;
+            if (this.queryId)
+                args.queryId = this.queryId;
             TYPO3.Annotate.Server.mimirQuery(
                 verb,
                 args,
@@ -152,11 +164,11 @@ $1\n\
             async.whilst(
                 function () { return self.isRunning();},
                 function (callback) {
-                    self.sendQuery('documentsCurrentCount', {queryId: self.queryId}, function(err, response) {
+                    self.sendQuery('documentsCurrentCount', {}, function(err, response) {
                         self.documentCurrentCount = Math.max(self.documentCurrentCount, response.value);
                         self.observe.trigger();
                     });
-                    self.sendQuery('documentsCount', {queryId: self.queryId}, function(err, response) {
+                    self.sendQuery('documentsCount', {}, function(err, response) {
                         var val = response.value;
                         if (val != - 1)
                         {
@@ -174,22 +186,34 @@ $1\n\
          * Download all Results
          */
         downloadResults: function() {
-            for (var i = 0; i < this.documentCurrentCount; ++i)
-            {
-                this.results.push({
+            var self = this;
+            async.each(Utility.range(self.documentCurrentCount), function (index,  callback) {
+                self.results.push({
                     uri: "Loading Uri",
                     text: "Loading Content",
-                    index: i
+                    index: index
                 });
-                this.sendQuery('renderDocument', {queryId: this.queryId, rank: i, keepOriginal: true}, (function (index, err, response) {
-                    this.results[index].text = response;
-                    this.observe.trigger();
-                }).bind(this, i));
-                this.sendQuery('documentMetadata', {queryId: this.queryId, rank: i}, (function(index, err, response) {
-                    this.results[index].uri = response.documentURI;
-                    this.observe.trigger();
-                }).bind(this, i));
-            }
+                async.parallel([
+                    function (callback) {
+                        self.sendQuery('renderDocument', {rank: index, keepOriginal: true}, function (err, response) {
+                            self.results[index].text = response;
+                            self.observe.trigger();
+                            callback();
+                        });
+                    },
+                    function (callback) {
+                        self.sendQuery('documentMetadata', {rank: index}, function(err, response) {
+                            self.results[index].uri = response.documentURI;
+                            self.observe.trigger();
+                            callback();
+                        });
+                    }
+                ], callback);
+            }, function (err) {
+                self.sendQuery('close', {}, function(err, response) {
+                    console.log("closed query");
+                });
+            });
         }
     };
     return Query;
