@@ -107,6 +107,13 @@ $1\n\
             self.observe.trigger();
         },
         /**
+         * Is the active query a valid query?
+         * @returns {boolean}
+         */
+        isValid: function () {
+            return /\S/.test(this.transformed);
+        },
+        /**
          * Are we ready to run a query at the moment?
          * @returns {boolean}
          */
@@ -134,6 +141,8 @@ $1\n\
          * @param {function} cb after succes
          */
         sendQuery: function(verb, args, cb) {
+            if (!this.isValid())
+                return;
             var self = this;
             if (this.queryId)
                 args.queryId = this.queryId;

@@ -61,6 +61,7 @@ define('TYPO3/CMS/Annotate/SearchUI', [
                 }),
                 React.createElement('button', {
                     className: 'run',
+                    disabled: !this.state.query.isValid(),
                     onClick: this.onQuery
                 }, 'Query!'),
                 React.createElement('textarea', {
