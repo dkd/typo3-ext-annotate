@@ -53,24 +53,73 @@ define('TYPO3/CMS/Annotate/Query', [
             return this.baseURL + verb;
         },
         /**
+         * Added dbo prefix if no prefix given
+         * @param {String} name
+         * @returns {String}
+         */
+        dboize: function (name) {
+            return name.indexOf(":") == -1 ? "dbo:" + name : name;
+        },
+        /**
+         * Added dbr prefix if no prefix given
+         * @param {String} name
+         * @returns {String}
+         */
+        dbrize: function (name) {
+            return name.indexOf(":") == -1 ? "dbr:" + name : name;
+        },
+        /**
          * Transform an input string into a mimir query
          * @param {String} raw input
          * @returns {String} transformed query
          */
         queryize: function(raw) {
-            var re = /\|(.*)\|/,
-                template = "\
-sparql=\"\
+            var result = null,
+                re = /\|([^|]*)\|/g,
+                template = "{Mention}",
+                templateBegin = "\
+{Mention sparql=\"\
 PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>\n\
 PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>\n\
 PREFIX owl:<http://www.w3.org/2002/07/owl#>\n\
 PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n\
 PREFIX dbo:<http://dbpedia.org/ontology/>\n\
 PREFIX dbr:<http://dbpedia.org/resource/>\n\
-select distinct ?inst where {\n\
-$1\n\
-}\"";
-            raw = raw.replace(re, template);
+select distinct ?inst where {\n",
+                templateEnd = "\n}\"}";
+
+            while ((result = re.exec(raw)) !== null) {
+                var begin = result.index,
+                    end = re.lastIndex;
+
+                var simple = raw.substring(begin + 1, end - 1);
+                if (!/\S/.test(simple))
+                    raw = Utility.replaceRange(raw, begin, end,  "{Mention}");
+                else
+                {
+                    var complex = templateBegin;
+
+                    simple = simple.split("\n");
+
+                    simple =  simple.map(function(line){
+                        line =  line.split(" ");
+                        if (line.length == 1)
+                            return "?inst a " + line[0];
+                        else if (line.length == 2)
+                            return "?inst " + this.dboize(line[0]) +  " " +  this.dbrize(line[1]);
+                        else if (line.length == 3)
+                            return line[0] + " " + this.dboize(line[1]) +  " " + this.dbrize(line[2]);
+                        else
+                            return "invalid line";
+                    }, this);
+
+                    complex += simple.join("\n");
+
+                    complex += templateEnd;
+                    raw = Utility.replaceRange(raw, begin, end,  complex);
+                }
+                re.lastIndex = 0;
+            }
             return raw;
         },
         /**
@@ -93,7 +142,7 @@ $1\n\
                 "postQuery",
                 {queryString: this.transformed},
                 function (err, response) {
-                    if (err)
+                    if (err || response.queryId === undefined)
                     {
                         TYPO3.Flashmessage.display(3, "ERROR", response);
                         self.state = this.states.ERROR;

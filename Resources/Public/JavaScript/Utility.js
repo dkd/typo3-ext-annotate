@@ -60,6 +60,17 @@ define('TYPO3/CMS/Annotate/Utility', [
             for (var i = 0; i < upperBound; i++)
                 list.push(i);
             return list;
+        },
+        /**
+         * Replace range in string with given string
+         * @param {String} string
+         * @param {number} begin
+         * @param {number} end
+         * @param {String} replacement
+         * @returns {String}
+         */
+        replaceRange: function (string, begin,  end,  replacement) {
+            return string.substring(0, begin) + replacement + string.substring(end, string.length);
         }
     };
 });
