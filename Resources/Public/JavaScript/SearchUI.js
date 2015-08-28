@@ -52,10 +52,8 @@ define('TYPO3/CMS/Annotate/SearchUI', [
                     className: 'new',
                     onClick: this.onNew
                 }, 'New!'),
-                React.createElement('input', {
-                    type: 'text',
+                React.createElement('textarea', {
                     className: 'bar',
-                    name: 'input',
                     value: this.state.query.raw,
                     onChange: this.onChange
                 }),

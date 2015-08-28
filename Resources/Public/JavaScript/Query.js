@@ -104,11 +104,11 @@ select distinct ?inst where {\n",
                     simple =  simple.map(function(line){
                         line =  line.split(" ");
                         if (line.length == 1)
-                            return "?inst a " + line[0];
+                            return "?inst a " + line[0] + " .";
                         else if (line.length == 2)
-                            return "?inst " + this.dboize(line[0]) +  " " +  this.dbrize(line[1]);
+                            return "?inst " + this.dboize(line[0]) +  " " +  this.dbrize(line[1]) + " .";
                         else if (line.length == 3)
-                            return line[0] + " " + this.dboize(line[1]) +  " " + this.dbrize(line[2]);
+                            return line[0] + " " + this.dboize(line[1]) +  " " + this.dbrize(line[2]) + " .";
                         else
                             return "invalid line";
                     }, this);
@@ -142,7 +142,7 @@ select distinct ?inst where {\n",
                 "postQuery",
                 {queryString: this.transformed},
                 function (err, response) {
-                    if (err || response.queryId === undefined)
+                    if (err || response == undefined || response.queryId === undefined)
                     {
                         TYPO3.Flashmessage.display(3, "ERROR", response);
                         self.state = this.states.ERROR;
