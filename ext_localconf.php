@@ -9,7 +9,9 @@ $TYPO3_CONF_VARS['EXTCONF']['rtehtmlarea']['plugins']['Annotate']['objectReferen
 $TYPO3_CONF_VARS['EXTCONF']['rtehtmlarea']['plugins']['Annotate']['addIconsToSkin'] = 1;
 $TYPO3_CONF_VARS['EXTCONF']['rtehtmlarea']['plugins']['Annotate']['disableInFE'] = 1;
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerExtDirectComponent(
-    'TYPO3.Annotate.Server',
-    'Dkd\\Annotate\\Server'
-);
+if (TYPO3_MODE === 'BE') {
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerExtDirectComponent(
+        'TYPO3.Annotate.Server',
+        'Dkd\\Annotate\\Server'
+    );
+}

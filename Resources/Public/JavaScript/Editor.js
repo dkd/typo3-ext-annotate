@@ -4,7 +4,9 @@
  * @author Johannes Goslar
  */
 define('TYPO3/CMS/Annotate/Editor', [
+    'TYPO3/CMS/Annotate/Aggregate'
 ], function (
+    Aggregate
 ) {
     /**
      * Abstract Editor Wrapper Constructor
@@ -121,6 +123,8 @@ define('TYPO3/CMS/Annotate/Editor', [
          */
         getContentId: function () {
             return "";
+        },
+        aggregate: function () {
         }
     };
     /**
@@ -141,6 +145,7 @@ define('TYPO3/CMS/Annotate/Editor', [
 
     Htmlarea.prototype.unwrapElement = function(element) {
         this.htmlarea.getDomNode().removeMarkup(element);
+        this.aggregate("REMOVE_ANNOTATION", element.innerHTML);
     };
 
     Htmlarea.prototype.getDocument = function() {
@@ -216,6 +221,13 @@ define('TYPO3/CMS/Annotate/Editor', [
 
     Htmlarea.prototype.getContentId = function () {
         return this.htmlarea.config.buttons.showAnnotate.id;
+    };
+
+    Htmlarea.prototype.aggregate = function (action,  additionalData) {
+        var table = "murks",
+            uid = "murks";
+        this.aggregate = Aggregate(table, uid);
+        this.aggregate(this, arguments);
     };
 
     return {
