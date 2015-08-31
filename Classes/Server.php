@@ -91,13 +91,60 @@ class Server {
 
     /**
      * Ext.Direct wrapper for TYPO3.Annotate.Server.mimirResolveUuid
-     * @param $uuid string
+     * @param $mimirId string
      * @return array [tablename, uid] the resource location
      */
-    public function mimirResolveUuid($uuid)
+    public function mimirResolveId($mimirId)
     {
-        $identityMap = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Maroschik\Identity\IdentityMap');
-        $ret = $identityMap->getResourceLocationForIdentifier($uuid);
-        return $ret;
+        $record = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
+            'typo3_table, typo3_uid',
+            'tx_annotate_ids',
+            sprintf('mimir_id = %s', $GLOBALS['TYPO3_DB']->fullQuoteStr($mimirId))
+        );
+        return ($record == false) ? null : $record;
     }
+
+    /**
+     * Ext.Direct wrapper for TYPO3.Annotate.Server.mimirGetId
+     * @param $tablename TYPO3 tablename
+     * @param $uid TYPO3 uid
+     * @return mimirId
+     */
+    public function mimirGetId($tablename, $uid)
+    {
+        $record = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
+            'mimir_id',
+            'tx_annotate_ids',
+            sprintf('typo3_table = %s AND typo3_uid = %s', $GLOBALS['TYPO3_DB']->fullQuoteStr($tablename, 'tx_annotate_ids'), $GLOBALS['TYPO3_DB']->fullQuoteStr($uid, 'tx_annotate_ids'))
+        );
+        return ($record == false) ? null : $record["mimir_id"];
+    }
+
+    /**
+ * Ext.Direct wrapper for TYPO3.Annotate.Server.mimirStoreId
+ * @param $tablename TYPO3 tablename
+ * @param $uid TYPO3 uid
+ * @param $mimirId mimirId
+ */
+public function mimirStoreId($tablename, $uid, $mimirId)
+{
+    if ($this->mimirGetId($tablename, $uid) != NULL)
+        $record = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+            'tx_annotate_ids',
+            sprintf('typo3_table = %s AND typo3_uid = %s', $GLOBALS['TYPO3_DB']->fullQuoteStr($tablename, 'tx_annotate_ids'), $GLOBALS['TYPO3_DB']->fullQuoteStr($uid, 'tx_annotate_ids')),
+            array(
+                'mimir_id' => $mimirId
+            )
+        );
+    else
+        $record = $GLOBALS['TYPO3_DB']->exec_INSERTquery(
+            'tx_annotate_ids',
+            array(
+                'typo3_table' => $tablename,
+                'typo3_uid' => $uid,
+                'mimir_id' => $mimirId
+            )
+        );
+    return $record;
+}
 }
