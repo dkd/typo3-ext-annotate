@@ -54,6 +54,7 @@ define('TYPO3/CMS/Annotate/List', [
             {
                 this.setState({busy: true});
                 this.props.editor.autoIndex.call(this.props.editor, (function() {
+                    debugger;
                     this.setState({busy: false});
                 }).bind(this));
             }

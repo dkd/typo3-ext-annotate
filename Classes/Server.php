@@ -43,30 +43,62 @@ class Server {
 
     /**
      * Server call for actually indexing text
-     * @param $input Text to be Annotated
+     * @param $table table of the edited text
      * @param $id id of the edited text
-     * @return string annotated text
+     * @param $content to be indexed
+     * @return string indexed document
      */
-    private function indexRemotely($text,$id)
+    private function indexRemotely($table, $id, $content)
     {
         $ret = $this->mimirIndex->get('/gate/service', ['query' => [
-            'text' => $text,
-            'gate.mimir.uri' => "$id",
+            'text' => $content,
             //not really needed but default is the not present rdfaexporter, so we set it to something
             'gate.export.format' => 'gate.corpora.export.GateXMLExporter'
         ]]);
+
+        //fix counting
+        $count = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
+            'count',
+            'tx_annotate_id_count',
+            '1=1'
+        );
+        $count = $count["count"];
+        if ($count == null)
+        {
+            $record = $GLOBALS['TYPO3_DB']->exec_INSERTquery(
+                'tx_annotate_id_count',
+                array(
+                    'count' => 0
+                )
+            );
+            $count = 0;
+        }
+
+        $this->mimirStoreId($table, $id, $count);
+
+        $record = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+            'tx_annotate_id_count',
+            "1=1",
+            array(
+                'count' => $count + 1
+            )
+        );
+
         return (string) $ret->getBody();
     }
 
     /**
      * Ext.Direct wrapper for TYPO3.Annotate.Server.index
-     * @param $input text to be annotated
+     * @param $table table of the edited text
      * @param $id id of the edited text
-     * @return string indexed document
+     * @param $content to be indexed
      */
-    public function index($text,$id)
+    public function index($table, $id, $content)
     {
-        return $this->indexRemotely($text,$id);
+        $xml_string = $this->indexRemotely($table, $id, $content);
+        $xml = simplexml_load_string($xml_string);
+        $json = json_encode($xml);
+        return $json;
     }
 
     /**
@@ -99,7 +131,7 @@ class Server {
         $record = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
             'typo3_table, typo3_uid',
             'tx_annotate_ids',
-            sprintf('mimir_id = %s', $GLOBALS['TYPO3_DB']->fullQuoteStr($mimirId))
+            sprintf('mimir_id = %s', $GLOBALS['TYPO3_DB']->fullQuoteStr($mimirId, 'tx_annotate_ids'))
         );
         return ($record == false) ? null : $record;
     }

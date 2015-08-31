@@ -4,9 +4,11 @@
  * @author Johannes Goslar
  */
 define('TYPO3/CMS/Annotate/Editor', [
-    'TYPO3/CMS/Annotate/Aggregate'
+    'TYPO3/CMS/Annotate/Aggregate',
+    'TYPO3/CMS/Annotate/Mimir'
 ], function (
-    Aggregate
+    Aggregate,
+    Mimir
 ) {
     /**
      * Abstract Editor Wrapper Constructor
@@ -81,6 +83,10 @@ define('TYPO3/CMS/Annotate/Editor', [
          * @param {function} cb
          */
         autoIndex: function(cb) {
+            var input = this.getContent(),
+                id = this.getContentId(),
+                editor = this;
+            Mimir.index(this.getContentTable(), this.getContentId(), this.getContent(), cb);
         },
         /**
          * Add hidden property to annotation span
@@ -98,8 +104,8 @@ define('TYPO3/CMS/Annotate/Editor', [
          */
         addPropertyAroundSelection: function() {
             var range = this.getSelectedRange(),
-                doc = this.getDocument(),
-                ele = doc.createElement("span");
+            doc = this.getDocument(),
+            ele = doc.createElement("span");
             ele.setAttribute("property","New Property");
             range.surroundContents(ele);
         },
@@ -122,6 +128,9 @@ define('TYPO3/CMS/Annotate/Editor', [
          * @returns {string} id for the content
          */
         getContentId: function () {
+            return "";
+        },
+        getContentTable: function () {
             return "";
         },
         aggregate: function () {
@@ -162,9 +171,9 @@ define('TYPO3/CMS/Annotate/Editor', [
 
     Htmlarea.prototype.applyHooks = function() {
         var focus_ = this.htmlarea.focus.bind(this.htmlarea),
-            setHTML_ = this.htmlarea.setHTML.bind(this.htmlarea),
-            setMode_ = this.htmlarea.setMode.bind(this.htmlarea),
-            editor =  this;
+        setHTML_ = this.htmlarea.setHTML.bind(this.htmlarea),
+        setMode_ = this.htmlarea.setMode.bind(this.htmlarea),
+        editor =  this;
         this.htmlarea.focus = function() {
             // the htmlarea undo functionality will refocus on the editor if we change an annotation attribute
             if (editor.getAnnotationList() && !editor.getAnnotationList().contains(document.activeElement))
@@ -200,18 +209,9 @@ define('TYPO3/CMS/Annotate/Editor', [
         }));
     };
 
-    Htmlarea.prototype.autoIndex = function(cb) {
-        var input = this.getContent(),
-            id = this.getContentId(),
-            editor =  this;
-        TYPO3.Annotate.Server.index(input, id, (function(result){
-            cb();
-        }));
-    };
-
     Htmlarea.prototype.getWishedListHeigth = function() {
         var editorWrap = this.getWrap(),
-            headerHeight = 180;
+        headerHeight = 180;
         return editorWrap.getHeight() -  180;
     };
 
@@ -225,7 +225,7 @@ define('TYPO3/CMS/Annotate/Editor', [
 
     Htmlarea.prototype.aggregate = function (action,  additionalData) {
         var table = "murks",
-            uid = "murks";
+        uid = "murks";
         this.aggregate = Aggregate(table, uid);
         this.aggregate(this, arguments);
     };

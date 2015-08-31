@@ -36,11 +36,12 @@ define('TYPO3/CMS/Annotate/SearchUI', [
             this.replaceState(ns);
         },
         onView: function(event) {
-            TYPO3.Annotate.Server.mimirResolveUuid(
-                event.target.innerHTML,
-                function(ret){
-                    window.open("alt_doc.php?&edit[" + ret.tablename +  "][" +  ret.uid + "]=edit");
-                });
+            debugger;
+            // TYPO3.Annotate.Server.mimirResolveUuid(
+            //     event.target.innerHTML,
+            //     function(ret){
+            //         window.open("alt_doc.php?&edit[" + ret.tablename +  "][" +  ret.uid + "]=edit");
+            //     });
         },
         render: function() {
             var ready =  this.state.query.isReady(),
@@ -84,7 +85,7 @@ define('TYPO3/CMS/Annotate/SearchUI', [
                                   className: "result",
                                   key: result.index
                               },
-                              React.createElement("p", {onClick: this.onView}, result.uri),
+                              React.createElement("p", {onClick: this.onView}, result.id),
                               React.createElement("p", {dangerouslySetInnerHTML: {__html: result.text}})
                              );
                       }).bind(this))

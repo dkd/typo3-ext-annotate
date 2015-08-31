@@ -7,12 +7,14 @@ define('TYPO3/CMS/Annotate/Query', [
     'jquery',
     'TYPO3/CMS/Annotate/Observe',
     'TYPO3/CMS/Annotate/async',
-    'TYPO3/CMS/Annotate/Utility'
+    'TYPO3/CMS/Annotate/Utility',
+    'TYPO3/CMS/Annotate/Mimir'
 ], function (
     $,
     Observe,
     async,
-    Utility
+    Utility,
+    Mimir
 ) {
     /**
      * Query Constructor
@@ -138,7 +140,7 @@ select distinct ?inst where {\n",
             var self = this;
             this.reset();
             this.state = this.states.RUNNING;
-            this.sendQuery(
+            Mimir.query(
                 "postQuery",
                 {queryString: this.transformed},
                 function (err, response) {
@@ -195,24 +197,6 @@ select distinct ?inst where {\n",
             var self = this;
             if (this.queryId)
                 args.queryId = this.queryId;
-            TYPO3.Annotate.Server.mimirQuery(
-                verb,
-                args,
-                function(result){
-                    cb.bind(self);
-                    var json = $.parseJSON(result);
-                    if (args.keepOriginal)
-                    {
-                        cb(null, json);
-                    }
-                    else
-                    {
-                        if (json.state == "SUCCESS")
-                            cb(null, json.data);
-                        else if (json.state == "ERROR")
-                            cb(json.data);
-                    }
-                });
         },
         /**
          * Function to keep loading result counts until the query is finished
@@ -222,11 +206,11 @@ select distinct ?inst where {\n",
             async.whilst(
                 function () { return self.isRunning();},
                 function (callback) {
-                    self.sendQuery('documentsCurrentCount', {}, function(err, response) {
+                    Mimir.query('documentsCurrentCount', {queryId: self.queryId}, function(err, response) {
                         self.documentCurrentCount = Math.max(self.documentCurrentCount, response.value);
                         self.observe.trigger();
                     });
-                    self.sendQuery('documentsCount', {}, function(err, response) {
+                    Mimir.query('documentsCount', {queryId: self.queryId}, function(err, response) {
                         var val = response.value;
                         if (val != - 1)
                         {
@@ -247,28 +231,28 @@ select distinct ?inst where {\n",
             var self = this;
             async.each(Utility.range(self.documentCurrentCount), function (index,  callback) {
                 self.results.push({
-                    uri: "Loading Uri",
                     text: "Loading Content",
+                    id: "Loading Id",
                     index: index
                 });
                 async.parallel([
                     function (callback) {
-                        self.sendQuery('renderDocument', {rank: index, keepOriginal: true}, function (err, response) {
+                        Mimir.query('renderDocument', {queryId: self.queryId, rank: index, keepOriginal: true}, function (err, response) {
                             self.results[index].text = response;
                             self.observe.trigger();
                             callback();
                         });
                     },
                     function (callback) {
-                        self.sendQuery('documentMetadata', {rank: index}, function(err, response) {
-                            self.results[index].uri = response.documentURI;
+                        Mimir.query('documentId', {rank: index, queryId: self.queryId}, function(err, response) {
+                            self.results[index].id = response.value;
                             self.observe.trigger();
                             callback();
                         });
                     }
                 ], callback);
             }, function (err) {
-                self.sendQuery('close', {}, function(err, response) {
+                Mimir.query('close', {queryId: self.queryId}, function(err, response) {
                     console.log("closed query");
                 });
             });
