@@ -147,7 +147,7 @@ select distinct ?inst where {\n",
                     if (err || response == undefined || response.queryId === undefined)
                     {
                         TYPO3.Flashmessage.display(3, "ERROR", response);
-                        self.state = this.states.ERROR;
+                        self.state = self.states.ERROR;
                         return;
                     }
                     self.queryId = response.queryId;

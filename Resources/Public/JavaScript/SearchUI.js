@@ -48,11 +48,7 @@ define('TYPO3/CMS/Annotate/SearchUI', [
                 running = this.state.query.isRunning(),
                 finished = this.state.query.isFinished();
             return React.createElement("div", {className: "mimir"},
-                React.createElement("p", null,  "Welcome to your Mimir Search"),
-                React.createElement('button', {
-                    className: 'new',
-                    onClick: this.onNew
-                }, 'New!'),
+                React.createElement("h2", null,  "Welcome to your Mimir Search"),
                 React.createElement('textarea', {
                     className: 'bar',
                     value: this.state.query.raw,
@@ -63,8 +59,14 @@ define('TYPO3/CMS/Annotate/SearchUI', [
                     disabled: !this.state.query.isValid(),
                     onClick: this.onQuery
                 }, 'Query!'),
+                                       
+                 React.createElement('button', {
+                    className: 'new',
+                    onClick: this.onNew
+                }, 'Clear'),
+                                       
                 React.createElement('textarea', {
-                    className: 'transformed',
+                    className: 'bar transformed',
                     readOnly:true,
                     value: this.state.query.transformed
                 }),
@@ -86,7 +88,7 @@ define('TYPO3/CMS/Annotate/SearchUI', [
                                   key: result.index
                               },
                               React.createElement("p", {onClick: this.onView}, result.id),
-                              React.createElement("p", {dangerouslySetInnerHTML: {__html: result.text}})
+                              React.createElement("p", {className: "resultText", dangerouslySetInnerHTML: {__html: result.text}})
                              );
                       }).bind(this))
                   ]
