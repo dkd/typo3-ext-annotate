@@ -42,20 +42,11 @@ class Server {
     }
 
     /**
-     * Server call for actually indexing text
-     * @param $table table of the edited text
-     * @param $id id of the edited text
-     * @param $content to be indexed
-     * @return string indexed document
+     * Get internal mimir count
+     * @return current count
      */
-    private function indexRemotely($table, $id, $content)
+    private function getMimirIdCount()
     {
-        $ret = $this->mimirIndex->get('/gate/service', ['query' => [
-            'text' => $content,
-            //not really needed but default is the not present rdfaexporter, so we set it to something
-            'gate.export.format' => 'gate.corpora.export.GateXMLExporter'
-        ]]);
-
         //fix counting
         $count = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
             'count',
@@ -73,16 +64,53 @@ class Server {
             );
             $count = 0;
         }
+        return $count;
+    }
 
-        $this->mimirStoreId($table, $id, $count);
-
+    /**2
+     * Set internal mimir count
+     * @param $count new Value
+     */
+    private function setMimirIdCount($count)
+    {
         $record = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
             'tx_annotate_id_count',
             "1=1",
             array(
-                'count' => $count + 1
+                'count' => $count
             )
         );
+    }
+
+    /**
+     * Server call for actually indexing text
+     * @param $table table of the edited text
+     * @param $id id of the edited text
+     * @param $content to be indexed
+     * @return string indexed document
+     */
+    private function indexRemotely($table, $id, $content)
+    {
+        $ret = $this->mimirIndex->get('/gate/service', ['query' => [
+            'text' => $content,
+            //not really needed but default is the not present rdfaexporter, so we set it to something
+            'gate.export.format' => 'gate.corpora.export.GateXMLExporter'
+        ]]);
+
+        $oldId = $this->mimirGetId($table, $id);
+        if ($oldId != null)
+        {
+            $delete = $this->mimirQuery->get('mimir-cloud/admin/actions/1/doDeleteOrUndelete', ['query' => [
+                'documentIds' => $oldId,
+                'operation' => 'delete'
+            ], 'auth' => [
+                'admin', 'abcdefg'
+            ]]);
+        }
+
+        $count = $this->getMimirIdCount();
+        $this->mimirStoreId($table, $id, $count);
+        $this->setMimirIdCount($count+1);
 
         return (string) $ret->getBody();
     }
@@ -122,6 +150,18 @@ class Server {
     }
 
     /**
+     * Ext.Direct wrapper for TYPO3.Annotate.Server.mimirSetIdCount
+     * to be called when the index is reset
+     * @param $count new count
+     * @return new count
+     */
+    public function mimirSetIdCount($count)
+    {
+        $this->setMimirIdCount($count);
+        return $count;
+    }
+
+    /**
      * Ext.Direct wrapper for TYPO3.Annotate.Server.mimirResolveUuid
      * @param $mimirId string
      * @return array [tablename, uid] the resource location
@@ -153,30 +193,30 @@ class Server {
     }
 
     /**
- * Ext.Direct wrapper for TYPO3.Annotate.Server.mimirStoreId
- * @param $tablename TYPO3 tablename
- * @param $uid TYPO3 uid
- * @param $mimirId mimirId
- */
-public function mimirStoreId($tablename, $uid, $mimirId)
-{
-    if ($this->mimirGetId($tablename, $uid) != NULL)
-        $record = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
-            'tx_annotate_ids',
-            sprintf('typo3_table = %s AND typo3_uid = %s', $GLOBALS['TYPO3_DB']->fullQuoteStr($tablename, 'tx_annotate_ids'), $GLOBALS['TYPO3_DB']->fullQuoteStr($uid, 'tx_annotate_ids')),
-            array(
-                'mimir_id' => $mimirId
-            )
-        );
-    else
-        $record = $GLOBALS['TYPO3_DB']->exec_INSERTquery(
-            'tx_annotate_ids',
-            array(
-                'typo3_table' => $tablename,
-                'typo3_uid' => $uid,
-                'mimir_id' => $mimirId
-            )
-        );
-    return $record;
-}
+     * Ext.Direct wrapper for TYPO3.Annotate.Server.mimirStoreId
+     * @param $tablename TYPO3 tablename
+     * @param $uid TYPO3 uid
+     * @param $mimirId mimirId
+     */
+    public function mimirStoreId($tablename, $uid, $mimirId)
+    {
+        if ($this->mimirGetId($tablename, $uid) != NULL)
+            $record = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+                'tx_annotate_ids',
+                sprintf('typo3_table = %s AND typo3_uid = %s', $GLOBALS['TYPO3_DB']->fullQuoteStr($tablename, 'tx_annotate_ids'), $GLOBALS['TYPO3_DB']->fullQuoteStr($uid, 'tx_annotate_ids')),
+                array(
+                    'mimir_id' => $mimirId
+                )
+            );
+        else
+            $record = $GLOBALS['TYPO3_DB']->exec_INSERTquery(
+                'tx_annotate_ids',
+                array(
+                    'typo3_table' => $tablename,
+                    'typo3_uid' => $uid,
+                    'mimir_id' => $mimirId
+                )
+            );
+        return $record;
+    }
 }

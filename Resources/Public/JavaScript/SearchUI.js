@@ -36,7 +36,6 @@ define('TYPO3/CMS/Annotate/SearchUI', [
             this.replaceState(ns);
         },
         onView: function(event) {
-            debugger;
             // TYPO3.Annotate.Server.mimirResolveUuid(
             //     event.target.innerHTML,
             //     function(ret){

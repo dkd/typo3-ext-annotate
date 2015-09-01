@@ -11,7 +11,6 @@ define('TYPO3/CMS/Annotate/Aggregate', [
             if (TYPO3.Aggregation && TYPO3.Aggregation.UsageTrackingService  && TYPO3.Aggregation.log)
             {
                 TYPO3.Aggregation.log(action, table, uid, additionalData, function () {
-                    debugger;
                 });
             }
         };

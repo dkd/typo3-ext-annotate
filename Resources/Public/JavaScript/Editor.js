@@ -223,10 +223,12 @@ define('TYPO3/CMS/Annotate/Editor', [
         return this.htmlarea.config.buttons.showAnnotate.id;
     };
 
-    Htmlarea.prototype.aggregate = function (action,  additionalData) {
-        var table = "murks",
-        uid = "murks";
-        this.aggregate = Aggregate(table, uid);
+    Htmlarea.prototype.getContentTable = function () {
+        return this.htmlarea.config.buttons.showAnnotate.table;
+    };
+
+    Htmlarea.prototype.aggregate = function (action, additionalData) {
+        this.aggregate = Aggregate(this.getContentTable(), this.getContentId());
         this.aggregate(this, arguments);
     };
 
