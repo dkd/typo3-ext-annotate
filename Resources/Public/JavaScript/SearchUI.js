@@ -35,17 +35,17 @@ define('TYPO3/CMS/Annotate/SearchUI', [
             ns.query.observe = this.state.query.observe;
             this.replaceState(ns);
         },
-        onView: function(event) {
-            // TYPO3.Annotate.Server.mimirResolveUuid(
-            //     event.target.innerHTML,
-            //     function(ret){
-            //         window.open("alt_doc.php?&edit[" + ret.tablename +  "][" +  ret.uid + "]=edit");
-            //     });
+        onView: function(result) {
+            return function (event) {
+                TYPO3.Annotate.Server.mimirResolveId(result.id, function(ret){
+                    window.open("alt_doc.php?&edit[" + ret.typo3_table +  "][" +  ret.typo3_uid + "]=edit");
+                });
+            };
         },
         render: function() {
             var ready =  this.state.query.isReady(),
-                running = this.state.query.isRunning(),
-                finished = this.state.query.isFinished();
+            running = this.state.query.isRunning(),
+            finished = this.state.query.isFinished();
             return React.createElement("div", {className: "mimir"},
                 React.createElement("h2", null,  "Welcome to your Mimir Search"),
                 React.createElement('textarea', {
@@ -58,12 +58,10 @@ define('TYPO3/CMS/Annotate/SearchUI', [
                     disabled: !this.state.query.isValid(),
                     onClick: this.onQuery
                 }, 'Query!'),
-                                       
-                 React.createElement('button', {
+                React.createElement('button', {
                     className: 'new',
                     onClick: this.onNew
                 }, 'Clear'),
-                                       
                 React.createElement('textarea', {
                     className: 'bar transformed',
                     readOnly:true,
@@ -84,9 +82,9 @@ define('TYPO3/CMS/Annotate/SearchUI', [
                           return React.createElement("div",
                               {
                                   className: "result",
-                                  key: result.index
+                                  key: result.index,
+                                  onClick: this.onView(result)
                               },
-                              React.createElement("p", {onClick: this.onView}, result.id),
                               React.createElement("p", {className: "resultText", dangerouslySetInnerHTML: {__html: result.text}})
                              );
                       }).bind(this))
@@ -94,5 +92,5 @@ define('TYPO3/CMS/Annotate/SearchUI', [
                  )
                );
         }
+            });
     });
-});
