@@ -171,9 +171,9 @@ define('TYPO3/CMS/Annotate/Editor', [
 
     Htmlarea.prototype.applyHooks = function() {
         var focus_ = this.htmlarea.focus.bind(this.htmlarea),
-        setHTML_ = this.htmlarea.setHTML.bind(this.htmlarea),
-        setMode_ = this.htmlarea.setMode.bind(this.htmlarea),
-        editor =  this;
+            setHTML_ = this.htmlarea.setHTML.bind(this.htmlarea),
+            setMode_ = this.htmlarea.setMode.bind(this.htmlarea),
+            editor =  this;
         this.htmlarea.focus = function() {
             // the htmlarea undo functionality will refocus on the editor if we change an annotation attribute
             if (editor.getAnnotationList() && !editor.getAnnotationList().contains(document.activeElement))
@@ -211,7 +211,7 @@ define('TYPO3/CMS/Annotate/Editor', [
 
     Htmlarea.prototype.getWishedListHeigth = function() {
         var editorWrap = this.getWrap(),
-        headerHeight = 180;
+            headerHeight = 180;
         return editorWrap.getHeight() -  180;
     };
 
@@ -229,7 +229,9 @@ define('TYPO3/CMS/Annotate/Editor', [
 
     Htmlarea.prototype.aggregate = function (action, additionalData) {
         this.aggregate = Aggregate(this.getContentTable(), this.getContentId());
-        this.aggregate(this, arguments);
+        if (additionalData == null)
+            additionalData =  {};
+        this.aggregate(action, additionalData);
     };
 
     return {

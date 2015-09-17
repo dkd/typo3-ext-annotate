@@ -34,6 +34,7 @@ define('TYPO3/CMS/Annotate/List', [
          */
         onCreateAnnotation: function() {
             this.props.editor.createAnnotationAroundSelection.call(this.props.editor);
+            this.props.editor.aggregate("ANNOTATE_CREATE");
         },
         /**
          * Automatically annotate the whole onAuto
@@ -41,6 +42,7 @@ define('TYPO3/CMS/Annotate/List', [
         onAuto: function() {
             this.setState({busy: true});
             this.props.editor.autoAnnotate.call(this.props.editor, (function() {
+                this.props.editor.aggregate("ANNOTATE_AUTO");
                 this.setState({busy: false});
             }).bind(this));
         },

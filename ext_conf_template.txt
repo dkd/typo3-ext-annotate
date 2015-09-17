@@ -1,0 +1,8 @@
+# cat=basic; type=string; label=Mimir Index Host
+mimirIndex = http://mimir:8080/
+# cat=basic; type=string; label=Mimir Query Host
+mimirQuery = http://mimir:8091/
+# cat=basic; type=string; label=Mimir Database ID
+mimirDatabase = 1
+# cat=basic; type=string; label= Annotate Host
+annotateHost = http://gate:8089/
