@@ -102,8 +102,8 @@ define('TYPO3/CMS/Annotate/Annotation', [
             else
                 ret = this.get('name') || this.get('typeof');
 
-            if (ret && ret.length > 15)
-                ret = ret.substring(0, 15) +  "...";
+            if (ret && ret.length > 50)
+                ret = ret.substring(0, 50) +  "...";
 
             return ret || "New";
         },

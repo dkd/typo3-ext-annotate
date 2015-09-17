@@ -78,7 +78,7 @@ define('TYPO3/CMS/Annotate/List', [
                     React.createElement("div", null,
                       React.createElement("section", null,
                         React.createElement("button", {onClick: this.onAuto, type:"button", className: "all"}, "Annotate!"),
-                        React.createElement("button", {onClick: this.onCreateAnnotation, type:"button", className: "new"}, "Around Selection!"),
+                        React.createElement("button", {onClick: this.onCreateAnnotation, type:"button", className: "new basic"}, "Add annotation"),
                         React.createElement("button", {onClick: this.onIndex, type:"button", className: "index"}, "Index!")
                        )
                      )

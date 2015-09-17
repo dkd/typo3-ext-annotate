@@ -1,7 +1,8 @@
 .showAnnotate
 {
-    background-image: url('images/ed_html.gif') !important;
+    background-image: url('images/showannotate.svg') !important;
     background-position: 0 0 !important;
+    background-color: rgba(255, 135, 0, 1.0);
 }
 
 h1 {
@@ -58,6 +59,9 @@ button:hover {
     height: 36px;
     border-radius: 5px;
     background-color: #FF8700;
+    background-image: url(images/annotate.svg);
+    background-repeat: no-repeat;
+    text-indent: 20px;
 }
 
 .annotate .all:hover {
@@ -65,9 +69,17 @@ button:hover {
 }
 
 .annotate .basic {
-    height: 30px;
-    border-radius: 5px;
     background-color: #B9B9B9;
+    background-image: url(images/aroundselection-01.png);
+    background-repeat: no-repeat;
+    text-indent: 22px;
+
+}
+
+.annotate .index {
+    background-image: url(images/index-01.png);
+    background-repeat: no-repeat;
+    text-indent: 22px;
 }
 
 .annotate .basic:hover {
@@ -138,8 +150,8 @@ button:hover {
 
 .annotate .iconDeleteDark{
     background: url("images/close_dark.svg") no-repeat;
-    width: 15px;
-    height: 15px;
+    width: 13px;
+    height: 13px;
     margin-bottom: 25px;
     border: 0px;
 }
@@ -191,4 +203,10 @@ button:hover {
     border: 0px;
     width: 3px;
     height: 7px;
+}
+
+
+.new button {
+background-color: red;
+
 }
