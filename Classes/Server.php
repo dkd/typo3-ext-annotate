@@ -1,30 +1,22 @@
 <?php
 namespace Dkd\Annotate;
+use Dkd\Annotate\Configuration;
 /**
  * Server Endpoint Wrapper for Annotate
  * At the moment do a straight call to gate
  * @author    Johannes Goslar <johannes.goslar@dkd.de>
  */
 class Server {
-
-    private $gate = null;
-    private $mimir = null;
-
-    function __construct()
-    {
-        $this->gate = new \GuzzleHttp\Client(['base_url' => "http://gate:8089/"]);
-        $this->mimirIndex = new \GuzzleHttp\Client(['base_url' => "http://mimir:8080/"]);
-        $this->mimirQuery = new \GuzzleHttp\Client(['base_url' => "http://mimir:8091/"]);
-    }
-
     /**
-     * Server call for actually annotating text
+     * getAnnotationHost call for actually annotating text
      * @param $input Text to be Annotated
      * @return string annotated text
      */
     private function annotateRemotely($text)
     {
-        $ret = $this->gate->get('/gate/service', ['query' => [
+        $configuration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Dkd\\Annotate\\Configuration');
+        $remote = new \GuzzleHttp\Client(['base_url' => $configuration->getAnnotationHost()]);
+        $ret = $remote->get('/gate/service', ['query' => [
             'text' => $text
         ]]);
         return (string) $ret->getBody();
@@ -91,7 +83,9 @@ class Server {
      */
     private function indexRemotely($table, $id, $content)
     {
-        $ret = $this->mimirIndex->get('/gate/service', ['query' => [
+        $configuration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Dkd\\Annotate\\Configuration');
+        $remote = new \GuzzleHttp\Client(['base_url' => $configuration->getMimirIndex()]);
+        $ret = $remote->get('/gate/service', ['query' => [
             'text' => $content,
             //not really needed but default is the not present rdfaexporter, so we set it to something
             'gate.export.format' => 'gate.corpora.export.GateXMLExporter'
@@ -100,7 +94,8 @@ class Server {
         $oldId = $this->mimirGetId($table, $id);
         if ($oldId != null)
         {
-            $delete = $this->mimirQuery->get('mimir-cloud/admin/actions/1/doDeleteOrUndelete', ['query' => [
+            $remote2 = new \GuzzleHttp\Client(['base_url' => $configuration->getMimirQuery()]);
+            $delete = $remote2->get(sprintf('mimir-cloud/admin/actions/%s/doDeleteOrUndelete', $configuration->getMimirDatabase()), ['query' => [
                 'documentIds' => $oldId,
                 'operation' => 'delete'
             ], 'auth' => [
@@ -138,7 +133,9 @@ class Server {
     public function mimirQuery($action, $args)
     {
         $extractedargs = get_object_vars($args);
-        $ret = $this->mimirQuery->get('/mimir-cloud/1/search/'.$action, ['query' => $extractedargs]);
+        $configuration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Dkd\\Annotate\\Configuration');
+        $remote = new \GuzzleHttp\Client(['base_url' => $configuration->getMimirQuery()]);
+        $ret = $remote->get('/mimir-cloud/1/search/' . $action, ['query' => $extractedargs]);
         $xml_string = (string) $ret->getBody();
         if (!$extractedargs["keepOriginal"])
         {
