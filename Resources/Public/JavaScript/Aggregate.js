@@ -8,7 +8,7 @@ define('TYPO3/CMS/Annotate/Aggregate', [
 ) {
     return function (table, uid) {
         return function (action, additionalData) {
-            if (TYPO3.Aggregation && TYPO3.Aggregation.UsageTrackingService  && TYPO3.Aggregation.log)
+            if (TYPO3.Aggregation && TYPO3.Aggregation.UsageTrackingService  && TYPO3.Aggregation.UsageTrackingService.log)
             {
                 TYPO3.Aggregation.log(action, table, uid, additionalData, function () {
                 });

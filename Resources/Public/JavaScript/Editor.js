@@ -29,6 +29,7 @@ define('TYPO3/CMS/Annotate/Editor', [
             // ele.setAttribute('resource',"New Annotation");
             ele.setAttribute('typeof',"Set Me");
             range.surroundContents(ele);
+            return range.getString();
         },
         /**
          * Get currently selected range from the editor
@@ -104,8 +105,8 @@ define('TYPO3/CMS/Annotate/Editor', [
          */
         addPropertyAroundSelection: function() {
             var range = this.getSelectedRange(),
-            doc = this.getDocument(),
-            ele = doc.createElement("span");
+                doc = this.getDocument(),
+                ele = doc.createElement("span");
             ele.setAttribute("property","New Property");
             range.surroundContents(ele);
         },

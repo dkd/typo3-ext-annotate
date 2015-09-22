@@ -9,7 +9,7 @@ if (TYPO3_MODE === 'BE') {
      */
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
         'Dkd.' . $_EXTKEY,
-        'tools',	 // Make module a submodule of 'tools'
+        'web',	 // Make module a submodule of 'tools'
         'search',	// Submodule key
         '',						// Position
         array(
