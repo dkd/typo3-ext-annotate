@@ -29,7 +29,7 @@ define('TYPO3/CMS/Annotate/Editor', [
             // ele.setAttribute('resource',"New Annotation");
             ele.setAttribute('typeof',"Set Me");
             range.surroundContents(ele);
-            return range.getString();
+            return range.toString();
         },
         /**
          * Get currently selected range from the editor

@@ -98,9 +98,9 @@ define('TYPO3/CMS/Annotate/Annotation', [
             // @type {string}
             var ret =this.get('resource');
             if (ret)
-                ret = ret.split('/').pop();
+                ret = ret.split('/').pop().replace('_', ' ');
             else
-                ret = this.get('name') || this.get('typeof');
+                ret = this.get('name') || this.span.textContent || this.get('typeof');
 
             if (ret && ret.length > 50)
                 ret = ret.substring(0, 50) +  "...";
