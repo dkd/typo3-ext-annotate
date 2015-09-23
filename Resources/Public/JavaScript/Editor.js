@@ -155,7 +155,7 @@ define('TYPO3/CMS/Annotate/Editor', [
 
     Htmlarea.prototype.unwrapElement = function(element) {
         this.htmlarea.getDomNode().removeMarkup(element);
-        this.aggregate("REMOVE_ANNOTATION", element.innerHTML);
+        this.aggregate("REMOVE_ANNOTATION", {text: element.innerHTML});
     };
 
     Htmlarea.prototype.getDocument = function() {
