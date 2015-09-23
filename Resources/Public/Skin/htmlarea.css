@@ -2,8 +2,7 @@
 {
     background-image: url('images/annotate.png') !important;
     background-position: 0 0 !important;
-    background-color: rgba(255, 135, 0, 1.0);
-    background-size: 100%;
+    width: 100px !important;
 }
 
 h1 {
@@ -208,6 +207,6 @@ button:hover {
 
 
 .new button {
-background-color: red;
+    background-color: red;
 
 }

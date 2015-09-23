@@ -28,7 +28,7 @@ HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
         var buttonConfiguration = {
             id: "showAnnotate",
             tooltip: "Annotate!",
-            Annotate: "onAnnotate",
+            action: "onAnnotate",
             textMode: true,
             dialog: true
         };
