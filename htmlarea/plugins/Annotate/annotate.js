@@ -48,7 +48,6 @@ HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
             mountpoint.className = "htmlarea-bbar";
             parent.appendChild(mountpoint);
             resizable.style.height = (resizable.offsetHeight +  600) +  "px";
-            debugger;
             Annotate.create(mountpoint, this.editor.document, 'Htmlarea', this.editor);
         }
     },
@@ -61,7 +60,19 @@ HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
 		    css.rel = 'stylesheet';
 		    css.type = 'text/css';
 		    css.href = this.editor.config.documentcssPath;
-		    headcss.appendChild(css);
+        headcss.appendChild(css);
+
+        var evalcss = this.editor.config.evaluationcssPath;
+        if (evalcss)
+        {
+            headcss = document.head;
+            css = document.createElement('link');
+            css.rel = 'stylesheet';
+            css.type = 'text/css';
+            css.href = evalcss;
+            headcss.appendChild(css);
+        }
+
         annotatePlugins.push(this);
     },
     /**

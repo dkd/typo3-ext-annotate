@@ -27,11 +27,17 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
 
     protected $elementTable = '';
 
+
+    private function isEvaluation() {
+        return getenv("FISH_EVALUATION") == "dkd";
+    }
+
     /**
      * FIXME: Development RTE Config is Wonky
      */
     public function addButtonsToToolbar() {
-        $this->htmlAreaRTE->thisConfig["showButtons"] = "*";
+        if ($this->isEvaluation())
+            $this->htmlAreaRTE->thisConfig["showButtons"] = "showAnnotate";
         return parent::addButtonsToToolbar();
     }
 
@@ -54,6 +60,12 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
         //add special css to edited htmldocument
         $documentcss = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extensionKey) . 'Resources/Public/Skin/document.css';
         $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].documentcssPath = "../' . $documentcss . '";';
+
+        if ($this->isEvaluation())
+        {
+            $evaluationcss = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extensionKey) . 'Resources/Public/Skin/evaluation.css';
+            $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].evaluationcssPath = "../' . $evaluationcss . '";';
+        }
 
         return $registerRTEinJavascriptString;
     }
