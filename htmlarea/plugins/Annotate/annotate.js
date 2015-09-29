@@ -42,11 +42,13 @@ HTMLArea.Annotate = Ext.extend(HTMLArea.Plugin, {
         if (!Annotate.created)
         {
             var wrap = document.getElementById("editorWrap" +this.editor.editorId),
-                editortr = wrap.parentElement.parentElement,
-                before = wrap.parentElement.nextSibling,
-                mountpoint = document.createElement("td");
-            editortr.insertBefore(mountpoint,before);
-
+                resizable = wrap.firstDescendant(),
+                parent = resizable.firstDescendant(),
+                mountpoint = document.createElement("div");
+            mountpoint.className = "htmlarea-bbar";
+            parent.appendChild(mountpoint);
+            resizable.style.height = (resizable.offsetHeight +  600) +  "px";
+            debugger;
             Annotate.create(mountpoint, this.editor.document, 'Htmlarea', this.editor);
         }
     },

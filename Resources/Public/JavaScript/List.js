@@ -86,7 +86,7 @@ define('TYPO3/CMS/Annotate/List', [
                      )
                    ),
                   this.state.busy ? null :
-                  React.createElement("div", {className: "entities", style: {maxHeight: this.state.entitiesHeigth}},
+                  React.createElement("div", {className: "entities"},// style: {maxHeight: this.state.entitiesHeigth}},
                     this.state.store.annotations.map(function(annotation, index) {
                         return React.createElement(ListEntry, {
                             key: annotation.get('aid'),

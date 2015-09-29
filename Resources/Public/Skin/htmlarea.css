@@ -16,7 +16,8 @@ h3 {
 
 .annotate .wrapper {
     background-color: #e4e4e4;
-    width: 500px;
+    width: 666px;
+    height: 600px;
 }
 
 .annotate input, .annotate label, .annotate button {
@@ -96,6 +97,7 @@ button:hover {
     padding: 0px 10px 10px 0px;
     overflow-y: auto;
     overflow-x: hidden;
+    max-height: 480px;
 }
 
 .entity {
