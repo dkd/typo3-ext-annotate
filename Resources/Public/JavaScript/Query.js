@@ -77,7 +77,7 @@ define('TYPO3/CMS/Annotate/Query', [
          */
         queryize: function(raw) {
             var result = null,
-                re = /\|([^|]*)\|/g,
+                re = /\$([^\$]*)\$/g,
                 template = "{Mention}",
                 templateBegin = "\
 {Mention sparql=\"\
