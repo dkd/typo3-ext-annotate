@@ -32,6 +32,7 @@ define('TYPO3/CMS/Annotate/Store', [
         observer: null,
         observers: null,
         annotations: null,
+        insertCount:  0,
         /**
          * Reset this store e.g. when html is set directly
          */
@@ -68,8 +69,8 @@ define('TYPO3/CMS/Annotate/Store', [
         handleAddition: function(span) {
             if (Utility.isAnnotation(span))
             {
-                if (!span.hasAttribute('aid'))
-                    span.setAttribute('aid', Utility.guid());
+                if (!span.aid)
+                    span.aid = this.insertCount ++;;
 
                 this.annotations.push(new Annotation(span,this.editor));
                 this.status();
@@ -77,8 +78,8 @@ define('TYPO3/CMS/Annotate/Store', [
             }
             else if (Utility.isProperty(span))
             {
-                if (!span.hasAttribute('aid'))
-                    span.setAttribute('aid', Utility.guid());
+                if (!span.aid)
+                    span.aid = this.insertCount ++;;
 
                 var ann = this.findAnnotationForProperty(span);
                 ann.properties.add(span, ann);
@@ -116,16 +117,30 @@ define('TYPO3/CMS/Annotate/Store', [
          * Show some status on the console
          */
         status: function() {
-            this.annotations.forEach(console.log, console);
+            // this.annotations.forEach(console.log, console);
         },
         /**
-            * Get Annotation for aid
-            * @param {string} aid
-        */
+         * Get Annotation for aid
+         * @param {string} aid
+         */
         forAid: function(aid) {
             return this.annotations.find(function(annotation) {
                 return annotation.get('aid') == aid ? annotation : undefined;
             });
+        },
+        sortingValue: function (annotation) {
+            if (annotation.span.newlyCreated != undefined )
+                return - annotation.span.newlyCreated;
+            else
+                return annotation.get('aid');
+        },
+        /**
+         *
+         */
+        sortedAnnotations: function () {
+            return this.annotations.concat().sort((function (a, b){
+                return this.sortingValue(a) - this.sortingValue(b);
+            }).bind(this));
         }
     };
     return Store;

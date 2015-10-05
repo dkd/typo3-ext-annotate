@@ -33,8 +33,9 @@ define('TYPO3/CMS/Annotate/List', [
          * Create new annotation
          */
         onCreateAnnotation: function() {
-            var text = this.props.editor.createAnnotationAroundSelection.call(this.props.editor);
-            this.props.editor.aggregate("ANNOTATE_CREATE", {text: text});
+            var ele = this.props.editor.createAnnotationAroundSelection.call(this.props.editor);
+                // this.expand(ele.aid), aid not set yet
+            this.props.editor.aggregate("ANNOTATE_CREATE", {text: ele.innerHTML});
         },
         /**
          * Automatically annotate the whole onAuto
@@ -65,11 +66,7 @@ define('TYPO3/CMS/Annotate/List', [
          * @param {string} aid
          */
         expand: function(aid) {
-            if (this.state.expanded)
-                this.state.store.forAid(this.state.expanded).toggleBlink();
-            if (aid && this.state.expanded != aid)
-                this.state.store.forAid(aid).toggleBlink();
-            this.setState({expanded: this.state.expanded != aid ? aid : null});
+            this.setState({expanded: this.state.expanded == aid ? null : aid});
         },
         render: function() {
             return React.createElement("div", {className: "annotate"},
@@ -87,7 +84,7 @@ define('TYPO3/CMS/Annotate/List', [
                    ),
                   this.state.busy ? null :
                   React.createElement("div", {className: "entities"},// style: {maxHeight: this.state.entitiesHeigth}},
-                    this.state.store.annotations.map(function(annotation, index) {
+                    this.state.store.sortedAnnotations().map(function(annotation, index) {
                         return React.createElement(ListEntry, {
                             key: annotation.get('aid'),
                             editor: this.props.editor,

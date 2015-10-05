@@ -22,7 +22,7 @@ define('TYPO3/CMS/Annotate/Annotation', [
         this.editor = editor;
         this.blinking = false;
         span.annotation = this;
-        // directAttributes observer
+        // htmlAttributes observer
         // @type {Object}
         this.observe = new Observe();
         this.observer = new MutationObserver(this.observe.trigger.bind(this.observe));
@@ -35,8 +35,10 @@ define('TYPO3/CMS/Annotate/Annotation', [
     Annotation.prototype = {
         // @type {Element}
         span: null,
-        // @type {string[]} attributes which are direct attributes of the span, otherwise they are accessed as hidden spans
-        directAttributes: ['vocab', 'resource', 'typeof', 'aid'],
+        // @type {string[]} attributes which are js properties of the span
+        jsAttributes: ['aid', 'newlyCreated'],
+        // @type {string[]} attributes which are htmlAttributesd of the span
+        htmlAttributes: ['vocab', 'resource', 'typeof'],
         // @type {string[]} editable attributes
         editableAttributesBase: ["vocab","resource","typeof"],
         /**
@@ -58,12 +60,16 @@ define('TYPO3/CMS/Annotate/Annotation', [
          * @param {} value
          */
         set: function(name, value) {
-            if (this.directAttributes.indexOf(name) != - 1)
+            if (this.htmlAttributes.indexOf(name) != - 1)
             {
                 if (value)
                     this.span.setAttribute(name, value);
                 else
                     this.span.removeAttribute(name);
+            }
+            else if (this.jsAttributes.indexOf(name) != - 1)
+            {
+                this.span[name] = value;
             }
             else
             {
@@ -80,9 +86,13 @@ define('TYPO3/CMS/Annotate/Annotation', [
          * @returns {}
          */
         get: function(name) {
-            if (this.directAttributes.indexOf(name) != - 1)
+            if (this.htmlAttributes.indexOf(name) != - 1)
             {
                 return this.span.hasAttribute(name) && this.span.getAttribute(name);
+            }
+            else if (this.jsAttributes.indexOf(name) != - 1)
+            {
+                return this.span[name];
             }
             else
             {
@@ -110,11 +120,8 @@ define('TYPO3/CMS/Annotate/Annotation', [
         /**
          * Yeah, we want that.
          */
-        toggleBlink: function() {
-            if (!this.blinking)
-                this.blinking = true, this.span.style.backgroundColor = '#FF8700';
-            else
-                this.blinking = false, this.span.style.backgroundColor = null;
+        doBlink: function(blink) {
+                this.span.style.backgroundColor = blink ? '#FF8700' : null;
         }
     };
     return Annotation;

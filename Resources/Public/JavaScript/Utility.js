@@ -39,18 +39,6 @@ define('TYPO3/CMS/Annotate/Utility', [
             }
         },
         /**
-         * Generate a (fake) guid for an annotation/property
-         * @returns {string}
-         */
-        guid: function () {
-            function s4() {
-                return Math.floor((1 + Math.random()) * 0x10000)
-                    .toString(16)
-                    .substring(1);
-            }
-            return s4() + s4() + s4() + s4();
-        },
-        /**
          * Return range of numbers, upperBound is not included
          * @param {number} upperBound
          * @returns {number[]}

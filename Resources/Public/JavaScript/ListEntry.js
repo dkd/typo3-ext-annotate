@@ -68,6 +68,7 @@ define('TYPO3/CMS/Annotate/ListEntry', [
             }).bind(this);
         },
         render: function() {
+            this.state.annotation.doBlink(this.props.expanded);
             var annotation = this.state.annotation,
                 expanded = this.props.expanded,
                 short = annotation.short(),

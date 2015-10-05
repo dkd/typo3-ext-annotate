@@ -18,18 +18,19 @@ define('TYPO3/CMS/Annotate/Editor', [
     }
     Abs.prototype = {
         constructor: Abs,
+        insertCount: 1,
         /**
          * Create new annotation around the currently selected text
          */
         createAnnotationAroundSelection: function() {
             var range = this.getSelectedRange(),
                 doc = this.getDocument(),
-                ele = doc.createElement("span");
-            ele.setAttribute('vocab',"http://schema.org");
-            // ele.setAttribute('resource',"New Annotation");
-            ele.setAttribute('typeof',"Set Me");
+                ele = doc.createElement('span');
+            ele.setAttribute('vocab', 'http://schema.org');
+            ele.setAttribute('typeof','Set Me');
+            ele.newlyCreated = this.insertCount++;
             range.surroundContents(ele);
-            return range.toString();
+            return ele;
         },
         /**
          * Get currently selected range from the editor
@@ -202,7 +203,7 @@ define('TYPO3/CMS/Annotate/Editor', [
 
     Htmlarea.prototype.autoAnnotate = function(cb) {
         var input = this.getContent(),
-            editor =  this;
+        editor =  this;
 
         TYPO3.Annotate.Server.annotateText(input, (function(result){
             editor.setContent(result);
@@ -212,7 +213,7 @@ define('TYPO3/CMS/Annotate/Editor', [
 
     Htmlarea.prototype.getWishedListHeigth = function() {
         var editorWrap = this.getWrap(),
-            headerHeight = 180;
+        headerHeight = 180;
         return editorWrap.getHeight() -  180;
     };
 
