@@ -37,7 +37,7 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
      */
     public function addButtonsToToolbar() {
         if ($this->isEvaluation())
-            $this->htmlAreaRTE->thisConfig["showButtons"] = "showAnnotate";
+            $this->htmlAreaRTE->thisConfig["showButtons"] = "showAnnotate, link, undo, redo";
         return parent::addButtonsToToolbar();
     }
 
