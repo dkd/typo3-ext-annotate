@@ -25,7 +25,7 @@ define('TYPO3/CMS/Annotate/Annotation', [
         // htmlAttributes observer
         // @type {Object}
         this.observe = new Observe();
-        this.observer = new MutationObserver(this.observe.trigger.bind(this.observe));
+        this.observer = new MutationObserver(this.mutationObserver.bind(this));
         this.observer.observe(span, {
             attributes: true,
             attributeOldValue: true
@@ -33,6 +33,12 @@ define('TYPO3/CMS/Annotate/Annotation', [
         this.properties = new Properties(this.observe, this.editor);
     }
     Annotation.prototype = {
+        mutationObserver: function (mutations) {
+            // firefox will send a mutation record for style
+            if (mutations[0] && mutations[0].attributeName == "style")
+                return;
+            this.observe.trigger();
+        },
         // @type {Element}
         span: null,
         // @type {string[]} attributes which are js properties of the span
@@ -121,7 +127,7 @@ define('TYPO3/CMS/Annotate/Annotation', [
          * Yeah, we want that.
          */
         doBlink: function(blink) {
-                this.span.style.backgroundColor = blink ? '#FF8700' : null;
+            this.span.style.backgroundColor = blink ? '#FF8700' : null;
         }
     };
     return Annotation;
