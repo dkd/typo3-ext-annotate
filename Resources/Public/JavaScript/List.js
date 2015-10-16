@@ -34,7 +34,7 @@ define('TYPO3/CMS/Annotate/List', [
          */
         onCreateAnnotation: function() {
             var ele = this.props.editor.createAnnotationAroundSelection.call(this.props.editor);
-                // this.expand(ele.aid), aid not set yet
+            // this.expand(ele.aid), aid not set yet
             this.props.editor.aggregate("ANNOTATE_CREATE", {text: ele.innerHTML});
         },
         /**
@@ -43,8 +43,8 @@ define('TYPO3/CMS/Annotate/List', [
         onAuto: function() {
             this.setState({busy: true});
             this.props.editor.autoAnnotate.call(this.props.editor, (function() {
-                this.props.editor.aggregate("ANNOTATE_AUTO", {});
                 this.setState({busy: false});
+                this.props.editor.aggregate("ANNOTATE_AUTO", {text: this.props.editor.getContent()});
             }).bind(this));
         },
         /**
@@ -58,6 +58,7 @@ define('TYPO3/CMS/Annotate/List', [
                 this.setState({busy: true});
                 this.props.editor.autoIndex.call(this.props.editor, (function() {
                     this.setState({busy: false});
+                    this.props.editor.aggregate("ANNOTATE_INDEX", {});
                 }).bind(this));
             }
         },

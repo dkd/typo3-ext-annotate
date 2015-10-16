@@ -47,7 +47,7 @@ define('TYPO3/CMS/Annotate/Observe',[
                 var target = this.state[key] || this.props[key];
                 target.observe.add(this.observeChanged);
             },
-            componentDidUnmount: function() {
+            componentWillUnmount: function() {
                 var target = this.state[key] || this.props[key];
                 target.observe.remove(this.observeChanged);
             },

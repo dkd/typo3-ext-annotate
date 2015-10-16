@@ -155,8 +155,8 @@ define('TYPO3/CMS/Annotate/Editor', [
     };
 
     Htmlarea.prototype.unwrapElement = function(element) {
+        this.aggregate("ANNOTATE_REMOVE", {text: element.innerHTML});
         this.htmlarea.getDomNode().removeMarkup(element);
-        this.aggregate("REMOVE_ANNOTATION", {text: element.innerHTML});
     };
 
     Htmlarea.prototype.getDocument = function() {
@@ -203,7 +203,7 @@ define('TYPO3/CMS/Annotate/Editor', [
 
     Htmlarea.prototype.autoAnnotate = function(cb) {
         var input = this.getContent(),
-        editor =  this;
+            editor =  this;
 
         TYPO3.Annotate.Server.annotateText(input, (function(result){
             editor.setContent(result);
@@ -213,7 +213,7 @@ define('TYPO3/CMS/Annotate/Editor', [
 
     Htmlarea.prototype.getWishedListHeigth = function() {
         var editorWrap = this.getWrap(),
-        headerHeight = 180;
+            headerHeight = 180;
         return editorWrap.getHeight() -  180;
     };
 
