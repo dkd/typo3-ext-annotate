@@ -106,7 +106,7 @@ select distinct ?inst where {\n",
                     simple =  simple.map(function(line){
                         line =  line.split(" ");
                         if (line.length == 1)
-                            return "?inst a " + line[0] + " .";
+                            return "?inst a " + this.dboize(line[0]) + " .";
                         else if (line.length == 2)
                             return "?inst " + this.dboize(line[0]) +  " " +  this.dbrize(line[1]) + " .";
                         else if (line.length == 3)
