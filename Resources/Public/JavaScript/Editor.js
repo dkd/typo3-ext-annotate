@@ -26,7 +26,7 @@ define('TYPO3/CMS/Annotate/Editor', [
             var range = this.getSelectedRange(),
                 doc = this.getDocument(),
                 ele = doc.createElement('span');
-            ele.setAttribute('vocab', 'http://schema.org');
+            ele.setAttribute('vocab', 'http://dbpedia.org/ontology/');
             ele.setAttribute('typeof','Set Me');
             ele.newlyCreated = this.insertCount++;
             range.surroundContents(ele);
