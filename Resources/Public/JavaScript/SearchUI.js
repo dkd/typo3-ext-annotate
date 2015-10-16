@@ -1,4 +1,4 @@
-/** 
+/**
  * @fileOverview SearchUI
  * @name SearchUI.js
  * @author Johannes Goslar
@@ -7,12 +7,14 @@ define('TYPO3/CMS/Annotate/SearchUI', [
     'TYPO3/CMS/Annotate/react',
     'TYPO3/CMS/Annotate/LoadingIndicator',
     'TYPO3/CMS/Annotate/Query',
-    'TYPO3/CMS/Annotate/Observe'
+    'TYPO3/CMS/Annotate/Observe',
+    'TYPO3/CMS/Annotate/Aggregate'
 ], function (
     React,
     LoadingIndicator,
     Query,
-    Observe
+    Observe,
+    Aggregate
 ) {
     return React.createClass({
         displayName: 'SearchUI',
@@ -36,16 +38,18 @@ define('TYPO3/CMS/Annotate/SearchUI', [
             this.replaceState(ns);
         },
         onView: function(result) {
+            var query = this.state.query;
             return function (event) {
                 TYPO3.Annotate.Server.mimirResolveId(result.id, function(ret){
+                    Aggregate(ret.typo3_table, ret.typo3_uid)("SEM_SEARCH_CLICK", {query: query.raw});
                     window.open("alt_doc.php?&edit[" + ret.typo3_table +  "][" +  ret.typo3_uid + "]=edit");
                 });
             };
         },
         render: function() {
             var ready =  this.state.query.isReady(),
-            running = this.state.query.isRunning(),
-            finished = this.state.query.isFinished();
+                running = this.state.query.isRunning(),
+                finished = this.state.query.isFinished();
             return React.createElement("div", {className: "mimir"},
                 React.createElement("h2", null,  "Welcome to your Mimir Search"),
                 React.createElement('textarea', {
@@ -92,5 +96,5 @@ define('TYPO3/CMS/Annotate/SearchUI', [
                  )
                );
         }
-            });
     });
+});
