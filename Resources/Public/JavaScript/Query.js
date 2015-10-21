@@ -12,7 +12,7 @@ define('TYPO3/CMS/Annotate/Query', [
 ], function (
     $,
     Observe,
-    async,
+    A,
     Utility,
     Mimir
 ) {
@@ -55,20 +55,20 @@ define('TYPO3/CMS/Annotate/Query', [
             return this.baseURL + verb;
         },
         /**
-         * Added dbo prefix if no prefix given
+         * Add a default sparql prefix if applicable
+         * @param {String} prefix
          * @param {String} name
          * @returns {String}
          */
-        dboize: function (name) {
-            return name.indexOf(":") == -1 ? "dbo:" + name : name;
-        },
-        /**
-         * Added dbr prefix if no prefix given
-         * @param {String} name
-         * @returns {String}
-         */
-        dbrize: function (name) {
-            return name.indexOf(":") == -1 ? "dbr:" + name : name;
+        prefixed: function (prefix, name)
+        {
+            if (! isNaN(name))
+                return name;
+            if (name.substring(0,1) == "?")
+                return name;
+            if (name.substring(0,1) == "\"")
+                return name;
+            return name.indexOf(":") == -1 ? prefix + ":" + name : name;
         },
         /**
          * Transform an input string into a mimir query
@@ -86,6 +86,7 @@ PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>\n\
 PREFIX owl:<http://www.w3.org/2002/07/owl#>\n\
 PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n\
 PREFIX dbo:<http://dbpedia.org/ontology/>\n\
+PREFIX dbp:<http://dbpedia.org/property/>\n\
 PREFIX dbr:<http://dbpedia.org/resource/>\n\
 select distinct ?inst where {\n",
                 templateEnd = "\n}\"}";
@@ -104,13 +105,15 @@ select distinct ?inst where {\n",
                     simple = simple.split("\n");
 
                     simple =  simple.map(function(line){
+                        if (line.substring(0, 6) == "FILTER")
+                            return line;
                         line =  line.split(" ");
                         if (line.length == 1)
-                            return "?inst a " + this.dboize(line[0]) + " .";
+                            return "?inst a " + this.prefixed("dbo",line[0]) + " .";
                         else if (line.length == 2)
-                            return "?inst " + this.dboize(line[0]) +  " " +  this.dbrize(line[1]) + " .";
+                            return "?inst " + this.prefixed("dbo",line[0]) +  " " +  this.prefixed("dbr",line[1]) + " .";
                         else if (line.length == 3)
-                            return line[0] + " " + this.dboize(line[1]) +  " " + this.dbrize(line[2]) + " .";
+                            return line[0] + " " + this.prefixed("dbo",line[1]) +  " " + this.prefixed("dbr",line[2]) + " .";
                         else
                             return "invalid line";
                     }, this);
@@ -203,7 +206,7 @@ select distinct ?inst where {\n",
          */
         delayForResults: function() {
             var self =  this;
-            async.whilst(
+            A.whilst(
                 function () { return self.isRunning();},
                 function (callback) {
                     Mimir.query('documentsCurrentCount', {queryId: self.queryId}, function(err, response) {
@@ -229,13 +232,13 @@ select distinct ?inst where {\n",
          */
         downloadResults: function() {
             var self = this;
-            async.each(Utility.range(self.documentCurrentCount), function (index,  callback) {
+            A.each(Utility.range(self.documentCurrentCount), function (index,  callback) {
                 self.results.push({
                     text: "Loading Content",
                     id: "Loading Id",
                     index: index
                 });
-                async.parallel([
+                A.parallel([
                     function (callback) {
                         Mimir.query('renderDocument', {queryId: self.queryId, rank: index, keepOriginal: true}, function (err, response) {
                             self.results[index].text = response;

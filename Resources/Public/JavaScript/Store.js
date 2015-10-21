@@ -70,7 +70,7 @@ define('TYPO3/CMS/Annotate/Store', [
             if (Utility.isAnnotation(span))
             {
                 if (!span.aid)
-                    span.aid = this.insertCount ++;;
+                    span.aid = this.insertCount ++;
 
                 this.annotations.push(new Annotation(span,this.editor));
                 this.status();
@@ -79,7 +79,7 @@ define('TYPO3/CMS/Annotate/Store', [
             else if (Utility.isProperty(span))
             {
                 if (!span.aid)
-                    span.aid = this.insertCount ++;;
+                    span.aid = this.insertCount ++;
 
                 var ann = this.findAnnotationForProperty(span);
                 ann.properties.add(span, ann);
