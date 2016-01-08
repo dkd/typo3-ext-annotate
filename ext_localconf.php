@@ -5,7 +5,7 @@ if (!defined('TYPO3_MODE')) {
 }
 
 $TYPO3_CONF_VARS['EXTCONF']['rtehtmlarea']['plugins']['Annotate'] = array();
-$TYPO3_CONF_VARS['EXTCONF']['rtehtmlarea']['plugins']['Annotate']['objectReference'] = '&Dkd\\Annotate\\HtmlAreaPlugin';
+$TYPO3_CONF_VARS['EXTCONF']['rtehtmlarea']['plugins']['Annotate']['objectReference'] = 'Dkd\\Annotate\\HtmlAreaPlugin';
 $TYPO3_CONF_VARS['EXTCONF']['rtehtmlarea']['plugins']['Annotate']['addIconsToSkin'] = 1;
 $TYPO3_CONF_VARS['EXTCONF']['rtehtmlarea']['plugins']['Annotate']['disableInFE'] = 1;
 
