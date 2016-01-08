@@ -14,12 +14,11 @@
     ],
     "autoload": {
         "psr-4": {
-            "Dkd\\Gateannotator\\": "Classes/"
+            "Dkd\\Annotate\\": "Classes/"
         }
     },
-    "require-dev": {
-        "typo3-ci/typo3cms": "dev-master",
-        "typo3/identity": "*",
+    "require": {
+        "typo3/cms": "^7.6",
         "guzzlehttp/guzzle": "~5.0"
     }
 }
