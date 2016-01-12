@@ -40,7 +40,7 @@ define('TYPO3/CMS/Annotate/SearchUI', [
         onView: function(result) {
             var query = this.state.query;
             return function (event) {
-                TYPO3.Annotate.Server.mimirResolveId(result.id, function(ret){
+                window.parent.TYPO3.Annotate.Server.mimirResolveId(result.id, function(ret){
                     Aggregate(ret.typo3_table, ret.typo3_uid)("SEM_SEARCH_CLICK", {query: query.raw});
                     window.open("alt_doc.php?&edit[" + ret.typo3_table +  "][" +  ret.typo3_uid + "]=edit");
                 });

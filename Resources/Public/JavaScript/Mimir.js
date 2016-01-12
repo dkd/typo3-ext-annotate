@@ -16,7 +16,7 @@ define('TYPO3/CMS/Annotate/Mimir', [
          * @param {function} cb after succes
          */
         query: function(verb, args, cb) {
-            TYPO3.Annotate.Server.mimirQuery(
+            window.parent.TYPO3.Annotate.Server.mimirQuery(
                 verb,
                 args,
                 function(result){
@@ -36,7 +36,7 @@ define('TYPO3/CMS/Annotate/Mimir', [
                 });
         },
         index: function (tablename, id, content, callback) {
-            TYPO3.Annotate.Server.index(tablename, id, content, function (result) {
+            window.parent.TYPO3.Annotate.Server.index(tablename, id, content, function (result) {
                 callback($.parseJSON(result));
             });
         }

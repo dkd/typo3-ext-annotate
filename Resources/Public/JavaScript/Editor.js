@@ -205,7 +205,7 @@ define('TYPO3/CMS/Annotate/Editor', [
         var input = this.getContent(),
             editor =  this;
 
-        TYPO3.Annotate.Server.annotateText(input, (function(result){
+        window.parent.TYPO3.Annotate.Server.annotateText(input, (function(result){
             editor.setContent(result);
             cb();
         }));
