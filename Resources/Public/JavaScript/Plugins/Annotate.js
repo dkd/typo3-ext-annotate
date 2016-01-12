@@ -68,7 +68,6 @@ define('TYPO3/CMS/Annotate/Plugins/Annotate', [
          * After editor was loaded
          */
         onGenerate: function () {
-            debugger;
             var headcss = this.editor.document.head;
             var css = this.editor.document.createElement('link');
             css.rel = 'stylesheet';

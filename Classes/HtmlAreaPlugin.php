@@ -38,7 +38,6 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
 
         //not nice, but the skin attribute is not honored anymore
         $listcss = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extensionKey) . 'Resources/Public/Skin/list.css';
-        $js[] = 'debugger;';
         $js[] = 'var cssele = document.createElement("link")';
         $js[] = 'cssele.rel = "stylesheet";';
         $js[] = 'cssele.type = "text/css";';
