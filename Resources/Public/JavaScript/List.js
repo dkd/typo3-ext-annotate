@@ -24,7 +24,7 @@ define('TYPO3/CMS/Annotate/List', [
             };
         },
         updateListHeight: function() {
-            this.setState({entitiesHeigth: this.props.editor.getWishedListHeigth()});
+            // this.setState({entitiesHeigth: this.props.editor.getWishedListHeigth()});
         },
         componentWillMount: function() {
             this.updateListHeight();
@@ -71,31 +71,31 @@ define('TYPO3/CMS/Annotate/List', [
         },
         render: function() {
             return React.createElement("div", {className: "annotate"},
-                React.createElement("div", {className: "wrapper"},
-                  React.createElement("div", {className: "header"},
-                    React.createElement("div", {className: "moduleTitle"}, React.createElement("h1", null, "Annotations")),
-                    this.state.busy ? React.createElement(LoadingIndicator, null) :
-                    React.createElement("div", null,
-                      React.createElement("section", null,
-                        React.createElement("button", {onClick: this.onAuto, type:"button", className: "all"}, "Annotate!"),
-                        React.createElement("button", {onClick: this.onCreateAnnotation, type:"button", className: "new basic"}, "Add annotation"),
-                        React.createElement("button", {onClick: this.onIndex, type:"button", className: "index"}, "Index!")
-                       )
-                     )
-                   ),
-                  this.state.busy ? null :
-                  React.createElement("div", {className: "entities"},// style: {maxHeight: this.state.entitiesHeigth}},
-                    this.state.store.sortedAnnotations().map(function(annotation, index) {
-                        return React.createElement(ListEntry, {
-                            key: annotation.get('aid'),
-                            editor: this.props.editor,
-                            expand: this.expand,
-                            expanded: this.state.expanded == annotation.get('aid'),
-                            annotation: annotation});
-                    }, this)
-                   )
-                 )
-               );
+                                       React.createElement("div", {className: "wrapper"},
+                                                           React.createElement("div", {className: "header"},
+                                                                               React.createElement("div", {className: "moduleTitle"}, React.createElement("h1", null, "Annotations")),
+                                                                               this.state.busy ? React.createElement(LoadingIndicator, null) :
+                                                                               React.createElement("div", null,
+                                                                                                   React.createElement("section", null,
+                                                                                                                       React.createElement("button", {onClick: this.onAuto, type:"button", className: "all"}, "Annotate!"),
+                                                                                                                       React.createElement("button", {onClick: this.onCreateAnnotation, type:"button", className: "new basic"}, "Add annotation"),
+                                                                                                                       React.createElement("button", {onClick: this.onIndex, type:"button", className: "index"}, "Index!")
+                                                                                                                      )
+                                                                                                  )
+                                                                              ),
+                                                           this.state.busy ? null :
+                                                           React.createElement("div", {className: "entities"},// style: {maxHeight: this.state.entitiesHeigth}},
+                                                                               this.state.store.sortedAnnotations().map(function(annotation, index) {
+                                                                                   return React.createElement(ListEntry, {
+                                                                                       key: annotation.get('aid'),
+                                                                                       editor: this.props.editor,
+                                                                                       expand: this.expand,
+                                                                                       expanded: this.state.expanded == annotation.get('aid'),
+                                                                                       annotation: annotation});
+                                                                               }, this)
+                                                                              )
+                                                          )
+                                      );
         }
     });
 });

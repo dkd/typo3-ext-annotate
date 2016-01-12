@@ -151,7 +151,7 @@ define('TYPO3/CMS/Annotate/Editor', [
     Htmlarea.prototype = Object.create(Abs.prototype);
     Htmlarea.prototype.constructor = Htmlarea;
     Htmlarea.prototype.getSelectedRange = function() {
-        return this.htmlarea.getSelectionRanges()[0];
+        return this.htmlarea.getSelection().selection.getRangeAt(0);
     };
 
     Htmlarea.prototype.unwrapElement = function(element) {

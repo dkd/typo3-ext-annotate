@@ -1,5 +1,6 @@
 <?php
 namespace Dkd\Annotate;
+
 /**
  * htmlAreaRTE plugin for semantic annotations
  *
@@ -13,8 +14,6 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
 
     protected $relativePathToLocallangFile = '';
 
-    protected $relativePathToSkin = 'Resources/Public/Skin/htmlarea.css';
-
     protected $pluginButtons = 'showAnnotate';
 
     protected $convertToolbarForHtmlAreaArray = array(
@@ -23,50 +22,29 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
 
     protected $requiredPlugins = 'InlineElements';
 
-    protected $elementUid = '';
+    public function buildJavascriptConfiguration() {
+        $js = array();
 
-    protected $elementTable = '';
-
-
-    private function isEvaluation() {
-        return getenv("FISH_EVALUATION") == "dkd";
-    }
-
-    /**
-     * FIXME: Development RTE Config is Wonky
-     */
-    public function addButtonsToToolbar() {
-        if ($this->isEvaluation())
-            $this->htmlAreaRTE->thisConfig["showButtons"] = "showAnnotate, link, undo, redo";
-        return parent::addButtonsToToolbar();
-    }
-
-    public function main($parentObject) {
-        parent::main($parentObject);
-
-        //provide editing with ids for backlinking
-        $this->elementTable = $parentObject->elementParts[0];
-        $this->elementUid = $parentObject->elementParts[1];
-
-        return TRUE;
-    }
-
-    public function buildJavascriptConfiguration($RTEcounter) {
-        $registerRTEinJavascriptString = parent::buildJavascriptConfiguration($RTEcounter);
-
-        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.showAnnotate.id = "' . $this->elementUid . '";';
-        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].buttons.showAnnotate.table = "' . $this->elementTable . '";';
+        $js[] = 'RTEarea[editornumber].buttons.showAnnotate = new Object();';
+        //extract table and id from editor number as our config is not provided with that anymore in 7.6
+        $js[] = 'var extractor = editornumber.match(/.*?_(.*?)__(.*?)__.*/i);';
+        $js[] = 'RTEarea[editornumber].buttons.showAnnotate.table = extractor[0];';
+        $js[] = 'RTEarea[editornumber].buttons.showAnnotate.id = extractor[1];';
+        $js[] = 'RTEarea[editornumber].buttons.showAnnotate.wrap = "editorWrap"+editornumber;';
 
         //add special css to edited htmldocument
         $documentcss = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extensionKey) . 'Resources/Public/Skin/document.css';
-        $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].documentcssPath = "../' . $documentcss . '";';
+        $js[] = 'RTEarea[editornumber].buttons.showAnnotate.documentcssPath = "../' . $documentcss . '";';
 
-        if ($this->isEvaluation())
-        {
-            $evaluationcss = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extensionKey) . 'Resources/Public/Skin/evaluation.css';
-            $registerRTEinJavascriptString .= 'RTEarea[' . $RTEcounter . '].evaluationcssPath = "../' . $evaluationcss . '";';
-        }
+        //not nice, but the skin attribute is not honored anymore
+        $listcss = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extensionKey) . 'Resources/Public/Skin/list.css';
+        $js[] = 'debugger;';
+        $js[] = 'var cssele = document.createElement("link")';
+        $js[] = 'cssele.rel = "stylesheet";';
+        $js[] = 'cssele.type = "text/css";';
+        $js[] = 'cssele.href = "../' . $listcss .'";';
+        $js[] = 'document.head.appendChild(cssele);';
 
-        return $registerRTEinJavascriptString;
+        return implode(LF, $js);
     }
 }
