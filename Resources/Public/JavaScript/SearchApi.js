@@ -14,20 +14,9 @@ define('TYPO3/CMS/Annotate/SearchApi', [
     $,
     SearchUI
 ) {
-    /**
-     * SearchApi Constructor
-     */
-    var SearchApi = function(){
-    };
-    SearchApi.prototype = {
-        // @type {Object}
-        constructor: SearchApi,
-        /**
-         * Show search ui
-         */
+    return {
         show: function(mountpoint) {
             React.render(React.createElement(SearchUI, {}), mountpoint);
         }
     };
-    return SearchApi;
 });
