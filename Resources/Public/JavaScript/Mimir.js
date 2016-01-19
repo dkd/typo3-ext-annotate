@@ -5,8 +5,10 @@
  */
 define('TYPO3/CMS/Annotate/Mimir', [
     'jquery',
+    'TYPO3/CMS/Annotate/Remote'
 ], function (
-    $
+    $,
+    Remote
 ) {
     return {
         /**
@@ -16,29 +18,28 @@ define('TYPO3/CMS/Annotate/Mimir', [
          * @param {function} cb after succes
          */
         query: function(verb, args, cb) {
-            window.parent.TYPO3.Annotate.Server.mimirQuery(
+            Remote.query(
                 verb,
                 args,
-                function(result){
+                function(err, result){
                     cb.bind(self);
-                    var json = $.parseJSON(result);
                     if (args.keepOriginal)
                     {
-                        cb(null, json);
+                        cb(null, result);
                     }
                     else
                     {
-                        if (json.state == "SUCCESS")
-                            cb(null, json.data);
-                        else if (json.state == "ERROR")
-                            cb(json.data);
+                        if (result.state == "SUCCESS")
+                            cb(null, result.data);
+                        else if (result.state == "ERROR")
+                            cb(result.data);
                     }
                 });
         },
         index: function (tablename, id, content, callback) {
-            window.parent.TYPO3.Annotate.Server.index(tablename, id, content, function (result) {
-                callback($.parseJSON(result));
+            Remote.index(tablename, id, content, function (err, result) {
+                callback(result);
             });
         }
     };
-});
+      });

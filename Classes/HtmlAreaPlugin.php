@@ -28,8 +28,8 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
         $js[] = 'RTEarea[editornumber].buttons.showAnnotate = new Object();';
         //extract table and id from editor number as our config is not provided with that anymore in 7.6
         $js[] = 'var extractor = editornumber.match(/.*?_(.*?)__(.*?)__.*/i);';
-        $js[] = 'RTEarea[editornumber].buttons.showAnnotate.table = extractor[0];';
-        $js[] = 'RTEarea[editornumber].buttons.showAnnotate.id = extractor[1];';
+        $js[] = 'RTEarea[editornumber].buttons.showAnnotate.table = extractor[1];';
+        $js[] = 'RTEarea[editornumber].buttons.showAnnotate.id = extractor[2];';
         $js[] = 'RTEarea[editornumber].buttons.showAnnotate.wrap = "editorWrap"+editornumber;';
 
         //add special css to edited htmldocument

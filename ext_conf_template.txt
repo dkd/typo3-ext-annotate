@@ -6,3 +6,5 @@ mimirQuery = http://mimir:8080/
 mimirDatabase = 1
 # cat=basic; type=string; label= Annotate Host
 annotateHost = http://gate:8089/
+# cat=basic; type=string; label= Annotate Host
+ontoautHost = http://ontoaut:3001/

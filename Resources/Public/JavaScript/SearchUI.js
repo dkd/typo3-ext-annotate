@@ -8,13 +8,15 @@ define('TYPO3/CMS/Annotate/SearchUI', [
     'TYPO3/CMS/Annotate/LoadingIndicator',
     'TYPO3/CMS/Annotate/Query',
     'TYPO3/CMS/Annotate/Observe',
-    'TYPO3/CMS/Annotate/Aggregate'
+    'TYPO3/CMS/Annotate/Aggregate',
+    'TYPO3/CMS/Annotate/Remote'
 ], function (
     React,
     LoadingIndicator,
     Query,
     Observe,
-    Aggregate
+    Aggregate,
+    Remote
 ) {
     return React.createClass({
         displayName: 'SearchUI',
@@ -40,9 +42,12 @@ define('TYPO3/CMS/Annotate/SearchUI', [
         onView: function(result) {
             var query = this.state.query;
             return function (event) {
-                window.parent.TYPO3.Annotate.Server.mimirResolveId(result.id, function(ret){
-                    Aggregate(ret.typo3_table, ret.typo3_uid)("SEM_SEARCH_CLICK", {query: query.raw});
-                    window.open("alt_doc.php?&edit[" + ret.typo3_table +  "][" +  ret.typo3_uid + "]=edit");
+                Remote.resolveId(result.id, function(err, ret){
+                    if (!err && ret)
+                    {
+                        Aggregate(ret.typo3_table, ret.typo3_uid)("SEM_SEARCH_CLICK", {query: query.raw});
+                        window.open(ret.base + "&edit[" + ret.typo3_table +  "][" +  ret.typo3_uid + "]=edit");
+                    }
                 });
             };
         },
@@ -51,50 +56,50 @@ define('TYPO3/CMS/Annotate/SearchUI', [
                 running = this.state.query.isRunning(),
                 finished = this.state.query.isFinished();
             return React.createElement("div", {className: "mimir"},
-                React.createElement("h2", null,  "Welcome to your Mimir Search"),
-                React.createElement('textarea', {
-                    className: 'bar',
-                    value: this.state.query.raw,
-                    onChange: this.onChange
-                }),
-                React.createElement('button', {
-                    className: 'run',
-                    disabled: !this.state.query.isValid(),
-                    onClick: this.onQuery
-                }, 'Query!'),
-                React.createElement('button', {
-                    className: 'new',
-                    onClick: this.onNew
-                }, 'Clear'),
-                React.createElement('textarea', {
-                    className: 'bar transformed',
-                    readOnly:true,
-                    value: this.state.query.transformed
-                }),
-                !(running || finished) ? null:
-                React.createElement("div", {
-                    className: 'results'
-                },
-                  !running ? null : [
-                      this.state.query.queryId,
-                      React.createElement(LoadingIndicator, {className: 'loading'}),
-                      this.state.query.documentCurrentCount
-                  ],
-                  !finished ? null : [
-                      "Showing " +  this.state.query.documentCurrentCount + " results for queryId: " + this.state.query.queryId,
-                      this.state.query.results.map((function (result) {
-                          return React.createElement("div",
-                              {
-                                  className: "result",
-                                  key: result.index,
-                                  onClick: this.onView(result)
-                              },
-                              React.createElement("p", {className: "resultText", dangerouslySetInnerHTML: {__html: result.text}})
-                             );
-                      }).bind(this))
-                  ]
-                 )
-               );
+                                       React.createElement("h2", null,  "Welcome to your Mimir Search"),
+                                       React.createElement('textarea', {
+                                           className: 'bar',
+                                           value: this.state.query.raw,
+                                           onChange: this.onChange
+                                       }),
+                                       React.createElement('button', {
+                                           className: 'run',
+                                           disabled: !this.state.query.isValid(),
+                                           onClick: this.onQuery
+                                       }, 'Query!'),
+                                       React.createElement('button', {
+                                           className: 'new',
+                                           onClick: this.onNew
+                                       }, 'Clear'),
+                                       React.createElement('textarea', {
+                                           className: 'bar transformed',
+                                           readOnly:true,
+                                           value: this.state.query.transformed
+                                       }),
+                                       !(running || finished) ? null:
+                                       React.createElement("div", {
+                                           className: 'results'
+                                       },
+                                                           !running ? null : [
+                                                               this.state.query.queryId,
+                                                               React.createElement(LoadingIndicator, {className: 'loading'}),
+                                                               this.state.query.documentCurrentCount
+                                                           ],
+                                                           !finished ? null : [
+                                                               "Showing " +  this.state.query.documentCurrentCount + " results for queryId: " + this.state.query.queryId,
+                                                               this.state.query.results.map((function (result) {
+                                                                   return React.createElement("div",
+                                                                                              {
+                                                                                                  className: "result",
+                                                                                                  key: result.index,
+                                                                                                  onClick: this.onView(result)
+                                                                                              },
+                                                                                              React.createElement("p", {className: "resultText", dangerouslySetInnerHTML: {__html: result.text}})
+                                                                                             );
+                                                               }).bind(this))
+                                                           ]
+                                                          )
+                                      );
         }
     });
 });

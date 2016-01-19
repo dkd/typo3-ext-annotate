@@ -62,4 +62,14 @@ class Configuration implements \TYPO3\CMS\Core\SingletonInterface {
     {
         return $this->settings['annotateHost'];
     }
+
+    /**
+     * Get Annotation Host
+     *
+     * @return string
+     */
+    public function getOntoautHost()
+    {
+        return $this->settings['ontoautHost'];
+    }
 }

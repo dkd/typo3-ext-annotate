@@ -5,10 +5,12 @@
  */
 define('TYPO3/CMS/Annotate/Editor', [
     'TYPO3/CMS/Annotate/Aggregate',
-    'TYPO3/CMS/Annotate/Mimir'
+    'TYPO3/CMS/Annotate/Mimir',
+    'TYPO3/CMS/Annotate/Remote'
 ], function (
     Aggregate,
-    Mimir
+    Mimir,
+    Remote
 ) {
     /**
      * Abstract Editor Wrapper Constructor
@@ -89,6 +91,13 @@ define('TYPO3/CMS/Annotate/Editor', [
                 id = this.getContentId(),
                 editor = this;
             Mimir.index(this.getContentTable(), this.getContentId(), this.getContent(), cb);
+        },
+        /**
+         * Index the whole content
+         * @param {function} cb
+         */
+        analyze: function(cb) {
+            Remote.analyze(this.getContentTable(), this.getContentId(), this.getContent(), cb);
         },
         /**
          * Add hidden property to annotation span
@@ -205,8 +214,9 @@ define('TYPO3/CMS/Annotate/Editor', [
         var input = this.getContent(),
             editor =  this;
 
-        window.parent.TYPO3.Annotate.Server.annotateText(input, (function(result){
-            editor.setContent(result);
+        Remote.annotate(input, (function(err, result){
+            if (!err)
+                editor.setContent(result);
             cb();
         }));
     };
