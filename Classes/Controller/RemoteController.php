@@ -268,13 +268,13 @@ class RemoteController extends ActionController
         $remote = new \GuzzleHttp\Client(['base_url' => $configuration->getOntoautHost()]);
 
         $text = $request->getBody()->getContents();
-
+        error_log($text);
         $ret = $remote->post('/', [
             'headers'  => ['content-type' => 'application/json', 'Accept' => 'application/json'],
             'body' => $text
         ]);
         $json = $ret->getBody()->getContents();
-
+        error_log($json);
         $response = $response->withHeader('Content-Type', 'json');
         $response->getBody()->write($json);
         return $response;

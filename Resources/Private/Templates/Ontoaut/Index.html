@@ -1,0 +1,17 @@
+{namespace annotate=Dkd\Annotate\ViewHelpers}
+<f:layout name="Ontoaut" />
+
+<f:section name="ontoaut">
+    <annotate:RequireJS />
+    <div id="ontoautMountpoint">
+    </div>
+    <script type="text/javascript">
+     require([
+         'TYPO3/CMS/Annotate/OntoautApi',
+     ], function(
+         OntoautApi
+     ){
+         OntoautApi.mount();
+     });
+    </script>
+</f:section>
