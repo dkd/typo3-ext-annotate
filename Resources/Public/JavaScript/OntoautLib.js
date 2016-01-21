@@ -62,7 +62,11 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _Remote = __webpack_require__(163);
+	var _reactJsonTable = __webpack_require__(163);
+
+	var _reactJsonTable2 = _interopRequireDefault(_reactJsonTable);
+
+	var _Remote = __webpack_require__(164);
 
 	var _Remote2 = _interopRequireDefault(_Remote);
 
@@ -103,24 +107,73 @@
 
 	        sharedInstance = _this;
 	        _this.remote = new _Remote2.default();
+	        _this.state = {
+	            displayedEntities: null,
+	            newEntry: {}
+	        };
+	        _this.onUpdate();
 	        return _this;
 	    }
 
 	    _createClass(Ontoaut, [{
-	        key: 'onSend',
-	        value: function onSend(text) {
-	            text = 'fixed';
-	            this.remote.addJob({ text: text }, console.log.bind(console));
+	        key: 'onUpdate',
+	        value: function onUpdate() {
+	            var _this2 = this;
+
+	            this.remote.entities(function (ent) {
+	                _this2.setState({ displayedEntities: ent });
+	            });
+	        }
+	    }, {
+	        key: 'onNewEntryChange',
+	        value: function onNewEntryChange(name) {
+	            var _this3 = this;
+
+	            return function (event) {
+	                var n = {};
+	                n[name] = event.target.value;
+	                _this3.setState(n);
+	            };
+	        }
+	    }, {
+	        key: 'onSave',
+	        value: function onSave() {
+	            var _this4 = this;
+
+	            this.remote.insertBase(this.state.subject, this.state.label, function (err, result) {
+	                _this4.onUpdate();
+	            });
+	        }
+	    }, {
+	        key: 'onGateReload',
+	        value: function onGateReload() {
+	            this.remote.forceGateReload(console.log.bind(console));
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            return _react2.default.createElement('button', { onClick: this.onSend.bind(this), type: 'button' }, 'Send!');
+	            var _this5 = this;
+
+	            return _react2.default.createElement('div', {},
+	            // active entities
+	            _react2.default.createElement(_reactJsonTable2.default, { rows: this.state.displayedEntities, columns: ['subject', 'cls', 'label'] }), _react2.default.createElement('button', { onClick: this.onUpdate.bind(this), type: 'button' }, 'Update!'), _react2.default.createElement('br', {}),
+	            // edit form
+	            ['subject', 'label'].map(function (name) {
+	                return _react2.default.createElement('span', { key: name, title: name }, name, ':', _react2.default.createElement('input', {
+	                    type: 'text',
+	                    name: name,
+	                    value: _this5.state[name],
+	                    onChange: _this5.onNewEntryChange(name)
+	                }));
+	            }), _react2.default.createElement('button', { onClick: this.onSave.bind(this), type: 'button' }, 'Save!'), _react2.default.createElement('button', { onClick: this.onGateReload.bind(this), type: 'button' }, 'GATE Reload!')
+	            //
+	            );
 	        }
 	    }]);
 
 	    return Ontoaut;
 	}(_react.Component);
+
 	//Do you hear them calling out my name?
 	// TYPO3 might want us and is signalizing that by giving us there define
 
@@ -20078,6 +20131,241 @@
 /* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var React = __webpack_require__(5);
+
+	var $ = React.DOM;
+
+	// Some shared attrs for JsonTable and JsonRow
+	var defaultSettings = {
+			header: true,
+			noRowsMessage: 'No items',
+			classPrefix: 'json'
+		},
+		getSetting = function( name ){
+			var settings = this.props.settings;
+
+			if( !settings || typeof settings[ name ] == 'undefined' )
+				return defaultSettings[ name ];
+
+			return settings[ name ];
+		}
+	;
+
+	var JsonTable = React.createClass({
+		getSetting: getSetting,
+
+		render: function(){
+			var cols = this.normalizeColumns(),
+				contents = [this.renderRows( cols )]
+			;
+
+			if( this.getSetting('header') )
+				contents.unshift( this.renderHeader( cols ) );
+
+			var tableClass = this.props.className || this.getSetting( 'classPrefix' ) + 'Table';
+
+			return $.table({ className: tableClass }, contents );
+		},
+
+		renderHeader: function( cols ){
+			var me = this,
+				prefix = this.getSetting( 'classPrefix' ),
+				headerClass = this.getSetting( 'headerClass' ),
+				cells = cols.map( function(col){
+					var className = prefix + 'Column';
+					if( headerClass )
+						className = headerClass( className, col.key );
+
+					return $.th(
+						{ className: className, key: col.key, onClick: me.onClickHeader, "data-key": col.key },
+						col.label
+					);
+				})
+			;
+
+			return $.thead({ key: 'th' },
+				$.tr({ className: prefix + 'Header' }, cells )
+			);
+		},
+
+		renderRows: function( cols ){
+			var me = this,
+				items = this.props.rows,
+				settings = this.props.settings || {},
+				i = 1
+			;
+
+			if( !items || !items.length )
+				return $.tbody({key:'body'}, [$.tr({}, $.td({}, this.getSetting('noRowsMessage') ))]);
+
+			var rows = items.map( function( item ){
+				var key = me.getKey( item, i );
+				return React.createElement(Row, {
+					key: key,
+					reactKey: key,
+					item: item,
+					settings: settings,
+					columns: cols,
+					i: i++,
+					onClickRow: me.onClickRow,
+					onClickCell: me.onClickCell
+				});
+			});
+
+			return $.tbody({key:'body'}, rows);
+		},
+
+		getItemField: function( item, field ){
+			return item[ field ];
+		},
+
+		normalizeColumns: function(){
+			var getItemField = this.getItemField,
+				cols = this.props.columns,
+				items = this.props.rows
+			;
+
+			if( !cols ){
+				if( !items || !items.length )
+					return [];
+
+				return Object.keys( items[0] ).map( function( key ){
+					return { key: key, label: key, cell: getItemField };
+				});
+			}
+
+			return cols.map( function( col ){
+				var key;
+				if( typeof col == 'string' ){
+					return {
+						key: col,
+						label: col,
+						cell: getItemField
+					};
+				}
+
+				if( typeof col == 'object' ){
+					key = col.key || col.label;
+
+					// This is about get default column definition
+					// we use label as key if not defined
+					// we use key as label if not defined
+					// we use getItemField as cell function if not defined
+					return {
+						key: key,
+						label: col.label || key,
+						cell: col.cell || getItemField
+					};
+				}
+
+				return {
+					key: 'unknown',
+					name:'unknown',
+					cell: 'Unknown'
+				};
+			});
+		},
+
+		getKey: function( item, i ){
+			var field = this.props.settings && this.props.settings.keyField;
+			if( field && item[ field ] )
+				return item[ field ];
+
+			if( item.id )
+				return item.id;
+
+			if( item._id )
+				return item._id;
+
+			return i;
+		},
+
+		shouldComponentUpdate: function(){
+			return true;
+		},
+
+		onClickRow: function( e, item ){
+			if( this.props.onClickRow ){
+				this.props.onClickRow( e, item );
+			}
+		},
+
+		onClickHeader: function( e ){
+			if( this.props.onClickHeader ){
+				this.props.onClickHeader( e, e.target.dataset.key );
+			}
+		},
+
+		onClickCell: function( e, key, item ){
+			if( this.props.onClickCell ){
+				this.props.onClickCell( e, key, item );
+			}
+		}
+	});
+
+	var Row = React.createClass({
+		getSetting: getSetting,
+
+		render: function() {
+			var me = this,
+				props = this.props,
+				cellClass = this.getSetting('cellClass'),
+				rowClass = this.getSetting('rowClass'),
+				prefix = this.getSetting('classPrefix'),
+				cells = props.columns.map( function( col ){
+					var content = col.cell,
+						key = col.key,
+						className = prefix + 'Cell ' + prefix + 'Cell_' + key
+					;
+
+					if( cellClass )
+						className = cellClass( className, key, props.item );
+
+					if( typeof content == 'function' )
+						content = content( props.item, key );
+
+					return $.td( {
+						className: className,
+						key: key,
+						"data-key": key,
+						onClick: me.onClickCell
+					}, content );
+				})
+			;
+
+			var className = prefix + 'Row ' + prefix +
+				(props.i % 2 ? 'Odd' : 'Even')
+			;
+
+			if( props.reactKey )
+				className += ' ' + prefix + 'Row_' + props.reactKey;
+
+			if( rowClass )
+				className = rowClass( className, props.item );
+
+			return $.tr({
+				className: className,
+				onClick: me.onClickRow,
+				key: this.props.reactKey
+			}, cells );
+		},
+
+		onClickCell: function( e ){
+			this.props.onClickCell( e, e.target.dataset.key, this.props.item );
+		},
+
+		onClickRow: function( e ){
+			this.props.onClickRow( e, this.props.item );
+		}
+	});
+
+	module.exports = JsonTable;
+
+
+/***/ },
+/* 164 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -20086,15 +20374,15 @@
 	    value: true
 	});
 
-	var _Utility = __webpack_require__(164);
+	var _Utility = __webpack_require__(165);
 
 	var _Utility2 = _interopRequireDefault(_Utility);
 
-	var _Api = __webpack_require__(166);
+	var _Api = __webpack_require__(167);
 
 	var _Api2 = _interopRequireDefault(_Api);
 
-	var _jqueryAjax = __webpack_require__(168);
+	var _jqueryAjax = __webpack_require__(169);
 
 	var _jqueryAjax2 = _interopRequireDefault(_jqueryAjax);
 
@@ -20138,7 +20426,7 @@
 	                this.dataTypeConfigured = 'json';
 	                go();
 	            } else {
-	                _jqueryAjax2.default.ajax({ url: "http://localhost:3001/",
+	                _jqueryAjax2.default.ajax({ url: "http://localhost:3001/status",
 	                    type: "HEAD",
 	                    timeout: 1000,
 	                    statusCode: {
@@ -20187,7 +20475,7 @@
 	exports.default = Remote;
 
 /***/ },
-/* 164 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20196,7 +20484,7 @@
 	  value: true
 	});
 
-	var _Utility = __webpack_require__(165);
+	var _Utility = __webpack_require__(166);
 
 	var _Utility2 = _interopRequireDefault(_Utility);
 
@@ -20205,7 +20493,7 @@
 	exports.default = _Utility2.default;
 
 /***/ },
-/* 165 */
+/* 166 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -20233,7 +20521,7 @@
 	};
 
 /***/ },
-/* 166 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20242,7 +20530,7 @@
 	  value: true
 	});
 
-	var _Api = __webpack_require__(167);
+	var _Api = __webpack_require__(168);
 
 	var _Api2 = _interopRequireDefault(_Api);
 
@@ -20251,7 +20539,7 @@
 	exports.default = _Api2.default;
 
 /***/ },
-/* 167 */
+/* 168 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -20260,11 +20548,14 @@
 	    value: true
 	});
 	exports.default = {
-	    addJob: {}
+	    addJob: {},
+	    entities: {},
+	    insertBase: {},
+	    forceGateReload: {}
 	};
 
 /***/ },
-/* 168 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
