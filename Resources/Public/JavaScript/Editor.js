@@ -4,11 +4,11 @@
  * @author Johannes Goslar
  */
 define('TYPO3/CMS/Annotate/Editor', [
-    'TYPO3/CMS/Annotate/Aggregate',
+    'TYPO3/CMS/AggregationAggregation',
     'TYPO3/CMS/Annotate/Mimir',
     'TYPO3/CMS/Annotate/Remote'
 ], function (
-    Aggregate,
+    Aggregation,
     Mimir,
     Remote
 ) {
@@ -240,10 +240,9 @@ define('TYPO3/CMS/Annotate/Editor', [
     };
 
     Htmlarea.prototype.aggregate = function (action, additionalData) {
-        this.aggregate = Aggregate(this.getContentTable(), this.getContentId());
         if (additionalData == null)
             additionalData =  {};
-        this.aggregate(action, additionalData);
+        Aggregation.log(action, this.getContentTable(), this.getContentId(), additionalData);
     };
 
     return {
