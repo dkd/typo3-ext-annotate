@@ -15,3 +15,7 @@ if (TYPO3_MODE === 'BE') {
         'Dkd\\Annotate\\Server'
     );
 }
+
+//FIXME: not implemented yet
+// $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['tt_content_drawItem']['_annotate_annotate'] =
+//                \Dkd\Annotate\Hooks\TTContentAnnotateElementPreviewRenderer::class;
