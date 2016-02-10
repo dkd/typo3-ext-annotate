@@ -9,13 +9,6 @@ $TYPO3_CONF_VARS['EXTCONF']['rtehtmlarea']['plugins']['Annotate']['objectReferen
 $TYPO3_CONF_VARS['EXTCONF']['rtehtmlarea']['plugins']['Annotate']['addIconsToSkin'] = 1;
 $TYPO3_CONF_VARS['EXTCONF']['rtehtmlarea']['plugins']['Annotate']['disableInFE'] = 1;
 
-if (TYPO3_MODE === 'BE') {
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerExtDirectComponent(
-        'TYPO3.Annotate.Server',
-        'Dkd\\Annotate\\Server'
-    );
-}
-
 //FIXME: not implemented yet
 // $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['tt_content_drawItem']['_annotate_annotate'] =
 //                \Dkd\Annotate\Hooks\TTContentAnnotateElementPreviewRenderer::class;
