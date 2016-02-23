@@ -4,7 +4,7 @@
  * @author Johannes Goslar
  */
 define('TYPO3/CMS/Annotate/Editor', [
-    'TYPO3/CMS/AggregationAggregation',
+    'TYPO3/CMS/Aggregation/Aggregation',
     'TYPO3/CMS/Annotate/Mimir',
     'TYPO3/CMS/Annotate/Remote'
 ], function (
