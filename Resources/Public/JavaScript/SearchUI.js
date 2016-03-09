@@ -95,7 +95,7 @@ define('TYPO3/CMS/Annotate/SearchUI', [
                                   key: result.index,
                                   onClick: this.onView(result)
                               },
-                              React.createElement("p", {className: "resultText", dangerouslySetInnerHTML: {__html: result.text}})
+                              React.createElement("p", {className: "resultText", dangerouslySetInnerHTML: {__html: result.text.split('style="background-color: rgb(255, 135, 0);"').join('')}})
                              );
                       }).bind(this))
                   ]
