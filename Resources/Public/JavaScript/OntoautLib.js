@@ -67,19 +67,15 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _reactJsonTable = __webpack_require__(164);
-
-	var _reactJsonTable2 = _interopRequireDefault(_reactJsonTable);
-
-	var _Remote = __webpack_require__(165);
+	var _Remote = __webpack_require__(164);
 
 	var _Remote2 = _interopRequireDefault(_Remote);
 
-	var _Submittor = __webpack_require__(171);
+	var _Submittor = __webpack_require__(170);
 
 	var _Submittor2 = _interopRequireDefault(_Submittor);
 
-	var _Entities = __webpack_require__(173);
+	var _Entities = __webpack_require__(172);
 
 	var _Entities2 = _interopRequireDefault(_Entities);
 
@@ -181,16 +177,16 @@
 	        value: function render() {
 	            var _this5 = this;
 
-	            return _react2.default.createElement('div', {}, _react2.default.createElement(_Submittor2.default, { remote: this.remote, update: this.onUpdate.bind(this) }), this.entitytypes.map(function (type) {
-	                return _react2.default.createElement('div', {}, _react2.default.createElement('h1', {}, type), _react2.default.createElement(_Entities2.default, { type: type, entities: _this5.state[type] || [], remote: _this5.remote, update: _this5.onUpdate.bind(_this5) }));
-	            }), _react2.default.createElement('button', { onClick: this.onUpdate.bind(this), type: 'button' }, 'Update!'), _react2.default.createElement('h1', {}, 'Manual'), ['subject', 'label', 'cls'].map(function (name) {
-	                return _react2.default.createElement('span', { key: name, title: name }, name, ':', _react2.default.createElement('input', {
+	            return _react2.default.createElement('div', { className: 'ontoaut' }, _react2.default.createElement(_Submittor2.default, { remote: this.remote, update: this.onUpdate.bind(this) }), this.entitytypes.map(function (type) {
+	                return _react2.default.createElement('div', { className: 'tableContainer' }, _react2.default.createElement('h2', {}, type), _react2.default.createElement(_Entities2.default, { type: type, entities: _this5.state[type] || [], remote: _this5.remote, update: _this5.onUpdate.bind(_this5) }));
+	            }), _react2.default.createElement('button', { onClick: this.onUpdate.bind(this), type: 'button' }, 'Update!'), _react2.default.createElement('div', { className: 'divider' }), _react2.default.createElement('h2', {}, 'Manual'), ['Subject', 'Label', 'Class'].map(function (name) {
+	                return _react2.default.createElement('span', { key: name, title: name }, name, _react2.default.createElement('input', {
 	                    type: 'text',
 	                    name: name,
 	                    value: _this5.state[name],
 	                    onChange: _this5.onNewEntryChange(name)
 	                }));
-	            }), _react2.default.createElement('button', { onClick: this.onSave.bind(this), type: 'button' }, 'Save!'), _react2.default.createElement('button', { onClick: this.onGateReload.bind(this), type: 'button' }, 'GATE Reload!'));
+	            }), _react2.default.createElement('div', { className: 'empty' }), _react2.default.createElement('button', { onClick: this.onSave.bind(this), type: 'button' }, 'Save!'), _react2.default.createElement('button', { onClick: this.onGateReload.bind(this), type: 'button' }, 'GATE Reload!'));
 	        }
 	    }]);
 
@@ -240,7 +236,7 @@
 
 
 	// module
-	exports.push([module.id, ".jsonTable\n{\n    border-collapse: separate;\n    border-spacing: 5px 40px;\n}\n", ""]);
+	exports.push([module.id, ".jsonTable\n{\n    border-collapse: separate;\n    border-spacing: 5px 40px;\n}\n\n.ontoaut\n{\n    border-spacing: 15px;\n}\n\n\nbody \n{\n    font-family: \"Arial\";\n}\n\nh2 {\n    margin-bottom: 15px;\n}\n\n.tableContainer\n{\n    margin-bottom: 40px;\n}\n\n.entityTable \n{\n    text-align: left;\n}\n\n\ntable\n{\n    border-spacing: 0px;\n}\n\nth \n{\n    background-color: #ececec;\n    padding: 10px;\n    color: #666666;\n}\n\ntr\n{\n    background: #ffffff;\n    text-align: left;\n}\n\n\n\ntd \n{\n    padding: 10px 60px 10px 10px; \n    border-bottom: 1px solid #ececec;\n}\n\n\n\nbutton\n{\n    color: #ffffff;\n    padding: 6px 15px;\n    border-radius: 4px;\n    background-color: #FE8B13;\n    border: 0px;\n    margin-right: 10px;\n    font-size: 14px;\n}\n\nbutton:hover \n{\nbackground-color: #d06e01;\n}\n\n\ninput\n{\n    height: 20px;\n    display: inline-block;\n    margin-right: 20px;\n}\n\n\n.empty\n{\n    margin-bottom: 20px;\n}\n\nspan\n{\n    color: #666666;\n    font-size: 14px;\n    margin-right: 5px;\n}\n\n.divider\n{\n    margin: 20px 0px 40px 0px;\n    border-bottom: 1px solid #ccc;\n}", ""]);
 
 	// exports
 
@@ -20256,241 +20252,6 @@
 /* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(5);
-
-	var $ = React.DOM;
-
-	// Some shared attrs for JsonTable and JsonRow
-	var defaultSettings = {
-			header: true,
-			noRowsMessage: 'No items',
-			classPrefix: 'json'
-		},
-		getSetting = function( name ){
-			var settings = this.props.settings;
-
-			if( !settings || typeof settings[ name ] == 'undefined' )
-				return defaultSettings[ name ];
-
-			return settings[ name ];
-		}
-	;
-
-	var JsonTable = React.createClass({
-		getSetting: getSetting,
-
-		render: function(){
-			var cols = this.normalizeColumns(),
-				contents = [this.renderRows( cols )]
-			;
-
-			if( this.getSetting('header') )
-				contents.unshift( this.renderHeader( cols ) );
-
-			var tableClass = this.props.className || this.getSetting( 'classPrefix' ) + 'Table';
-
-			return $.table({ className: tableClass }, contents );
-		},
-
-		renderHeader: function( cols ){
-			var me = this,
-				prefix = this.getSetting( 'classPrefix' ),
-				headerClass = this.getSetting( 'headerClass' ),
-				cells = cols.map( function(col){
-					var className = prefix + 'Column';
-					if( headerClass )
-						className = headerClass( className, col.key );
-
-					return $.th(
-						{ className: className, key: col.key, onClick: me.onClickHeader, "data-key": col.key },
-						col.label
-					);
-				})
-			;
-
-			return $.thead({ key: 'th' },
-				$.tr({ className: prefix + 'Header' }, cells )
-			);
-		},
-
-		renderRows: function( cols ){
-			var me = this,
-				items = this.props.rows,
-				settings = this.props.settings || {},
-				i = 1
-			;
-
-			if( !items || !items.length )
-				return $.tbody({key:'body'}, [$.tr({}, $.td({}, this.getSetting('noRowsMessage') ))]);
-
-			var rows = items.map( function( item ){
-				var key = me.getKey( item, i );
-				return React.createElement(Row, {
-					key: key,
-					reactKey: key,
-					item: item,
-					settings: settings,
-					columns: cols,
-					i: i++,
-					onClickRow: me.onClickRow,
-					onClickCell: me.onClickCell
-				});
-			});
-
-			return $.tbody({key:'body'}, rows);
-		},
-
-		getItemField: function( item, field ){
-			return item[ field ];
-		},
-
-		normalizeColumns: function(){
-			var getItemField = this.getItemField,
-				cols = this.props.columns,
-				items = this.props.rows
-			;
-
-			if( !cols ){
-				if( !items || !items.length )
-					return [];
-
-				return Object.keys( items[0] ).map( function( key ){
-					return { key: key, label: key, cell: getItemField };
-				});
-			}
-
-			return cols.map( function( col ){
-				var key;
-				if( typeof col == 'string' ){
-					return {
-						key: col,
-						label: col,
-						cell: getItemField
-					};
-				}
-
-				if( typeof col == 'object' ){
-					key = col.key || col.label;
-
-					// This is about get default column definition
-					// we use label as key if not defined
-					// we use key as label if not defined
-					// we use getItemField as cell function if not defined
-					return {
-						key: key,
-						label: col.label || key,
-						cell: col.cell || getItemField
-					};
-				}
-
-				return {
-					key: 'unknown',
-					name:'unknown',
-					cell: 'Unknown'
-				};
-			});
-		},
-
-		getKey: function( item, i ){
-			var field = this.props.settings && this.props.settings.keyField;
-			if( field && item[ field ] )
-				return item[ field ];
-
-			if( item.id )
-				return item.id;
-
-			if( item._id )
-				return item._id;
-
-			return i;
-		},
-
-		shouldComponentUpdate: function(){
-			return true;
-		},
-
-		onClickRow: function( e, item ){
-			if( this.props.onClickRow ){
-				this.props.onClickRow( e, item );
-			}
-		},
-
-		onClickHeader: function( e ){
-			if( this.props.onClickHeader ){
-				this.props.onClickHeader( e, e.target.dataset.key );
-			}
-		},
-
-		onClickCell: function( e, key, item ){
-			if( this.props.onClickCell ){
-				this.props.onClickCell( e, key, item );
-			}
-		}
-	});
-
-	var Row = React.createClass({
-		getSetting: getSetting,
-
-		render: function() {
-			var me = this,
-				props = this.props,
-				cellClass = this.getSetting('cellClass'),
-				rowClass = this.getSetting('rowClass'),
-				prefix = this.getSetting('classPrefix'),
-				cells = props.columns.map( function( col ){
-					var content = col.cell,
-						key = col.key,
-						className = prefix + 'Cell ' + prefix + 'Cell_' + key
-					;
-
-					if( cellClass )
-						className = cellClass( className, key, props.item );
-
-					if( typeof content == 'function' )
-						content = content( props.item, key );
-
-					return $.td( {
-						className: className,
-						key: key,
-						"data-key": key,
-						onClick: me.onClickCell
-					}, content );
-				})
-			;
-
-			var className = prefix + 'Row ' + prefix +
-				(props.i % 2 ? 'Odd' : 'Even')
-			;
-
-			if( props.reactKey )
-				className += ' ' + prefix + 'Row_' + props.reactKey;
-
-			if( rowClass )
-				className = rowClass( className, props.item );
-
-			return $.tr({
-				className: className,
-				onClick: me.onClickRow,
-				key: this.props.reactKey
-			}, cells );
-		},
-
-		onClickCell: function( e ){
-			this.props.onClickCell( e, e.target.dataset.key, this.props.item );
-		},
-
-		onClickRow: function( e ){
-			this.props.onClickRow( e, this.props.item );
-		}
-	});
-
-	module.exports = JsonTable;
-
-
-/***/ },
-/* 165 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -20500,15 +20261,15 @@
 	});
 	exports.default = undefined;
 
-	var _Utility = __webpack_require__(166);
+	var _Utility = __webpack_require__(165);
 
 	var _Utility2 = _interopRequireDefault(_Utility);
 
-	var _Api = __webpack_require__(168);
+	var _Api = __webpack_require__(167);
 
 	var _Api2 = _interopRequireDefault(_Api);
 
-	var _jqueryAjax = __webpack_require__(170);
+	var _jqueryAjax = __webpack_require__(169);
 
 	var _jqueryAjax2 = _interopRequireDefault(_jqueryAjax);
 
@@ -20601,7 +20362,7 @@
 	exports.default = Remote;
 
 /***/ },
-/* 166 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20610,7 +20371,7 @@
 	  value: true
 	});
 
-	var _Utility = __webpack_require__(167);
+	var _Utility = __webpack_require__(166);
 
 	var _Utility2 = _interopRequireDefault(_Utility);
 
@@ -20619,7 +20380,7 @@
 	exports.default = _Utility2.default;
 
 /***/ },
-/* 167 */
+/* 166 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -20630,7 +20391,7 @@
 	exports.default = {};
 
 /***/ },
-/* 168 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20639,7 +20400,7 @@
 	  value: true
 	});
 
-	var _Api = __webpack_require__(169);
+	var _Api = __webpack_require__(168);
 
 	var _Api2 = _interopRequireDefault(_Api);
 
@@ -20648,7 +20409,7 @@
 	exports.default = _Api2.default;
 
 /***/ },
-/* 169 */
+/* 168 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -20667,7 +20428,7 @@
 	};
 
 /***/ },
-/* 170 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -25217,7 +24978,7 @@
 
 
 /***/ },
-/* 171 */
+/* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25229,11 +24990,13 @@
 	});
 	exports.default = undefined;
 
+	__webpack_require__(1);
+
 	var _react = __webpack_require__(5);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Result = __webpack_require__(172);
+	var _Result = __webpack_require__(171);
 
 	var _Result2 = _interopRequireDefault(_Result);
 
@@ -25279,7 +25042,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            return _react2.default.createElement('div', {}, _react2.default.createElement('h1', {}, 'Submittor'), _react2.default.createElement('textarea', { value: this.state.input, onChange: this.onChange.bind(this) }), _react2.default.createElement('br', {}), _react2.default.createElement(_Result2.default, { result: this.state.result }), _react2.default.createElement('br', {}), _react2.default.createElement('button', { onClick: this.onSubmit.bind(this) }, 'Submit'));
+	            return _react2.default.createElement('div', {}, _react2.default.createElement('h2', {}, 'Submittor'), _react2.default.createElement('textarea', { value: this.state.input, onChange: this.onChange.bind(this) }), _react2.default.createElement('br', {}), _react2.default.createElement(_Result2.default, { result: this.state.result }), _react2.default.createElement('br', {}), _react2.default.createElement('button', { onClick: this.onSubmit.bind(this) }, 'Submit'), _react2.default.createElement('div', { className: 'divider' }));
 	        }
 	    }]);
 
@@ -25289,7 +25052,7 @@
 	exports.default = Submittor;
 
 /***/ },
-/* 172 */
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25338,7 +25101,7 @@
 	exports.default = Result;
 
 /***/ },
-/* 173 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25390,7 +25153,7 @@
 	        value: function render() {
 	            var _this3 = this;
 
-	            return _react2.default.createElement('div', {}, _react2.default.createElement('table', {}, _react2.default.createElement('tbody', {}, _react2.default.createElement('tr', {}, _react2.default.createElement('th', {}, 'Label'), _react2.default.createElement('th', {}, 'Subject'), _react2.default.createElement('th', {}, 'Class'), this.unconfirmed ? _react2.default.createElement('th', {}, 'Confirm') : null), this.props.entities.map(function (ent, i) {
+	            return _react2.default.createElement('div', {}, _react2.default.createElement('table', { className: 'entityTable' }, _react2.default.createElement('tbody', {}, _react2.default.createElement('tr', {}, _react2.default.createElement('th', {}, 'Label'), _react2.default.createElement('th', {}, 'Subject'), _react2.default.createElement('th', {}, 'Class'), this.unconfirmed ? _react2.default.createElement('th', {}, 'Action') : null), this.props.entities.map(function (ent, i) {
 	                return _react2.default.createElement('tr', { key: i }, _react2.default.createElement('td', {}, ent.label), _react2.default.createElement('td', {}, ent.subject), _react2.default.createElement('td', {}, ent.cls), _this3.unconfirmed ? _react2.default.createElement('td', {}, _react2.default.createElement('button', { onClick: _this3.confirm(ent.subject), type: 'button' }, 'Confirm')) : null);
 	            }))));
 	        }
