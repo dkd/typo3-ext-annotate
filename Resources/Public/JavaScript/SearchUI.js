@@ -3,8 +3,18 @@
  * @name SearchUI.js
  * @author Johannes Goslar
  */
+
+define('React', ['TYPO3/CMS/Annotate/react'], function(React){
+    return React;
+});
+
+define('ReactDOM', ['TYPO3/CMS/Annotate/react'], function(React){
+    return React;
+});
+
 define('TYPO3/CMS/Annotate/SearchUI', [
     'TYPO3/CMS/Annotate/react',
+    'TYPO3/CMS/Annotate/react-tab',
     'TYPO3/CMS/Annotate/LoadingIndicator',
     'TYPO3/CMS/Annotate/Query',
     'TYPO3/CMS/Annotate/Observe',
@@ -12,12 +22,18 @@ define('TYPO3/CMS/Annotate/SearchUI', [
     'TYPO3/CMS/Annotate/Remote'
 ], function (
     React,
+    ReactTab,
     LoadingIndicator,
     Query,
     Observe,
     Aggregation,
     Remote
 ) {
+    var Tab = ReactTab.Tab,
+        Tabs = ReactTab.Tabs,
+        TabList = ReactTab.TabList,
+        TabPanel = ReactTab.TabPanel;
+
     return React.createClass({
         displayName: 'SearchUI',
         mixins: [Observe.Mixin('query')],
@@ -56,27 +72,46 @@ define('TYPO3/CMS/Annotate/SearchUI', [
             var ready =  this.state.query.isReady(),
                 running = this.state.query.isRunning(),
                 finished = this.state.query.isFinished();
-            return React.createElement("div", {className: "mimir"},
+            return React.createElement('div',{className: "mimir"},
                 React.createElement("h2", null,  "Welcome to your Mimir Search"),
-                React.createElement('textarea', {
-                    className: 'bar',
-                    value: this.state.query.raw,
-                    onChange: this.onChange
-                }),
-                React.createElement('button', {
-                    className: 'run',
-                    disabled: !this.state.query.isValid(),
-                    onClick: this.onQuery
-                }, 'Query!'),
-                React.createElement('button', {
-                    className: 'new',
-                    onClick: this.onNew
-                }, 'Clear'),
-                React.createElement('textarea', {
-                    className: 'bar transformed',
-                    readOnly:true,
-                    value: this.state.query.transformed
-                }),
+                React.createElement(Tabs, {},
+                  React.createElement(TabList,  {},
+                    React.createElement(Tab, {}, "Normal"),
+                    React.createElement(Tab, {}, "Advanced")
+                   ),
+                  React.createElement(TabPanel, {},
+                    React.createElement('button', {
+                        className: 'run',
+                        disabled: !this.state.query.isValid(),
+                        onClick: this.onQuery
+                    }, 'Query!'),
+                    React.createElement('textarea', {
+                        className: 'bar',
+                        value: this.state.query.raw,
+                        onChange: this.onChange
+                    })
+                   ),
+                  React.createElement(TabPanel, {},
+                    React.createElement('button', {
+                        className: 'run',
+                        disabled: !this.state.query.isValid(),
+                        onClick: this.onQuery
+                    }, 'Query!'),
+                    React.createElement('button', {
+                        className: 'new',
+                        onClick: this.onNew
+                    }, 'Clear'),
+                    React.createElement('textarea', {
+                        className: 'bar',
+                        value: this.state.query.raw,
+                        onChange: this.onChange
+                    }),
+                    React.createElement('textarea', {
+                        className: 'bar transformed',
+                        readOnly:true,
+                        value: this.state.query.transformed
+                    })
+                   )),
                 !(running || finished) ? null:
                 React.createElement("div", {
                     className: 'results'
