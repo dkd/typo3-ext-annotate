@@ -75,7 +75,7 @@
 
 	var _Submittor2 = _interopRequireDefault(_Submittor);
 
-	var _Entities = __webpack_require__(172);
+	var _Entities = __webpack_require__(174);
 
 	var _Entities2 = _interopRequireDefault(_Entities);
 
@@ -236,7 +236,7 @@
 
 
 	// module
-	exports.push([module.id, ".jsonTable\n{\n    border-collapse: separate;\n    border-spacing: 5px 40px;\n}\n\n.ontoaut\n{\n    border-spacing: 15px;\n}\n\n\nbody \n{\n    font-family: \"Arial\";\n}\n\nh2 {\n    margin-bottom: 15px;\n}\n\n.tableContainer\n{\n    margin-bottom: 40px;\n}\n\n.entityTable \n{\n    text-align: left;\n}\n\n\ntable\n{\n    border-spacing: 0px;\n}\n\nth \n{\n    background-color: #ececec;\n    padding: 10px;\n    color: #666666;\n}\n\ntr\n{\n    background: #ffffff;\n    text-align: left;\n}\n\n\n\ntd \n{\n    padding: 10px 60px 10px 10px; \n    border-bottom: 1px solid #ececec;\n}\n\n\n\nbutton\n{\n    color: #ffffff;\n    padding: 6px 15px;\n    border-radius: 4px;\n    background-color: #FE8B13;\n    border: 0px;\n    margin-right: 10px;\n    font-size: 14px;\n}\n\nbutton:hover \n{\nbackground-color: #d06e01;\n}\n\n\ninput\n{\n    height: 20px;\n    display: inline-block;\n    margin-right: 20px;\n}\n\n\n.empty\n{\n    margin-bottom: 20px;\n}\n\nspan\n{\n    color: #666666;\n    font-size: 14px;\n    margin-right: 5px;\n}\n\n.divider\n{\n    margin: 20px 0px 40px 0px;\n    border-bottom: 1px solid #ccc;\n}", ""]);
+	exports.push([module.id, ".jsonTable\n{\n    border-collapse: separate;\n    border-spacing: 5px 40px;\n}\n\n.ontoaut\n{\n    border-spacing: 15px;\n}\n\n\nbody \n{\n    font-family: \"Arial\";\n}\n\nh2 {\n    margin-bottom: 15px;\n}\n\n.tableContainer\n{\n    margin-bottom: 40px;\n}\n\n.entityTable \n{\n    text-align: left;\n}\n\ntextarea\n{\n    min-width: 600px;\n    min-height: 300px;\n}\n\ntable\n{\n    border-spacing: 0px;\n}\n\nth \n{\n    background-color: #ececec;\n    padding: 10px;\n    color: #666666;\n}\n\ntr\n{\n    background: #ffffff;\n    text-align: left;\n}\n\n\n\ntd \n{\n    padding: 10px 60px 10px 10px; \n    border-bottom: 1px solid #ececec;\n}\n\n\n\nbutton\n{\n    color: #ffffff;\n    padding: 6px 15px;\n    border-radius: 4px;\n    background-color: #FE8B13;\n    border: 0px;\n    margin-right: 10px;\n    font-size: 14px;\n}\n\nbutton:hover \n{\nbackground-color: #d06e01;\n}\n\n\ninput\n{\n    height: 20px;\n    display: inline-block;\n    margin-right: 20px;\n}\n\n\n.empty\n{\n    margin-bottom: 20px;\n}\n\nspan\n{\n    color: #666666;\n    font-size: 14px;\n    margin-right: 5px;\n}\n\n.divider\n{\n    margin: 20px 0px 40px 0px;\n    border-bottom: 1px solid #ccc;\n}\n", ""]);
 
 	// exports
 
@@ -25000,6 +25000,10 @@
 
 	var _Result2 = _interopRequireDefault(_Result);
 
+	var _queryString = __webpack_require__(172);
+
+	var _queryString2 = _interopRequireDefault(_queryString);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -25016,8 +25020,10 @@
 
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Submittor).call(this, props));
 
+	        var params = _queryString2.default.parse(location.search),
+	            input = params.passedText || '<span resource="http://dbpedia.org/resource/Berlin" vocab="http://dbpedia.org/ontology/">Berlin</span> is some city. <span resource="http://dbpedia.org/resource/Angela_Merkel" vocab="http://dbpedia.org/ontology/">Angela Merkel</span> is there.';
 	        _this.state = {
-	            input: '<span resource="http://dbpedia.org/resource/Berlin" vocab="http://dbpedia.org/ontology/">Berlin</span> is some city. <span resource="http://dbpedia.org/resource/Angela_Merkel" vocab="http://dbpedia.org/ontology/">Angela Merkel</span> is stupid.',
+	            input: input,
 	            result: []
 	        };
 	        return _this;
@@ -25102,6 +25108,114 @@
 
 /***/ },
 /* 172 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var strictUriEncode = __webpack_require__(173);
+
+	function encode(value, strict) {
+		return strict ? strictUriEncode(value) : encodeURIComponent(value);
+	}
+
+	exports.extract = function (str) {
+		return str.split('?')[1] || '';
+	};
+
+	exports.parse = function (str) {
+		// Create an object with no prototype
+		// https://github.com/sindresorhus/query-string/issues/47
+		var ret = Object.create(null);
+
+		if (typeof str !== 'string') {
+			return ret;
+		}
+
+		str = str.trim().replace(/^(\?|#|&)/, '');
+
+		if (!str) {
+			return ret;
+		}
+
+		str.split('&').forEach(function (param) {
+			var parts = param.replace(/\+/g, ' ').split('=');
+			// Firefox (pre 40) decodes `%3D` to `=`
+			// https://github.com/sindresorhus/query-string/pull/37
+			var key = parts.shift();
+			var val = parts.length > 0 ? parts.join('=') : undefined;
+
+			key = decodeURIComponent(key);
+
+			// missing `=` should be `null`:
+			// http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
+			val = val === undefined ? null : decodeURIComponent(val);
+
+			if (ret[key] === undefined) {
+				ret[key] = val;
+			} else if (Array.isArray(ret[key])) {
+				ret[key].push(val);
+			} else {
+				ret[key] = [ret[key], val];
+			}
+		});
+
+		return ret;
+	};
+
+	exports.stringify = function (obj, opts) {
+		opts = opts || {};
+
+		var strict = opts.strict !== false;
+
+		return obj ? Object.keys(obj).sort().map(function (key) {
+			var val = obj[key];
+
+			if (val === undefined) {
+				return '';
+			}
+
+			if (val === null) {
+				return key;
+			}
+
+			if (Array.isArray(val)) {
+				var result = [];
+
+				val.slice().sort().forEach(function (val2) {
+					if (val2 === undefined) {
+						return;
+					}
+
+					if (val2 === null) {
+						result.push(encode(key, strict));
+					} else {
+						result.push(encode(key, strict) + '=' + encode(val2, strict));
+					}
+				});
+
+				return result.join('&');
+			}
+
+			return encode(key, strict) + '=' + encode(val, strict);
+		}).filter(function (x) {
+			return x.length > 0;
+		}).join('&') : '';
+	};
+
+
+/***/ },
+/* 173 */
+/***/ function(module, exports) {
+
+	'use strict';
+	module.exports = function (str) {
+		return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
+			return '%' + c.charCodeAt(0).toString(16).toUpperCase();
+		});
+	};
+
+
+/***/ },
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

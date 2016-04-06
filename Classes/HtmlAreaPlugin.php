@@ -23,6 +23,10 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
     protected $requiredPlugins = 'InlineElements';
 
     public function buildJavascriptConfiguration() {
+
+        $uriBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Backend\\Routing\\UriBuilder');
+        $ontoautLink = $uriBuilder->buildUriFromModule('tools_AnnotateOntoaut');
+
         $js = array();
 
         $js[] = 'RTEarea[editornumber].buttons.showAnnotate = new Object();';
@@ -31,6 +35,7 @@ class HtmlAreaPlugin extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {
         $js[] = 'RTEarea[editornumber].buttons.showAnnotate.table = extractor[1];';
         $js[] = 'RTEarea[editornumber].buttons.showAnnotate.id = extractor[2];';
         $js[] = 'RTEarea[editornumber].buttons.showAnnotate.wrap = "editorWrap"+editornumber;';
+        $js[] = 'RTEarea[editornumber].buttons.showAnnotate.ontoautLink = "' . $ontoautLink . '";';
 
         //add special css to edited htmldocument
         $documentcss = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extensionKey) . 'Resources/Public/Skin/document.css';

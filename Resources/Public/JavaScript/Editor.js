@@ -245,6 +245,13 @@ define('TYPO3/CMS/Annotate/Editor', [
         Aggregation.log(action, this.getContentTable(), this.getContentId(), additionalData);
     };
 
+    Htmlarea.prototype.analyze = function(cb) {
+        var url = this.htmlarea.config.buttons.showAnnotate.ontoautLink;
+        url += "&passedText=" + encodeURIComponent(this.getContent());
+        window.open(url,'_blank');
+        cb();
+    };
+
     return {
         Htmlarea: Htmlarea
     };
