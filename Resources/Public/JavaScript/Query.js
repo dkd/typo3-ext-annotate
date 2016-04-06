@@ -19,9 +19,9 @@ define('TYPO3/CMS/Annotate/Query', [
     /**
      * Query Constructor
      */
-    var Query = function(){
+    var Query = function(start){
         // @type {String}
-        this.raw = "";
+        this.raw = start;
         // @type {String}
         this.transformed = this.queryize(this.raw);
         // @type {String}

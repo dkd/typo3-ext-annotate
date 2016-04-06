@@ -40,7 +40,9 @@ define('TYPO3/CMS/Annotate/SearchUI', [
         getInitialState: function() {
             return {
                 input: "",
-                query: new Query("")
+                query: new Query("$$"),
+                beginner: 'all',
+                beginnerType: 'Fish'
             };
         },
         onChange: function(event) {
@@ -68,6 +70,16 @@ define('TYPO3/CMS/Annotate/SearchUI', [
                 });
             };
         },
+        onBeginnerSelect: function (event) {
+            var val = event.target.value;
+            this.setState({beginner: val});
+            this.state.query.update(val == 'all' ? '$$': '$' + this.state.beginnerType +'$');
+        },
+        onBeginnerType: function (event) {
+            var val = event.target.value;
+            this.setState({beginnerType: val});
+            this.state.query.update('$' + val +'$');
+        },
         render: function() {
             var ready =  this.state.query.isReady(),
                 running = this.state.query.isRunning(),
@@ -80,37 +92,36 @@ define('TYPO3/CMS/Annotate/SearchUI', [
                     React.createElement(Tab, {}, "Advanced")
                    ),
                   React.createElement(TabPanel, {},
+                    React.createElement('h2', {}, 'What are you looking for?'),
+                    React.createElement('input', {type: 'radio', checked: this.state.beginner == 'all',  value: 'all', onChange: this.onBeginnerSelect}), ' All entities!',
+                    React.createElement('br', {}),
+                    React.createElement('input', {type: 'radio', checked: this.state.beginner == 'type', value: 'type', onChange: this.onBeginnerSelect}), ' All of type: ',
+                    React.createElement('input', {value: this.state.beginnerType, onChange: this.onBeginnerType, disabled: this.state.beginner == 'all'}),
+                    React.createElement('br', {}),
                     React.createElement('button', {
                         className: 'run',
                         disabled: !this.state.query.isValid(),
                         onClick: this.onQuery
-                    }, 'Query!'),
-                    React.createElement('textarea', {
-                        className: 'bar',
-                        value: this.state.query.raw,
-                        onChange: this.onChange
-                    })
+                    }, 'Query!')
                    ),
                   React.createElement(TabPanel, {},
-                    React.createElement('button', {
-                        className: 'run',
-                        disabled: !this.state.query.isValid(),
-                        onClick: this.onQuery
-                    }, 'Query!'),
-                    React.createElement('button', {
-                        className: 'new',
-                        onClick: this.onNew
-                    }, 'Clear'),
                     React.createElement('textarea', {
                         className: 'bar',
                         value: this.state.query.raw,
                         onChange: this.onChange
                     }),
+                    React.createElement('br', {}),
                     React.createElement('textarea', {
                         className: 'bar transformed',
                         readOnly:true,
                         value: this.state.query.transformed
-                    })
+                    }),
+                    React.createElement('br', {}),
+                    React.createElement('button', {
+                        className: 'run',
+                        disabled: !this.state.query.isValid(),
+                        onClick: this.onQuery
+                    }, 'Query!')
                    )),
                 !(running || finished) ? null:
                 React.createElement("div", {
