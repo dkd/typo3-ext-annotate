@@ -35,7 +35,7 @@ define('TYPO3/CMS/Annotate/List', [
         onCreateAnnotation: function() {
             var ele = this.props.editor.createAnnotationAroundSelection.call(this.props.editor);
             // this.expand(ele.aid), aid not set yet
-            this.props.editor.aggregate("ANNOTATE_CREATE", {text: ele.innerHTML});
+            this.props.editor.aggregate('ANNOTATE_CREATE', {text: ele.innerHTML});
         },
         /**
          * Automatically annotate the whole onAuto
@@ -44,21 +44,21 @@ define('TYPO3/CMS/Annotate/List', [
             this.setState({busy: true});
             this.props.editor.autoAnnotate.call(this.props.editor, (function() {
                 this.setState({busy: false});
-                this.props.editor.aggregate("ANNOTATE_AUTO", {text: this.props.editor.getContent()});
+                this.props.editor.aggregate('ANNOTATE_AUTO', {text: this.props.editor.getContent()});
             }).bind(this));
         },
         /**
          * Index the Document
          */
         onIndex: function() {
-            if (this.props.editor.getContentId().substring(0, 3) == "NEW")
-                TYPO3.Flashmessage.display(3, "ERROR", "You need to save at least once before you can index content.");
+            if (this.props.editor.getContentId().substring(0, 3) == 'NEW')
+                TYPO3.Flashmessage.display(3, 'ERROR', 'You need to save at least once before you can index content.');
             else
             {
                 this.setState({busy: true});
                 this.props.editor.autoIndex.call(this.props.editor, (function() {
                     this.setState({busy: false});
-                    this.props.editor.aggregate("ANNOTATE_INDEX", {});
+                    this.props.editor.aggregate('ANNOTATE_INDEX', {});
                 }).bind(this));
             }
         },
@@ -76,30 +76,27 @@ define('TYPO3/CMS/Annotate/List', [
             this.setState({expanded: this.state.expanded == aid ? null : aid});
         },
         render: function() {
-            return React.createElement("div", {className: "annotate"},
-                React.createElement("div", {className: "wrapper"},
-                  React.createElement("div", {className: "header"},
-                    React.createElement("div", {className: "moduleTitle"}, React.createElement("h1", null, "Annotations")),
+            return React.createElement('div', {className: 'annotate'},
+                React.createElement('div', {className: 'wrapper'},
+                  React.createElement('div', {className: 'header'},
+                    React.createElement('div', {className: 'moduleTitle'}, React.createElement('h1', null, 'Annotations')),
                     this.state.busy ? React.createElement(LoadingIndicator, null) :
-                    React.createElement("div", null,
-                      React.createElement("section", null,
-                        React.createElement("button", {onClick: this.onAuto, type:"button", className: "all"}, "Annotate!"),
-                        React.createElement("button", {onClick: this.onCreateAnnotation, type:"button", className: "new basic"}, "Add annotation"),
-                        React.createElement("button", {onClick: this.onIndex, type:"button", className: "index"}, "Index!"),
-                        React.createElement("button", {onClick: this.onAnalyze, type:"button", className: "index"}, "Analyze!")
-                       )
+                    React.createElement('div', null,
+                      React.createElement('button', {onClick: this.onAuto, type:'button', className: 'all'}, 'Automatic annotation'),
+                      React.createElement('button', {onClick: this.onCreateAnnotation, type:'button', className: 'new basic'}, 'Manual annotation'),
+                      React.createElement('div', {className: 'entities'},
+                        this.state.store.sortedAnnotations().map(function(annotation, index) {
+                            return React.createElement(ListEntry, {
+                                key: annotation.get('aid'),
+                                editor: this.props.editor,
+                                expand: this.expand,
+                                expanded: this.state.expanded == annotation.get('aid'),
+                                annotation: annotation});
+                        }, this)
+                       ),
+                      React.createElement('button', {onClick: this.onIndex, type:'button', className: 'index'}, 'save to Mimir'),
+                      React.createElement('button', {onClick: this.onAnalyze, type:'button', className: 'index'}, 'send to Ontoaut')
                      )
-                   ),
-                  this.state.busy ? null :
-                  React.createElement("div", {className: "entities"},// style: {maxHeight: this.state.entitiesHeigth}},
-                    this.state.store.sortedAnnotations().map(function(annotation, index) {
-                        return React.createElement(ListEntry, {
-                            key: annotation.get('aid'),
-                            editor: this.props.editor,
-                            expand: this.expand,
-                            expanded: this.state.expanded == annotation.get('aid'),
-                            annotation: annotation});
-                    }, this)
                    )
                  )
                );

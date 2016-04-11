@@ -21,7 +21,6 @@ h3 {
 }
 
 .annotate input, .annotate label, .annotate button {
-    margin-bottom: 20px;
     border:1px solid #b9b9b9;
 }
 
@@ -49,7 +48,7 @@ h3 {
     white-space: normal !important;
     background-color:#B9B9B9;
     border-radius: 4px;
-    margin-right: 15px;
+    margin: 5px;
 }
 
 button:hover {
